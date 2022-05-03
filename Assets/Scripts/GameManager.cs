@@ -35,8 +35,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            sensor.GetComponent<Renderer>().enabled = true;
+
     }
 
     public void AddSilk(int i)
