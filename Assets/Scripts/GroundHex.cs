@@ -9,20 +9,18 @@ public class GroundHex : MonoBehaviour
     public Type type;
     public Color[] colors;
 
-    // Start is called before the first frame update
     void Awake()
     {
-        ChangeType(type);        
+        //ChangeType(type);        
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void ChangeType(Type t)
+    private void ChangeType(Type t)
     {
-        transform.GetComponent<SpriteRenderer>().color = colors[(int)t];
+        //transform.GetComponent<SpriteRenderer>().color = colors[(int)t];
     }
 }

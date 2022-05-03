@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    private GameObject player;
+    public enum Type { Silk, Health };
+    public Color[] colors;
+    public Type type;
+    
+
     void Start()
-    {
-        player = GameObject.Find("Spider");
+    { 
+
     }
 
     void Update()
@@ -19,8 +23,12 @@ public class Item : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
-            //Debug.Log("item");
-            GameManager.instance.AddSilk(50);
+            if(type == Type.Silk)
+                collider.transform.GetComponent<Player>().AddSilk(50);
+
+            else if(type == Type.Health)
+                collider.transform.GetComponent<Player>().AddHealth(2);
+
             Destroy(gameObject);
         }
     }

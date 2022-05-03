@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour
+public class FlyingEnemy : MonoBehaviour
 {
+    public enum Type {Fly, Bee};
+    public Type type;
+    public Color[] colors;
+
     public float speed;
+    public int damage;
 
     private Collider2D coll;
 
