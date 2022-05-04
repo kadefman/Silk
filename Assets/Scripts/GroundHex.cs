@@ -7,7 +7,7 @@ public class GroundHex : MonoBehaviour
 
     public enum Type { Wood, Web}
     public Type type;
-    public Color[] colors;
+    //public Color[] colors;
 
     void Awake()
     {

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -8712523888338872128}
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 1017012220701539823}
+  - component: {fileID: 8896278060805462555}
   m_Layer: 8
   m_Name: Bee
   m_TagString: Untagged
@@ -135,11 +136,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  colors:
-  - {r: 0.093871, g: 1, b: 0, a: 0}
-  - {r: 1, g: 1, b: 0, a: 0}
-  speed: 100
-  damage: 4
+  speed: 150
+  damage: 1
+  health: 2
+  silkReward: 10
+--- !u!114 &8896278060805462555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3689479164833152567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5538810516643815871
 PrefabInstance:
   m_ObjectHideFlags: 0

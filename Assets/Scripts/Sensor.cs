@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Sensor : MonoBehaviour
 {
-    public GameObject thing1;
-    public GameObject thing2;
-
     private float rayStart = .2f;
     private float rayEnd = .3f;
 
@@ -24,7 +21,7 @@ public class Sensor : MonoBehaviour
     {
         Vector2 startPoint = transform.position + rayStart * transform.right;
         Vector2 endPoint = transform.position + rayEnd * transform.right;
-        RaycastHit2D hit = Physics2D.Linecast(startPoint, endPoint, LayerMask.GetMask("OnGround"));
+        RaycastHit2D hit = Physics2D.Linecast(startPoint, endPoint, LayerMask.GetMask("EmptyTile"));
         //Debug.DrawLine(startPoint, endPoint, Color.red, 5f);
 
         if (hit.transform != null && hit.transform.CompareTag("EmptyTile"))
@@ -41,7 +38,7 @@ public class Sensor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if(IsFacingEmpty())
+            if (IsFacingEmpty())
             {
                 GameManager.instance.sensor = transform;
                 transform.GetComponent<Renderer>().enabled = true;

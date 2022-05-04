@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7183947100556492882}
   - component: {fileID: 5551564476675126458}
   - component: {fileID: 5221777552533394566}
+  - component: {fileID: 3964492874710783860}
   m_Layer: 11
   m_Name: Web
   m_TagString: Untagged
@@ -104,6 +105,19 @@ MonoBehaviour:
   colors:
   - {r: 0.49019608, g: 0.32156864, b: 0.16078432, a: 1}
   - {r: 0.65882355, g: 0.65882355, b: 0.65882355, a: 1}
+--- !u!114 &3964492874710783860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4324176906323633106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSize: {x: 0.96, y: 0.56, z: 1}
 --- !u!1001 &2803333434433966537
 PrefabInstance:
   m_ObjectHideFlags: 0

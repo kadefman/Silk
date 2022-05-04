@@ -4,30 +4,24 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum Type { Silk, Health };
-    public Color[] colors;
+    public enum Type { Silk, Health, Key };
+    //public Color[] colors;
     public Type type;
-    
-
-    void Start()
-    { 
-
-    }
-
-    void Update()
-    {
-        
-    }
+    public int healthPlus;
+    public int silkPlus;
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player"))
         {
-            if(type == Type.Silk)
-                collider.transform.GetComponent<Player>().AddSilk(50);
+            if (type == Type.Silk)
+                collider.transform.GetComponent<Player>().AddSilk(silkPlus);
 
-            else if(type == Type.Health)
-                collider.transform.GetComponent<Player>().AddHealth(2);
+            else if (type == Type.Health)
+                collider.transform.GetComponent<Player>().AddHealth(healthPlus);
+
+            else if(type == Type.Key)
+                GameManager.instance.OpenDoor(true);
 
             Destroy(gameObject);
         }

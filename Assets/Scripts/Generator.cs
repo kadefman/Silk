@@ -16,7 +16,7 @@ public class Generator : MonoBehaviour
     public int startX;
     public int startY;
 
-    public float xOffest = .96f;
+    public float xOffset = .96f;
     public float yOffset = .56f;
 
     void Start()
@@ -48,9 +48,9 @@ public class Generator : MonoBehaviour
                 GameObject go;
 
                 if (x % 2 == 0)
-                    go = Instantiate(hex, new Vector2(x * xOffest, 2 * y * yOffset), Quaternion.identity, transform);
+                    go = Instantiate(hex, new Vector2(x * xOffset, 2 * y * yOffset), Quaternion.identity, transform);
                 else
-                    go = Instantiate(hex, new Vector2(x * xOffest, 2 * y * yOffset - yOffset), Quaternion.identity, transform);
+                    go = Instantiate(hex, new Vector2(x * xOffset, 2 * y * yOffset - yOffset), Quaternion.identity, transform);
                
                 if (hex == platform)
                     playerPos = new Vector2(go.transform.position.x, go.transform.position.y);
@@ -60,7 +60,7 @@ public class Generator : MonoBehaviour
         if (followSpider)
             cam.transform.parent = player.transform;
         else
-            cam.transform.Translate(new Vector2(xOffest * width / 2, yOffset * height));
+            cam.transform.Translate(new Vector2(xOffset * width / 2, yOffset * height));
 
         player.transform.position = playerPos;
     }

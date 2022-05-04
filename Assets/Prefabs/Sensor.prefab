@@ -145,5 +145,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thing1: {fileID: 3689479164833152567, guid: 332cd2fcb2ab495418dbf7d6762ddf6f, type: 3}
   thing2: {fileID: 3689479164833152567, guid: 93b1085a95eb0024eac71b6ec8878974, type: 3}
-  start: 0.1
-  end: 0.2

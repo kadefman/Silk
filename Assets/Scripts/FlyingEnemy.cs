@@ -6,10 +6,12 @@ public class FlyingEnemy : MonoBehaviour
 {
     public enum Type {Fly, Bee};
     public Type type;
-    public Color[] colors;
+    //public Color[] colors;
 
     public float speed;
     public int damage;
+    public int health;
+    public int silkReward;
 
     private Collider2D coll;
 
@@ -22,5 +24,20 @@ public class FlyingEnemy : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void AddHealth(int i)
+    {
+        health += i;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+            GameManager.instance.AddSilk(silkReward);
+            GameManager.instance.enemyCount--;
+            if (GameManager.instance.enemyCount == 0)
+                GameManager.instance.OpenDoor(false);
+        }
+            
+
     }
 }

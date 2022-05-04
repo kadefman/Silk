@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1176046325728003406}
   - component: {fileID: 5091105678184314409}
   - component: {fileID: -2732773461225110625}
-  m_Layer: 13
+  - component: {fileID: 3734918346877003920}
+  m_Layer: 14
   m_Name: EmptyTile
   m_TagString: EmptyTile
   m_Icon: {fileID: 0}
@@ -144,3 +145,16 @@ PolygonCollider2D:
       - {x: 0.34, y: -0.58}
       - {x: 0.64, y: -0.06}
       - {x: 0.64, y: 0.06}
+--- !u!114 &3734918346877003920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176046325728003404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSize: {x: 0.96, y: 0.56, z: 1}

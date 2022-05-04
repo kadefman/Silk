@@ -21,8 +21,8 @@ TagManager:
   - Ground
   - Items,UI
   - OnGround
-  - 
-  - 
+  - EmptyTile
+  - Bullets
   - 
   - 
   - 

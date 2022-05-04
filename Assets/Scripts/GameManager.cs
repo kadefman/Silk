@@ -5,28 +5,23 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [HideInInspector] public static GameManager instance = null;
-    [HideInInspector] public Player playerScript;
-    [HideInInspector] public Transform sensor;
-    [HideInInspector] public Transform webTile;
-
     public GameObject web;
     public GameObject webCounter;
+    public GameObject platform;
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI spinText;
+
+    [HideInInspector] public static GameManager instance = null;
+    public List<Room> rooms;
+    [HideInInspector] public Player playerScript;
+    [HideInInspector] public Transform sensor;
+    [HideInInspector] public Transform webTile;
+    [HideInInspector]public int enemyCount;
+    [HideInInspector] public int roomIndex;
+
+    public Room currentRoom;  
     
-    public bool saveWebProgress;
-    public float spinTime;
-    public int spinCost;
-
-    //this will be changed
-    public int enemyCount;
-    public GameObject door;
-    public GameObject emp;
-
-    private float inverseSpinTime;
-
     private void Awake()
     {
         if (instance == null)
@@ -40,18 +35,17 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         spinText.gameObject.SetActive(false);
-        inverseSpinTime = 1f / spinTime;
+        
+        roomIndex = 0;
+        SetRoom(0);
     }
 
-    private void Update()
+    public void SetRoom(int index)
     {
-        if (enemyCount == 0 && door != null)
-        {
-            Vector2 doorPos = door.transform.position;
-            Destroy(door);
-            Instantiate(emp, doorPos, Quaternion.identity);
-            door = null;
-        }           
+        //Debug.Log($"Entering Room {index}");
+        roomIndex = index;
+        currentRoom = rooms[roomIndex];
+        enemyCount = currentRoom.enemyCount;
     }
 
     public IEnumerator SpinCountdown(int startSilk)
@@ -61,6 +55,7 @@ public class GameManager : MonoBehaviour
         spinText.text = $"Spinning web...";
 
         float silkSpent = 0f;
+        float inverseSpinTime = 1f / playerScript.spinTime;
         int silkUnitsSpent = 0;
         bool cancelled = false;
 
@@ -70,32 +65,32 @@ public class GameManager : MonoBehaviour
         if (tile.childCount == 0)
         {
             counter = Instantiate(webCounter, tile.transform.position, Quaternion.identity, tile);
-            counter.GetComponent<TextMeshPro>().text = spinCost.ToString();
+            counter.GetComponent<TextMeshPro>().text = playerScript.spinCost.ToString();
         }
             
         else
         {
             counter = tile.GetChild(0).gameObject;
-            silkUnitsSpent = spinCost - int.Parse(counter.GetComponent<TextMeshPro>().text);
+            silkUnitsSpent = playerScript.spinCost - int.Parse(counter.GetComponent<TextMeshPro>().text);
         }
                            
-        while (silkUnitsSpent<spinCost)
+        while (silkUnitsSpent< playerScript.spinCost)
         {
             if (!playerScript.spinning || playerScript.silkCount <=0)
             {
-                if (!saveWebProgress)
+                if (!playerScript.saveWebProgress)
                     Destroy(counter);
 
                 cancelled = true;
                 break;
             }
 
-            silkSpent += spinCost * inverseSpinTime * Time.deltaTime;
+            silkSpent += playerScript.spinCost * inverseSpinTime * Time.deltaTime;
             if (silkSpent > 1f)
             {
                 silkSpent -= 1f;
                 silkUnitsSpent += 1;
-                counter.GetComponent<TextMeshPro>().text = (spinCost - silkUnitsSpent).ToString();
+                counter.GetComponent<TextMeshPro>().text = (playerScript.spinCost - silkUnitsSpent).ToString();
                 playerScript.AddSilk(-1);
             }
             
@@ -104,13 +99,23 @@ public class GameManager : MonoBehaviour
 
         spinText.gameObject.SetActive(false);
 
-        if (!cancelled)
+        //knockback?
+        if(cancelled)
+        {
+            Vector2 knockBackDir = playerScript.transform.position - tile.transform.position;
+            float knockBackFloat = .15f;
+            playerScript.transform.position = (Vector2)playerScript.transform.position + knockBackDir * knockBackFloat;
+        }
+
+        else
         {
             CreateWeb(tile);
             playerScript.spinning = false;
             sensor.GetComponent<Renderer>().enabled = false;
             sensor = null;
-        }             
+        }  
+        
+        
     }
 
     private void CreateWeb(Transform spot)
@@ -120,4 +125,27 @@ public class GameManager : MonoBehaviour
         Instantiate(web, position, Quaternion.identity, transform);
     }
 
+    public void OpenDoor(bool key)
+    {
+        Transform door;
+        if (key)
+            door = currentRoom.keyDoor;
+        else 
+            door = currentRoom.enemyDoor;
+
+        if(door!=null)
+        {
+            Vector2 doorPos = door.transform.position;
+            door.DetachChildren();
+            Destroy(door.gameObject);
+            Instantiate(platform, doorPos, Quaternion.identity);
+        }     
+    }
+
+    //this is a duplicate method, only exists so that enemies can reward silk directly 
+    //(which may not permanently be the case anyway)
+    public void AddSilk(int i)
+    {
+        playerScript.AddSilk(i);
+    }
 }

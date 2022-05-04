@@ -43,18 +43,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6184ac8c25544994ea6979ece8daa3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScript: {fileID: 0}
-  sensor: {fileID: 0}
-  webTile: {fileID: 0}
   web: {fileID: 4324176906323633106, guid: b94d71cb31608c7488fbbd2c2afefb44, type: 3}
   webCounter: {fileID: 1416069312964486467, guid: a01a7e76a0b0a4542bff1b29a3900a77,
+    type: 3}
+  platform: {fileID: 4324176906323633106, guid: 309d377d8d1736649beb6b3787668e99,
     type: 3}
   silkText: {fileID: 0}
   healthText: {fileID: 0}
   spinText: {fileID: 0}
-  saveWebProgress: 1
-  spinTime: 2
-  spinCost: 30
+  rooms: []
+  playerScript: {fileID: 0}
+  sensor: {fileID: 0}
+  webTile: {fileID: 0}
   enemyCount: 0
-  door: {fileID: 0}
-  emp: {fileID: 1176046325728003404, guid: 27ab3b4e80155e544a50c7a8702fc1d0, type: 3}
+  roomIndex: 0
