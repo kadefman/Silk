@@ -138,29 +138,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   speed: 100
-<<<<<<< HEAD:Assets/Prefabs/Enemies/Fly.prefab
-  damage: 0
-  health: 2
-  silkReward: 5
---- !u!114 &6967999571123142435
-MonoBehaviour:
-=======
   damage: 2
 --- !u!1 &5273936232660296990
 GameObject:
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Fly.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD:Assets/Prefabs/Enemies/Fly.prefab
-  m_GameObject: {fileID: 3689479164833152567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-=======
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2206560449070840525}
@@ -237,7 +221,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Fly.prefab
 --- !u!1001 &4499895135089389762
 PrefabInstance:
   m_ObjectHideFlags: 0

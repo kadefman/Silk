@@ -137,14 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-<<<<<<< HEAD:Assets/Prefabs/Enemies/Bee.prefab
-  speed: 150
-  damage: 1
-  health: 2
-  silkReward: 10
---- !u!114 &8896278060805462555
-MonoBehaviour:
-=======
   colors:
   - {r: 0.093871, g: 1, b: 0, a: 0}
   - {r: 1, g: 1, b: 0, a: 0}
@@ -152,19 +144,10 @@ MonoBehaviour:
   damage: 4
 --- !u!1 &9134185133437562554
 GameObject:
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Bee.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD:Assets/Prefabs/Enemies/Bee.prefab
-  m_GameObject: {fileID: 3689479164833152567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-=======
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6294752580915590823}
@@ -241,7 +224,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Bee.prefab
 --- !u!1001 &5538810516643815871
 PrefabInstance:
   m_ObjectHideFlags: 0

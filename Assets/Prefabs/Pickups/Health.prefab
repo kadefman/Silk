@@ -114,27 +114,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-<<<<<<< HEAD:Assets/Prefabs/Pickups/Health.prefab
-  healthPlus: 5
-  silkPlus: 50
---- !u!114 &-6668193478286705516
-MonoBehaviour:
-=======
 --- !u!1 &7692937241801932687
 GameObject:
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Health.prefab
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD:Assets/Prefabs/Pickups/Health.prefab
-  m_GameObject: {fileID: 3689479164833152567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-=======
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7845650303994555500}
@@ -211,4 +196,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
->>>>>>> e463632bca1228d4c41ded36021b80e251d0783f:Assets/Prefabs/Health.prefab
