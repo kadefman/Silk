@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 51541744823365334}
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 2401802152899015746}
-  - component: {fileID: -6668193478286705516}
   m_Layer: 12
   m_Name: Health
   m_TagString: Untagged
@@ -114,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  healthPlus: 5
+  silkPlus: 50
 --- !u!1 &7692937241801932687
 GameObject:
   m_ObjectHideFlags: 0

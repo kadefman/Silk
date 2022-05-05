@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: -8712523888338872128}
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 1017012220701539823}
-  - component: {fileID: 6967999571123142435}
   m_Layer: 8
   m_Name: Fly
   m_TagString: Untagged
@@ -139,6 +138,8 @@ MonoBehaviour:
   type: 0
   speed: 100
   damage: 2
+  health: 2
+  silkReward: 5
 --- !u!1 &5273936232660296990
 GameObject:
   m_ObjectHideFlags: 0

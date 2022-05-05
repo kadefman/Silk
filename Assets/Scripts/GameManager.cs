@@ -32,17 +32,15 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    private void Start()
     {
         spinText.gameObject.SetActive(false);
-        
-        roomIndex = 0;
-        SetRoom(0);
     }
 
     public void SetRoom(int index)
     {
-        //Debug.Log($"Entering Room {index}");
+        Debug.Log($"Entering Room {index}");
+        Debug.Log(rooms.Count);
         roomIndex = index;
         currentRoom = rooms[roomIndex];
         enemyCount = currentRoom.enemyCount;
@@ -130,16 +128,19 @@ public class GameManager : MonoBehaviour
         Transform door;
         if (key)
             door = currentRoom.keyDoor;
-        else 
+        else
             door = currentRoom.enemyDoor;
 
-        if(door!=null)
+        if (door != null)
         {
+            Debug.Log("There's a door");
             Vector2 doorPos = door.transform.position;
             door.DetachChildren();
             Destroy(door.gameObject);
             Instantiate(platform, doorPos, Quaternion.identity);
-        }     
+        }
+        else
+            Debug.Log("No door");
     }
 
     //this is a duplicate method, only exists so that enemies can reward silk directly 

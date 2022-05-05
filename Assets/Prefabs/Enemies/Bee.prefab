@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: -8712523888338872128}
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 1017012220701539823}
-  - component: {fileID: 8896278060805462555}
   m_Layer: 8
   m_Name: Bee
   m_TagString: Untagged
@@ -137,11 +136,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  colors:
-  - {r: 0.093871, g: 1, b: 0, a: 0}
-  - {r: 1, g: 1, b: 0, a: 0}
   speed: 100
   damage: 4
+  health: 2
+  silkReward: 10
 --- !u!1 &9134185133437562554
 GameObject:
   m_ObjectHideFlags: 0
