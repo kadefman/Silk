@@ -120,6 +120,7 @@ public class Player : MonoBehaviour
             godMode = true;
             speed = 6;
             spinCost = 0;
+            shotCost = 0;
             spinTime = 0;
         }
 

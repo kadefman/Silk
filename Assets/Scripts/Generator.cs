@@ -4,64 +4,120 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    public GameObject tile;
-    public GameObject platform;
+    public GameObject[] tiles;
+    public GameObject[] enemies;
+    public GameObject[] items;
     public GameObject wall;
     public GameObject player;
     public GameObject cam;
-    public bool followSpider;
 
-    public int width;
+    //the following public variables are only for testing single rooms
+    public Room.Shape shape;
+    /*public int width;
     public int height;
     public int startX;
-    public int startY;
+    public int startY;*/
 
-    public float xOffset = .96f;
-    public float yOffset = .56f;
+    private float xOffset = .96f;
+    private float yOffset = 1.12f;
+
+    private Vector2 playerPos = Vector2.zero;
 
     void Start()
     {
         GenerateLevel();
+        cam.transform.parent = player.transform;
+        player.transform.position = playerPos;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            foreach(Transform child in transform)
+                Destroy(child.gameObject);
+
+            GenerateLevel();
+        }           
     }
 
     void GenerateLevel()
     {
-        Vector2 playerPos = Vector2.zero;
+        Room.Shape singleShape;
 
-        for (int x = 0; x <= width + 1; x++)
+        if (shape == Room.Shape.Other)
+        {            
+            int rand = Random.Range(0,3);
+            singleShape = (Room.Shape)rand;
+        }
+        else
+            singleShape = shape;
+
+        Room singleRoom = new Room(singleShape);
+        GenerateRoom(singleRoom, Vector2.zero);
+    }
+
+    void GenerateRoom(Room room, Vector2 genPoint)
+    {
+        List<Vector2> tilePoints = new List<Vector2>();
+        List<Vector2> wallPoints = new List<Vector2>();
+
+        switch(room.shape)
         {
-            for (int y = 0; y <= height + 1; y++)
-            {
-                GameObject hex;
+            case Room.Shape.Rect:
+                int length = Random.Range(2, 6);
+                int height = Random.Range(2, 6);
+                bool upDown = false;
+                int rand = Random.Range(0, 2);
+                upDown = rand == 0;
 
-                if (x == 0 || y == 0 || x == width + 1 || y == height + 1)
-                    hex = wall;
+                Debug.Log("Rectangle type " + (upDown ? "upDown, " : "downUp, ") + length + "by " + height);
 
-                else
+                for (int x = 0; x <= length+1; x++)
                 {
-                    if (x == startX & y == startY)
-                        hex = platform;
-                    else
-                        hex = tile;
+                    for(int y=0; y <= height+1; y++)
+                    {
+                        float pointX = genPoint.x + xOffset * x;
+                        float pointY;
+                        if (x % 2 == 1)
+                            pointY = genPoint.y + (yOffset * (y + (upDown ? -.5f : .5f)));
+                        else
+                            pointY = genPoint.y + yOffset * y;
+
+                        Debug.Log($"{x}, {y}, {pointX}, {pointY}");
+                        Vector2 thisPoint = new Vector2(pointX, pointY);
+
+                        if (x == 0 || x == length+1 || y == 0 || y == height+1)
+                            wallPoints.Add(thisPoint);
+
+                        else
+                            tilePoints.Add(thisPoint);
+                    }
                 }
+                break;
 
-                GameObject go;
+            case Room.Shape.Circle:
+                int rad = Random.Range(1, 6);
+                
+                break;
 
-                if (x % 2 == 0)
-                    go = Instantiate(hex, new Vector2(x * xOffset, 2 * y * yOffset), Quaternion.identity, transform);
-                else
-                    go = Instantiate(hex, new Vector2(x * xOffset, 2 * y * yOffset - yOffset), Quaternion.identity, transform);
-               
-                if (hex == platform)
-                    playerPos = new Vector2(go.transform.position.x, go.transform.position.y);
-            }
+            case Room.Shape.Hall:
+                break;
+
+            default:
+                Debug.Log("This shape has not been implemented");
+                return;
         }
 
-        if (followSpider)
-            cam.transform.parent = player.transform;
-        else
-            cam.transform.Translate(new Vector2(xOffset * width / 2, yOffset * height));
+        foreach (Vector2 point in wallPoints)   
+            Instantiate(wall, point, Quaternion.identity, transform);
 
-        player.transform.position = playerPos;
+        foreach(Vector2 point in tilePoints)
+        {
+            int rand = Random.Range(0, 2);
+            Instantiate(tiles[rand], point, Quaternion.identity,transform);
+        }
+            
+        //choose locations for player, enemies, pickups
     }
 }

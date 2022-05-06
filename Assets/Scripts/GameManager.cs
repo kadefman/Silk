@@ -14,14 +14,13 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public static GameManager instance = null;
     public List<Room> rooms;
+    public Room currentRoom;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;
-    [HideInInspector]public int enemyCount;
+    [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
-
-    public Room currentRoom;  
-    
+      
     private void Awake()
     {
         if (instance == null)
@@ -39,11 +38,17 @@ public class GameManager : MonoBehaviour
 
     public void SetRoom(int index)
     {
-        Debug.Log($"Entering Room {index}");
-        Debug.Log(rooms.Count);
-        roomIndex = index;
-        currentRoom = rooms[roomIndex];
-        enemyCount = currentRoom.enemyCount;
+        if (rooms != null && rooms.Count != 0)
+        {
+            Debug.Log($"Entering Room {index}");
+            Debug.Log(rooms.Count);
+            roomIndex = index;
+            currentRoom = rooms[roomIndex];
+            enemyCount = currentRoom.enemyCount;
+        }
+
+        else
+            roomIndex = -1;
     }
 
     public IEnumerator SpinCountdown(int startSilk)

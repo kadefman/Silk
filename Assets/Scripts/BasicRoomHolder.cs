@@ -10,21 +10,21 @@ public class BasicRoomHolder : MonoBehaviour
     public Transform key;
     public Transform keyDoor;
     public Transform eDoor;
-    public Scene scene;
+    public Scene templateScene;
 
     private void Start()
     {       
-        if (scene == Scene.kadefSample)
+        if (templateScene == Scene.kadefSample)
         {
-            rooms.Add(new Room(0, 0));
-            rooms.Add(new Room(3, 1, eDoor));
-            rooms.Add(new Room(0, 2));
-            rooms.Add(new Room(10, 3, null, key, keyDoor));
-            rooms.Add(new Room(0, 4));
+            rooms.Add(new Room());
+            rooms.Add(new Room(3, eDoor));
+            rooms.Add(new Room());
+            rooms.Add(new Room(10, null, key, keyDoor));
+            rooms.Add(new Room());
         }
 
-        else
-            rooms.Add(new Room(4, 0, eDoor));
+        else if(templateScene == Scene.aquaMockup)
+            rooms.Add(new Room(4, eDoor));
 
         GameManager.instance.rooms = rooms;
         GameManager.instance.SetRoom(0);
