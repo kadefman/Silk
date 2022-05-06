@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public float spinTime;
     public bool saveWebProgress;
 
-    private Animator animator;
+    public Animator animator;
 
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
     }
 
     void Start()
@@ -125,39 +125,61 @@ public class Player : MonoBehaviour
             if (movement.x == 1)
             {
                 curDirection = Vector2.right;
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 1);
-                Debug.Log("right");
+                /*animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 1f);
+                Debug.Log("right");*/
             }
             else if (movement.x == -1)
             {
                 curDirection = Vector2.left;
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 1);
+                /*animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", -1f);*/
             }
             else if (movement.y == 1)
             {
                 curDirection = Vector2.up;
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 1);
+                /*animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 0f);
+                animator.SetFloat("verticalMovement", 1f);*/
             }
             else if (movement.y == -1)
             {
                 curDirection = Vector2.down;
-                animator.SetFloat("horizontalMovement", 1);
-                animator.SetBool("isMoving", true);
+                /*animator.SetFloat("verticalMovement", -1f);
+                animator.SetFloat("horizontalMovement", 0f);
+                animator.SetBool("isMoving", true);*/
             }
 
             if (Input.GetKey(KeyCode.D))
             {
                 gameObject.transform.localScale = new Vector3(-1.3f, 1.3f, 1);
-                //animator.SetBool("isMoving", true);
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", -1f);
+
             }
             
+            if (Input.GetKey(KeyCode.W))
+            {
+
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 0f);
+                animator.SetFloat("verticalMovement", 1f);
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+
+                animator.SetFloat("verticalMovement", -1f);
+                animator.SetFloat("horizontalMovement", 0f);
+                animator.SetBool("isMoving", true);
+            }
+
             if (Input.GetKey(KeyCode.A))
             {
                 gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1);
-                //animator.SetBool("isMoving", true);
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 1f);
+                Debug.Log("right");
             }
 
             bool isIdle = movement.x == 0 && movement.y == 0;
@@ -165,7 +187,10 @@ public class Player : MonoBehaviour
             if (isIdle)
             {
                 animator.SetBool("isMoving", false);
-                Debug.Log("not moving");
+                //animator.SetFloat("verticalMovement", 0f);
+                //animator.SetFloat("horizontalMovement", 0f);
+
+                //Debug.Log("not moving");
             }
 
             //animator.SetFloat("horizontalMovement", 1);
