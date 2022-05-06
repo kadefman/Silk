@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public float spinTime;
     public bool saveWebProgress;
 
+    private Animator animator;
+
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
     [HideInInspector] public bool spinning;
@@ -25,6 +27,11 @@ public class Player : MonoBehaviour
     private Vector2 curDirection;
     private float bulletOffset = .08f;
     private bool setup;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void Start()
     {
@@ -100,15 +107,69 @@ public class Player : MonoBehaviour
         if (!spinning)
         {
             Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            
+
+            /*if (isIdle)
+            {
+                animator.SetBool("isMoving", false);
+                Debug.Log("idle");
+            }
+            else
+            {
+                animator.SetBool("isMoving", true);
+                Debug.Log("moving");
+            }*/
+
             rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
             if (movement.x == 1)
+            {
                 curDirection = Vector2.right;
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 1);
+                Debug.Log("right");
+            }
             else if (movement.x == -1)
+            {
                 curDirection = Vector2.left;
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 1);
+            }
             else if (movement.y == 1)
+            {
                 curDirection = Vector2.up;
+                animator.SetBool("isMoving", true);
+                animator.SetFloat("horizontalMovement", 1);
+            }
             else if (movement.y == -1)
+            {
                 curDirection = Vector2.down;
+                animator.SetFloat("horizontalMovement", 1);
+                animator.SetBool("isMoving", true);
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                gameObject.transform.localScale = new Vector3(-1.3f, 1.3f, 1);
+                //animator.SetBool("isMoving", true);
+            }
+            
+            if (Input.GetKey(KeyCode.A))
+            {
+                gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1);
+                //animator.SetBool("isMoving", true);
+            }
+
+            bool isIdle = movement.x == 0 && movement.y == 0;
+
+            if (isIdle)
+            {
+                animator.SetBool("isMoving", false);
+                Debug.Log("not moving");
+            }
+
+            //animator.SetFloat("horizontalMovement", 1);
+            
         }
     }
 
