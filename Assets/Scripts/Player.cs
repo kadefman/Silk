@@ -17,6 +17,11 @@ public class Player : MonoBehaviour
     public bool saveWebProgress;
 
     public Animator animator;
+    public AudioSource audioSource;
+    public AudioSource walkSource;
+    public AudioClip[] walkClips;
+    public AudioClip webShotSFX;
+
 
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
@@ -76,6 +81,8 @@ public class Player : MonoBehaviour
                     mousePos.z = 10;
                     Vector2 dir = Camera.main.ScreenToWorldPoint(mousePos) - transform.position;
                     Shoot(dir);
+                    audioSource.pitch = Random.Range(.95f, 1.1f);
+                    audioSource.PlayOneShot(webShotSFX, .8f);
                 }                   
             }
 
@@ -186,11 +193,22 @@ public class Player : MonoBehaviour
 
             if (isIdle)
             {
+                walkSource.Stop();
                 animator.SetBool("isMoving", false);
                 //animator.SetFloat("verticalMovement", 0f);
                 //animator.SetFloat("horizontalMovement", 0f);
 
                 //Debug.Log("not moving");
+            }
+            else
+            {
+                if (walkSource.isPlaying == false)
+                {
+                    walkSource.clip = walkClips[Random.Range(0, walkClips.Length)];
+
+                    walkSource.Play();
+                }
+                
             }
 
             //animator.SetFloat("horizontalMovement", 1);
