@@ -36,8 +36,6 @@ public class FlyingEnemy : MonoBehaviour
             GameManager.instance.enemyCount--;
             if (GameManager.instance.enemyCount == 0)
                 GameManager.instance.OpenDoor(false);
-        }
-            
-
+        }           
     }
 }

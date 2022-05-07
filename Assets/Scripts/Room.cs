@@ -5,9 +5,16 @@ using UnityEngine;
 [System.Serializable]
 public class Room
 {   
-    public enum Shape { Rect, Diamond, Circle, Hall, Other }
+    //fork, symmRect (oscillating, maybe for hallway), rect in other 2 angles?, start Room
+    public enum Shape { Diamond, Hexagon, Triangle, Hall, Random, Rect, SymmRect, Fork }
+    public enum TravelDirection { U, UR, DR, D, DL, UL }
+    public enum WallDirection { UL, UR, R, DR, DL, L}
 
     public Shape shape;
+    public TravelDirection entranceDir;
+    public TravelDirection exitDir;
+    public WallDirection entranceWall;
+    public WallDirection exitWall;
     public Transform enemyDoor;
     public Transform magicKey;
     public Transform keyDoor;
@@ -16,11 +23,20 @@ public class Room
 
     //int eDoorCount, int kDoorCount?
     //the items and enemies arguments will NOT BE OPTIONAL FOREVER
-    public Room(Shape roomShape, int enemies = 0, int items= 0)
+    public Room(Shape roomShape, TravelDirection enterDir, WallDirection enterWall, int enemies = 0, int items= 0)
     {
         shape = roomShape;
+        entranceDir = enterDir;
+        entranceWall = enterWall;
         enemyCount = enemies;
         itemCount = items;
+    }
+
+    //starting room!
+    public Room(Shape roomShape)
+    {
+        shape = roomShape;
+        //do I even need anything else here?
     }
 
     //basic overload for template levels (not for use with generator)

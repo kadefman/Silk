@@ -36,7 +36,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         setup = true;
+
         GameManager.instance.playerScript = this;
+
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;
         godMode = false;
@@ -150,51 +152,53 @@ public class Player : MonoBehaviour
                 animator.SetBool("isMoving", true);*/
             }
 
-            if (Input.GetKey(KeyCode.D))
+            if(animator != null)
             {
-                gameObject.transform.localScale = new Vector3(-1.3f, 1.3f, 1);
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", -1f);
+                if (Input.GetKey(KeyCode.D))
+                {
+                    gameObject.transform.localScale = new Vector3(-1.3f, 1.3f, 1);
+                    animator.SetBool("isMoving", true);
+                    animator.SetFloat("horizontalMovement", -1f);
 
+                }
+
+                if (Input.GetKey(KeyCode.W))
+                {
+
+                    animator.SetBool("isMoving", true);
+                    animator.SetFloat("horizontalMovement", 0f);
+                    animator.SetFloat("verticalMovement", 1f);
+                }
+
+                if (Input.GetKey(KeyCode.S))
+                {
+
+                    animator.SetFloat("verticalMovement", -1f);
+                    animator.SetFloat("horizontalMovement", 0f);
+                    animator.SetBool("isMoving", true);
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1);
+                    animator.SetBool("isMoving", true);
+                    animator.SetFloat("horizontalMovement", 1f);
+                    Debug.Log("right");
+                }
+
+                bool isIdle = movement.x == 0 && movement.y == 0;
+
+                if (isIdle)
+                {
+                    animator.SetBool("isMoving", false);
+                    //animator.SetFloat("verticalMovement", 0f);
+                    //animator.SetFloat("horizontalMovement", 0f);
+
+                    //Debug.Log("not moving");
+                }
+
+                //animator.SetFloat("horizontalMovement", 1);
             }
-            
-            if (Input.GetKey(KeyCode.W))
-            {
-
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 0f);
-                animator.SetFloat("verticalMovement", 1f);
-            }
-
-            if (Input.GetKey(KeyCode.S))
-            {
-
-                animator.SetFloat("verticalMovement", -1f);
-                animator.SetFloat("horizontalMovement", 0f);
-                animator.SetBool("isMoving", true);
-            }
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1);
-                animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 1f);
-                Debug.Log("right");
-            }
-
-            bool isIdle = movement.x == 0 && movement.y == 0;
-
-            if (isIdle)
-            {
-                animator.SetBool("isMoving", false);
-                //animator.SetFloat("verticalMovement", 0f);
-                //animator.SetFloat("horizontalMovement", 0f);
-
-                //Debug.Log("not moving");
-            }
-
-            //animator.SetFloat("horizontalMovement", 1);
-            
         }
     }
 
