@@ -557,6 +557,7 @@ public class Generator : MonoBehaviour
             Instantiate(wall, entrancePoint, Quaternion.identity, roomObject.transform);
             randIndex = Random.Range(0, tilePoints.Count);
             playerPos = tilePoints[randIndex];
+            Instantiate(tiles[1], tilePoints[randIndex], Quaternion.identity, roomObject.transform);
             tilePoints.RemoveAt(randIndex);
         }
         else
