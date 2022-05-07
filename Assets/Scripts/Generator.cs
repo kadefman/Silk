@@ -546,6 +546,8 @@ public class Generator : MonoBehaviour
         foreach(Vector2 point in tilePoints)
         {
             float tileChooser = Random.Range(0f, 1f);
+            if (currentIndex == 0)
+                tileChooser = 1f;
             if(tileChooser <= webRatio)
                 Instantiate(tiles[0], point, Quaternion.identity, roomObject.transform);
             else
