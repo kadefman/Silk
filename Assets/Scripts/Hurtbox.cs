@@ -8,6 +8,9 @@ public class Hurtbox : MonoBehaviour
 
     private FlyingEnemy enemy;
     private int damage;
+    public AudioSource audioSource;
+    public AudioClip damageSFX;
+    //public AudioClip deathSFX;
 
     void Awake()
     {
@@ -27,6 +30,8 @@ public class Hurtbox : MonoBehaviour
 
         else if(collider.gameObject.CompareTag("Bullet"))
         {
+            //audioSource.pitch = Random.Range(.95f, 1.1f);
+           // audioSource.PlayOneShot(damageSFX, .8f);
             enemy.AddHealth(collider.transform.GetComponent<Bullet>().damage*-1);
             if (!collider.transform.GetComponent<Bullet>().piercing)
                 Destroy(collider.gameObject);
@@ -37,6 +42,8 @@ public class Hurtbox : MonoBehaviour
     private IEnumerator ShowDamage()
     {
         transform.GetComponent<SpriteRenderer>().enabled = true;
+        audioSource.pitch = Random.Range(.95f, 1.1f);
+        audioSource.PlayOneShot(damageSFX, .8f);
         float timer = displayTime;
         while(timer >= float.Epsilon)
         {
