@@ -33,8 +33,10 @@ public class Hurtbox : MonoBehaviour
             //audioSource.pitch = Random.Range(.95f, 1.1f);
            // audioSource.PlayOneShot(damageSFX, .8f);
             enemy.AddHealth(collider.transform.GetComponent<Bullet>().damage*-1);
-            if (!collider.transform.GetComponent<Bullet>().piercing)
+            if (!collider.transform.GetComponent<Bullet>().piercing) {
                 Destroy(collider.gameObject);
+                collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
+                }
             StartCoroutine(ShowDamage());
         }
     }

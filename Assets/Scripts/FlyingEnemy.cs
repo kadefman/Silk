@@ -30,8 +30,6 @@ public class FlyingEnemy : MonoBehaviour
         if(sprite != null) {
             var lookAtPoint = sprite.position+ new Vector3(rb.velocity.x, rb.velocity.y, 0);
             lookAtPoint.z = sprite.position.z;
-            //sprite.LookAt(lookAtPoint);
-            // sprite.LookAt(sprite.position + new Vector3 (rb.velocity.x, rb.velocity.y,0));
             float angle = 0;
 
             Vector3 relative = transform.InverseTransformPoint(lookAtPoint);
