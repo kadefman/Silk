@@ -69,12 +69,16 @@ public class GameManager : MonoBehaviour
         {
             counter = Instantiate(webCounter, tile.transform.position, Quaternion.identity, tile);
             counter.GetComponent<TextMeshPro>().text = playerScript.spinCost.ToString();
+            // Player Anim
+            playerScript.StartCoroutine(playerScript.SpinSnap(true, false, tile));
         }
             
         else
         {
             counter = tile.GetChild(0).gameObject;
             silkUnitsSpent = playerScript.spinCost - int.Parse(counter.GetComponent<TextMeshPro>().text);
+            // Player Anim
+            playerScript.StartCoroutine(playerScript.SpinSnap(true, true, tile));
         }
                            
         while (silkUnitsSpent< playerScript.spinCost)
@@ -108,14 +112,19 @@ public class GameManager : MonoBehaviour
             Vector2 knockBackDir = playerScript.transform.position - tile.transform.position;
             float knockBackFloat = .15f;
             playerScript.transform.position = (Vector2)playerScript.transform.position + knockBackDir * knockBackFloat;
+            // Player Anim
+            playerScript.StartCoroutine(playerScript.SpinSnap(false, false, tile));
         }
 
         else
         {
             CreateWeb(tile);
             playerScript.spinning = false;
-            sensor.GetComponent<Renderer>().enabled = false;
-            sensor = null;
+            // sensor.GetComponent<Renderer>().enabled = false;
+            // sensor = null;
+
+            // Player Anim
+            playerScript.StartCoroutine(playerScript.SpinSnap(false, true, tile));
         }  
         
         

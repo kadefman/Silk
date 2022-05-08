@@ -2227,6 +2227,7 @@ GameObject:
   - component: {fileID: 521655343}
   - component: {fileID: 521655342}
   - component: {fileID: 521655341}
+  - component: {fileID: 521655344}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -2297,8 +2298,39 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1721393408}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &521655344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521655340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!4 &526763754 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2335087186768354628, guid: 332cd2fcb2ab495418dbf7d6762ddf6f,
@@ -8056,18 +8088,28 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: a271385316e3c45468bda7f8a52be953, type: 2}
     - target: {fileID: 5117213971614264372, guid: adcc63bae6744be45b7178109629fe6d,
         type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117213971614264372, guid: adcc63bae6744be45b7178109629fe6d,
+        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5744485022669620613, guid: adcc63bae6744be45b7178109629fe6d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7748342181413285210, guid: adcc63bae6744be45b7178109629fe6d,
         type: 3}
       propertyPath: m_RootOrder
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7803034255373278129, guid: adcc63bae6744be45b7178109629fe6d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8298337636929318778, guid: adcc63bae6744be45b7178109629fe6d,
         type: 3}
