@@ -141,6 +141,8 @@ MonoBehaviour:
   health: 2
   silkReward: 10
   sprite: {fileID: 6294752580915590823}
+  FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
+    type: 3}
 --- !u!1 &9134185133437562554
 GameObject:
   m_ObjectHideFlags: 0

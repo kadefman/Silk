@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     public Animator animator;
     public Animator animator2;
 
+    public GameObject FxDiePrefab;
+
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
     [HideInInspector] public bool spinning;
@@ -246,6 +248,10 @@ public class Player : MonoBehaviour
         {
             animator.SetTrigger("Hit");
         }
+        if (healthCount < 0)
+        {
+            Die();
+        }
     }
 
     public void SpinWeb()
@@ -277,7 +283,12 @@ public class Player : MonoBehaviour
         }
         transform.GetComponent<SpriteRenderer>().color = Color.black;
     }
-
+    private void Die()
+    {
+        // Do stuff when dying
+        animator.Play("Base Layer.Die");
+        Instantiate(FxDiePrefab, transform);
+    }
     public IEnumerator SpinSnap( bool getIn, bool skip, Transform tile)
     {
         /*

@@ -16,7 +16,8 @@ public class FlyingEnemy : MonoBehaviour
     private Collider2D coll;
     private Rigidbody2D rb;
 
-    public Transform sprite; 
+    public Transform sprite;
+    public GameObject FxDiePrefab;
 
     void Start()
     {
@@ -44,11 +45,22 @@ public class FlyingEnemy : MonoBehaviour
         health += i;
         if (health <= 0)
         {
-            Destroy(gameObject);
-            GameManager.instance.AddSilk(silkReward);
-            GameManager.instance.enemyCount--;
-            if (GameManager.instance.enemyCount == 0)
-                GameManager.instance.OpenDoor(false);
+            StartCoroutine(Die());
         }           
+    }
+    IEnumerator Die()
+    {
+        rb.velocity = Vector3.zero;
+        Animator animator = GetComponentInChildren<Animator>();
+        animator.Play("Base Layer.Die");
+        Instantiate(FxDiePrefab, transform);
+
+        yield return new WaitForSeconds(2);
+
+        Destroy(gameObject);
+        GameManager.instance.AddSilk(silkReward);
+        GameManager.instance.enemyCount--;
+        if (GameManager.instance.enemyCount == 0)
+            GameManager.instance.OpenDoor(false);
     }
 }
