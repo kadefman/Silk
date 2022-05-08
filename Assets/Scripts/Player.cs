@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public bool saveWebProgress;
 
     public Animator animator;
+    public Animator animator2;
 
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
@@ -52,8 +53,7 @@ public class Player : MonoBehaviour
         AddHealth(healthStart);
         healthCount = healthStart;
         setup = false;
-
-        sp = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         Debug.Log(sp);
     }
 
@@ -116,8 +116,6 @@ public class Player : MonoBehaviour
         {
             Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-            
-
             /*if (isIdle)
             {
                 animator.SetBool("isMoving", false);
@@ -165,7 +163,7 @@ public class Player : MonoBehaviour
                     sp.flipX = true;
                     animator.SetBool("isMoving", true);
                     animator.SetFloat("horizontalMovement", -1f);
-                    Debug.Log("left");
+                    // Debug.Log("left");
                 }
 
                 if (movement.y == 1)
@@ -189,7 +187,7 @@ public class Player : MonoBehaviour
                     sp.flipX = false;
                     animator.SetBool("isMoving", true);
                     animator.SetFloat("horizontalMovement", 1f);
-                    Debug.Log("right");
+                    // Debug.Log("right");
                 }
 
                 bool isIdle = movement.x == 0 && movement.y == 0;
@@ -244,6 +242,10 @@ public class Player : MonoBehaviour
         GameManager.instance.healthText.text = $"Health: {healthCount}";
         if(!setup && i != 0)
             StartCoroutine(ShowChange(true, i>0));
+        if (i < 0)
+        {
+            animator.SetTrigger("Hit");
+        }
     }
 
     public void SpinWeb()
@@ -256,6 +258,8 @@ public class Player : MonoBehaviour
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
+
+        animator2.SetTrigger("Shoot");
     }
 
     private IEnumerator ShowChange(bool health, bool positive = true)
