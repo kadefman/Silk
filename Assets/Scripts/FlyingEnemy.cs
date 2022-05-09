@@ -6,7 +6,12 @@ public class FlyingEnemy : MonoBehaviour
 {
     public enum Type {Fly, Bee};
     public Type type;
-    //public Color[] colors;
+
+    public Transform sprite;
+    public GameObject FxDiePrefab;
+    /*public AudioSource audioSource;
+    public AudioClip damageSFX;
+    public AudioClip deathSFX;*/
 
     public float speed;
     public int damage;
@@ -15,9 +20,6 @@ public class FlyingEnemy : MonoBehaviour
 
     private Collider2D coll;
     private Rigidbody2D rb;
-
-    public Transform sprite;
-    public GameObject FxDiePrefab;
 
     void Start()
     {
@@ -40,16 +42,35 @@ public class FlyingEnemy : MonoBehaviour
         
     }
 
-    public void AddHealth(int i)
+    public void GetHit(int i)
     {
-        health += i;
+        health -= i;
         if (health <= 0)
         {
             StartCoroutine(Die());
-        }           
+        }
+
+        else if(i>0)
+        {
+            Debug.Log("Maybe sounds?");
+            /*audioSource.pitch = Random.Range(.95f, 1.1f);
+            audioSource.PlayOneShot(damageSFX, .8f);*/
+        }       
     }
     IEnumerator Die()
     {
+        //game
+        Destroy(transform.GetChild(0).gameObject);
+        GameManager.instance.AddSilk(silkReward);
+        GameManager.instance.enemyCount--;
+        if (GameManager.instance.enemyCount == 0)
+            GameManager.instance.OpenDoor(false);
+
+        //audio
+        /*audioSource.pitch = Random.Range(.95f, 1.1f);
+        audioSource.PlayOneShot(deathSFX, .8f);*/
+
+        //anim
         rb.velocity = Vector3.zero;
         Animator animator = GetComponentInChildren<Animator>();
         animator.Play("Base Layer.Die");
@@ -58,9 +79,6 @@ public class FlyingEnemy : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
-        GameManager.instance.AddSilk(silkReward);
-        GameManager.instance.enemyCount--;
-        if (GameManager.instance.enemyCount == 0)
-            GameManager.instance.OpenDoor(false);
+        
     }
 }

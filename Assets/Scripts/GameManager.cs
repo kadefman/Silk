@@ -41,19 +41,20 @@ public class GameManager : MonoBehaviour
         if (rooms != null && rooms.Count != 0)
         {
             Debug.Log($"Entering Room {index}");
-            Debug.Log(rooms.Count);
+            Debug.Log(rooms.Count + " rooms total");
             roomIndex = index;
             currentRoom = rooms[roomIndex];
             enemyCount = currentRoom.enemyCount;
-        }
+        } 
 
         else
             roomIndex = -1;
     }
 
     public IEnumerator SpinCountdown(int startSilk)
-    {
+    {           
         playerScript.spinning = true;
+        playerScript.canMove = false;
         spinText.gameObject.SetActive(true);
         spinText.text = $"Spinning web...";
 
@@ -114,23 +115,21 @@ public class GameManager : MonoBehaviour
             playerScript.transform.position = (Vector2)playerScript.transform.position + knockBackDir * knockBackFloat;
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, false, tile));
+            playerScript.canMove = true;
         }
 
         else
         {
             CreateWeb(tile);
             playerScript.spinning = false;
-            // sensor.GetComponent<Renderer>().enabled = false;
-            // sensor = null;
+            playerScript.canMove = true;
 
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, true, tile));
-        }  
-        
-        
+        }                
     }
 
-    private void CreateWeb(Transform spot)
+    public void CreateWeb(Transform spot)
     {
         Vector2 position = spot.transform.position;
         Destroy(spot.gameObject);

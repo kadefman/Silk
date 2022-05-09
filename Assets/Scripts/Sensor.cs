@@ -7,17 +7,7 @@ public class Sensor : MonoBehaviour
     private float rayStart = .2f;
     private float rayEnd = .3f;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
-    public bool IsFacingEmpty()
+    private bool IsFacingEmpty()
     {
         Vector2 startPoint = transform.position + rayStart * transform.right;
         Vector2 endPoint = transform.position + rayEnd * transform.right;
@@ -40,8 +30,12 @@ public class Sensor : MonoBehaviour
         {
             if (IsFacingEmpty())
             {
-                GameManager.instance.sensor = transform;
-                transform.GetComponent<Renderer>().enabled = true;
+                Debug.Log("Sensor");
+                if (GameManager.instance.sensor == null)
+                {
+                    GameManager.instance.sensor = transform;
+                    transform.GetComponent<Renderer>().enabled = true;
+                }             
             }
         }
     }

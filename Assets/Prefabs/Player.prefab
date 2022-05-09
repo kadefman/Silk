@@ -341,7 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 89674033662669932, guid: cc85dc9a8896aa1468cc21df476e48ef, type: 3}
   controls: 2
-  speed: 2
+  speedStart: 2
   silkStart: 50
   healthStart: 10
   spinCost: 30
@@ -354,7 +354,9 @@ MonoBehaviour:
     type: 3}
   silkCount: 0
   healthCount: 0
+  speed: 2
   spinning: 0
+  canMove: 0
   godMode: 0
 --- !u!70 &7803034255373278129
 CapsuleCollider2D:
