@@ -13,6 +13,7 @@ public class FlyingEnemy : MonoBehaviour
     public AudioClip damageSFX;
     public AudioClip deathSFX;*/
 
+    public bool dropSilkInPlace;
     public float speed;
     public int damage;
     public int health;
@@ -61,10 +62,19 @@ public class FlyingEnemy : MonoBehaviour
     {
         //game
         Destroy(transform.GetChild(0).gameObject);
-        GameManager.instance.AddSilk(silkReward);
+
         GameManager.instance.enemyCount--;
         if (GameManager.instance.enemyCount == 0)
             GameManager.instance.OpenDoor(false);
+
+        if (dropSilkInPlace)
+        {
+            Debug.Log("Random Item");
+            //Instantiate(GameManager.RandomItem());
+        }
+        else
+            GameManager.instance.AddSilk(silkReward);
+        
 
         //audio
         /*audioSource.pitch = Random.Range(.95f, 1.1f);

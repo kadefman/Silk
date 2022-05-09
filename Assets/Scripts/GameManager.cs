@@ -11,10 +11,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI spinText;
+    public GameObject[] items;
 
     [HideInInspector] public static GameManager instance = null;
-    public List<Room> rooms;
-    public Room currentRoom;
+    [HideInInspector] public List<Room> rooms;
+    [HideInInspector] public Room currentRoom;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;
