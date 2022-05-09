@@ -13,6 +13,7 @@ public class Item : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            FindObjectOfType<AudioManager>().Play("Pickup");
             if (type == Type.Silk)
                 collider.transform.GetComponent<Player>().AddSilk(value);
 
