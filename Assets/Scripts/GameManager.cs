@@ -11,13 +11,14 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI spinText;
+    public GameObject[] items;
 
     [HideInInspector] public static GameManager instance = null;
-    public List<Room> rooms;
-    public Room currentRoom;
+    [HideInInspector] public List<Room> rooms;
+    [HideInInspector] public Room currentRoom;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
-    [HideInInspector] public Transform webTile;
+    public Transform webTile;
     [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
       
@@ -41,11 +42,11 @@ public class GameManager : MonoBehaviour
         if (rooms != null && rooms.Count != 0)
         {
             Debug.Log($"Entering Room {index}");
-            Debug.Log(rooms.Count);
+            Debug.Log(rooms.Count + " rooms total");
             roomIndex = index;
             currentRoom = rooms[roomIndex];
             enemyCount = currentRoom.enemyCount;
-        }
+        } 
 
         else
             roomIndex = -1;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator SpinCountdown(int startSilk)
     {
         playerScript.spinning = true;
+        playerScript.canMove = false;
         spinText.gameObject.SetActive(true);
         spinText.text = $"Spinning web...";
 
@@ -119,18 +121,14 @@ public class GameManager : MonoBehaviour
         else
         {
             CreateWeb(tile);
-            playerScript.spinning = false;
-            // sensor.GetComponent<Renderer>().enabled = false;
-            // sensor = null;
+            playerScript.spinning = false;           
 
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, true, tile));
-        }  
-        
-        
+        }                
     }
 
-    private void CreateWeb(Transform spot)
+    public void CreateWeb(Transform spot)
     {
         Vector2 position = spot.transform.position;
         Destroy(spot.gameObject);
@@ -162,5 +160,11 @@ public class GameManager : MonoBehaviour
     public void AddSilk(int i)
     {
         playerScript.AddSilk(i);
+    }
+
+    public static GameObject RandomObject(GameObject[] objectArray)
+    {
+        int objectIndex = Random.Range(0, objectArray.Length);
+        return objectArray[objectIndex];
     }
 }

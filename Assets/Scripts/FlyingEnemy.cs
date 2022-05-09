@@ -6,18 +6,23 @@ public class FlyingEnemy : MonoBehaviour
 {
     public enum Type {Fly, Bee};
     public Type type;
-    //public Color[] colors;
 
+    public Transform sprite;
+    public GameObject FxDiePrefab;
+    /*public AudioSource audioSource;
+    public AudioClip damageSFX;
+    public AudioClip deathSFX;*/
+
+    public bool dropSilkInPlace;
     public float speed;
+    public float dropRate;
     public int damage;
     public int health;
     public int silkReward;
 
     private Collider2D coll;
     private Rigidbody2D rb;
-
-    public Transform sprite;
-    public GameObject FxDiePrefab;
+    private Vector3 position;
 
     void Start()
     {
@@ -40,27 +45,53 @@ public class FlyingEnemy : MonoBehaviour
         
     }
 
-    public void AddHealth(int i)
+    public void GetHit(int i)
     {
-        health += i;
+        health -= i;
         if (health <= 0)
         {
             StartCoroutine(Die());
-        }           
+        }
+
+        else if(i>0)
+        {
+            //Debug.Log("Maybe sounds?");
+            /*audioSource.pitch = Random.Range(.95f, 1.1f);
+            audioSource.PlayOneShot(damageSFX, .8f);*/
+        }       
     }
     IEnumerator Die()
     {
+        //game
+        Destroy(transform.GetChild(0).gameObject);
+
+        GameManager.instance.enemyCount--;
+        if (GameManager.instance.enemyCount == 0)
+            GameManager.instance.OpenDoor(false);
+
+        if (dropSilkInPlace)
+        {
+            Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
+        }
+        else
+            GameManager.instance.AddSilk(silkReward);
+        
+
+        //audio
+        /*audioSource.pitch = Random.Range(.95f, 1.1f);
+        audioSource.PlayOneShot(deathSFX, .8f);*/
+
+        //anim
         rb.velocity = Vector3.zero;
         Animator animator = GetComponentInChildren<Animator>();
+        position = gameObject.transform.position;
+        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death", position);
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
 
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
-        GameManager.instance.AddSilk(silkReward);
-        GameManager.instance.enemyCount--;
-        if (GameManager.instance.enemyCount == 0)
-            GameManager.instance.OpenDoor(false);
+        
     }
 }

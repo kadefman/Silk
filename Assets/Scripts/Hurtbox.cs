@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Hurtbox : MonoBehaviour
-{
+{    
+    private FlyingEnemy enemy;  
+    
     public float displayTime;
-
-    private FlyingEnemy enemy;
     private int damage;
-    public AudioSource audioSource;
-    public AudioClip damageSFX;
-    //public AudioClip deathSFX;
+    
 
     void Awake()
     {
@@ -25,27 +23,27 @@ public class Hurtbox : MonoBehaviour
             Player player = collider.gameObject.GetComponent<Player>();
             player.AddHealth(-damage);
             if (player.spinning)
-                player.spinning = false;
+                player.spinning = false; 
         }
 
         else if(collider.gameObject.CompareTag("Bullet"))
         {
-            //audioSource.pitch = Random.Range(.95f, 1.1f);
-           // audioSource.PlayOneShot(damageSFX, .8f);
-            enemy.AddHealth(collider.transform.GetComponent<Bullet>().damage*-1);
-            if (!collider.transform.GetComponent<Bullet>().piercing) {
+            
+            enemy.GetHit(collider.transform.GetComponent<Bullet>().damage);
+            if (!collider.transform.GetComponent<Bullet>().piercing) 
+            {
                 Destroy(collider.gameObject);
                 collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
-                }
-            StartCoroutine(ShowDamage());
+            }
+            //StartCoroutine(ShowDamage());
         }
     }
 
-    private IEnumerator ShowDamage()
+
+    //circle thingy
+    /*private IEnumerator ShowDamage()
     {
         transform.GetComponent<SpriteRenderer>().enabled = true;
-        audioSource.pitch = Random.Range(.95f, 1.1f);
-        audioSource.PlayOneShot(damageSFX, .8f);
         float timer = displayTime;
         while(timer >= float.Epsilon)
         {
@@ -53,5 +51,5 @@ public class Hurtbox : MonoBehaviour
             yield return null;
         }
         transform.GetComponent<SpriteRenderer>().enabled = false;
-    }
+    }*/
 }

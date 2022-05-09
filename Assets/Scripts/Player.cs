@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 
     public GameObject bullet;
     public ControlScheme controls;
-    public float speed;
+    public float speedStart;
     public int silkStart;   
     public int healthStart;
     public int spinCost;
@@ -18,18 +18,18 @@ public class Player : MonoBehaviour
 
     public Animator animator;
     public Animator animator2;
-
     public GameObject FxDiePrefab;
 
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
+    [HideInInspector] public float speed;
     [HideInInspector] public bool spinning;
+    [HideInInspector] public bool canMove;
     [HideInInspector] public bool godMode;
 
     private Rigidbody2D rb;
     private Vector2 curDirection;
     private float bulletOffset = .08f;
-    private bool setup;
 
     SpriteRenderer sp;
     private Vector3 positionBeforeSpinSnap;
@@ -41,29 +41,28 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        setup = true;
-
         GameManager.instance.playerScript = this;
 
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;
         godMode = false;
-        curDirection = Vector2.right;
+        canMove = true;
+        curDirection = Vector2.down;
 
+        speed = speedStart;
         AddSilk(silkStart);
         silkCount = silkStart;
         AddHealth(healthStart);
         healthCount = healthStart;
-        setup = false;
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
-        Debug.Log(sp);
+        //Debug.Log(sp);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!spinning)
+            if (canMove && (silkCount > 0 || godMode))
                 SpinWeb();
         }
 
@@ -76,7 +75,7 @@ public class Player : MonoBehaviour
             ToggleGodMode();
 
         //3 variations of shooting controls
-        if(!spinning && silkCount>0)
+        if(canMove && (silkCount>0 || godMode))
         {
             if (controls == ControlScheme.Mouse)
             {               
@@ -114,96 +113,47 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!spinning)
-        {
+        if (canMove)
+        {           
             Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 
-            /*if (isIdle)
+            if (movement == Vector2.zero)
             {
                 animator.SetBool("isMoving", false);
-                Debug.Log("idle");
             }
+
             else
             {
                 animator.SetBool("isMoving", true);
-                Debug.Log("moving");
-            }*/
-
-            rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
-            if (movement.x == 1)
-            {
-                curDirection = Vector2.right;
-                /*animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 1f);
-                Debug.Log("right");*/
-            }
-            else if (movement.x == -1)
-            {
-                curDirection = Vector2.left;
-                /*animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", -1f);*/
-            }
-            else if (movement.y == 1)
-            {
-                curDirection = Vector2.up;
-                /*animator.SetBool("isMoving", true);
-                animator.SetFloat("horizontalMovement", 0f);
-                animator.SetFloat("verticalMovement", 1f);*/
-            }
-            else if (movement.y == -1)
-            {
-                curDirection = Vector2.down;
-                /*animator.SetFloat("verticalMovement", -1f);
-                animator.SetFloat("horizontalMovement", 0f);
-                animator.SetBool("isMoving", true);*/
-            }
-
-            if(animator != null)
-            {
-                if (movement.x > 0.5f)
-                {
-                    sp.flipX = true;
-                    animator.SetBool("isMoving", true);
-                    animator.SetFloat("horizontalMovement", -1f);
-                    // Debug.Log("left");
-                }
 
                 if (movement.y == 1)
                 {
-
-                    animator.SetBool("isMoving", true);
+                    curDirection = Vector2.up;
                     animator.SetFloat("horizontalMovement", 0f);
                     animator.SetFloat("verticalMovement", 1f);
                 }
 
-                if (movement.y == -1)
+                else if (movement.x == 1)
                 {
+                    curDirection = Vector2.right;
+                    sp.flipX = true;
+                    animator.SetFloat("horizontalMovement", -1f);
+                }
+                else if (movement.x == -1)
+                {
+                    curDirection = Vector2.left;
+                    sp.flipX = false;
+                    animator.SetFloat("horizontalMovement", 1f);
+                }
+
+                else if (movement.y == -1)
+                {
+                    curDirection = Vector2.down;
                     sp.flipX = false;
                     animator.SetFloat("verticalMovement", -1f);
                     animator.SetFloat("horizontalMovement", 0f);
-                    animator.SetBool("isMoving", true);
                 }
-
-                if (movement.x < -0.5f)
-                {
-                    sp.flipX = false;
-                    animator.SetBool("isMoving", true);
-                    animator.SetFloat("horizontalMovement", 1f);
-                    // Debug.Log("right");
-                }
-
-                bool isIdle = movement.x == 0 && movement.y == 0;
-
-                if (isIdle)
-                {
-                    animator.SetBool("isMoving", false);
-                    //animator.SetFloat("verticalMovement", 0f);
-                    //animator.SetFloat("horizontalMovement", 0f);
-
-                    //Debug.Log("not moving");
-                }
-
-                //animator.SetFloat("horizontalMovement", 1);
             }
         }
     }
@@ -215,40 +165,44 @@ public class Player : MonoBehaviour
         {
             godMode = true;
             speed = 6;
-            spinCost = 0;
             shotCost = 0;
-            spinTime = 0;
         }
 
         else
         {
             godMode = false;
-            speed = 2;
-            spinCost = 30;
-            spinTime = 1.8f;
+            speed = speedStart;
         }
     } 
 
-    //do we need to differentiate setup?
     public void AddSilk(int i)
     {
         silkCount += i;
         GameManager.instance.silkText.text = $"Silk: {silkCount}";
-        if(!setup && i>0)
-            StartCoroutine(ShowChange(false));
+
+
+        /*if(i>0)
+            StartCoroutine(ShowChange(false));*/
     }
 
     public void AddHealth(int i)
     {
+        if (godMode && i < 0)
+            return;
+
         healthCount += i;
         GameManager.instance.healthText.text = $"Health: {healthCount}";
-        if(!setup && i != 0)
-            StartCoroutine(ShowChange(true, i>0));
+
+        //colored circle thingy
+        /*if(i != 0)
+            StartCoroutine(ShowChange(true, i>0));*/
+
         if (i < 0)
         {
             animator.SetTrigger("Hit");
         }
-        if (healthCount < 0)
+
+        if (healthCount <= 0)
         {
             Die();
         }
@@ -257,18 +211,23 @@ public class Player : MonoBehaviour
     public void SpinWeb()
     {
         if(GameManager.instance.webTile != null)
-            GameManager.instance.StartCoroutine("SpinCountdown", silkStart);
+        {
+            if (godMode)
+                GameManager.instance.CreateWeb(GameManager.instance.webTile);
+            else
+                GameManager.instance.StartCoroutine("SpinCountdown", silkStart);
+        }           
     }
 
     public void Shoot(Vector2 dir)
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
-
+        FindObjectOfType<AudioManager>().Play("Web shot 1");
         animator2.SetTrigger("Shoot");
     }
 
-    private IEnumerator ShowChange(bool health, bool positive = true)
+   /* private IEnumerator ShowChange(bool health, bool positive = true)
     {
         if (health)
             transform.GetComponent<SpriteRenderer>().color = positive ? Color.green : Color.red;
@@ -282,10 +241,12 @@ public class Player : MonoBehaviour
             yield return null;
         }
         transform.GetComponent<SpriteRenderer>().color = Color.black;
-    }
+    }*/
+
     private void Die()
     {
         // Do stuff when dying
+        canMove = false;
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
     }
@@ -329,7 +290,7 @@ public class Player : MonoBehaviour
                 yield return null;
             }
             transform.position = targetPosition;
-        
+
             // Show Player
             transparent.a = 1;
             sp.color = transparent;
@@ -357,7 +318,7 @@ public class Player : MonoBehaviour
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
             }
+            canMove = true;
         }
-
     }
 }
