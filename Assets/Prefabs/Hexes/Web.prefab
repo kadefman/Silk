@@ -102,9 +102,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  colors:
-  - {r: 0.49019608, g: 0.32156864, b: 0.16078432, a: 1}
-  - {r: 0.65882355, g: 0.65882355, b: 0.65882355, a: 1}
+  webSprites:
+  - {fileID: 4796289729230840213, guid: 6f818f70af10b294c8406092b0f1c051, type: 3}
+  - {fileID: -7178868210122759525, guid: 6f818f70af10b294c8406092b0f1c051, type: 3}
+  - {fileID: 2878123674455552929, guid: 6f818f70af10b294c8406092b0f1c051, type: 3}
+  uglySprite: {fileID: 21300000, guid: fba9fa1faf25289448813414cdeca987, type: 3}
+  useArt: 1
 --- !u!114 &3964492874710783860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 0.96, y: 0.56, z: 1}
 --- !u!1001 &2803333434433966537
 PrefabInstance:
   m_ObjectHideFlags: 0
