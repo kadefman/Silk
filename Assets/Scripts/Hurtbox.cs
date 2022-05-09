@@ -23,7 +23,7 @@ public class Hurtbox : MonoBehaviour
             Player player = collider.gameObject.GetComponent<Player>();
             player.AddHealth(-damage);
             if (player.spinning)
-                player.spinning = false;
+                player.spinning = false; 
         }
 
         else if(collider.gameObject.CompareTag("Bullet"))

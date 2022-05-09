@@ -22,6 +22,10 @@ public class FlyingEnemy : MonoBehaviour
     private Collider2D coll;
     private Rigidbody2D rb;
 
+    public Transform sprite;
+    public GameObject FxDiePrefab;
+    private Vector3 position;
+
     void Start()
     {
         rb = transform.GetComponent<Rigidbody2D>();
@@ -83,6 +87,8 @@ public class FlyingEnemy : MonoBehaviour
         //anim
         rb.velocity = Vector3.zero;
         Animator animator = GetComponentInChildren<Animator>();
+        position = gameObject.transform.position;
+        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death", position);
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
 
