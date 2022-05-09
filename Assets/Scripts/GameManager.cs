@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
         Vector2 position = spot.transform.position;
         Destroy(spot.gameObject);
         Instantiate(web, position, Quaternion.identity, transform);
+        FindObjectOfType<AudioManager>().Play("Web complete");
     }
 
     public void OpenDoor(bool key)
