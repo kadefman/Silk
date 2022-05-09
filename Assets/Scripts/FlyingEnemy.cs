@@ -15,15 +15,13 @@ public class FlyingEnemy : MonoBehaviour
 
     public bool dropSilkInPlace;
     public float speed;
+    public float dropRate;
     public int damage;
     public int health;
     public int silkReward;
 
     private Collider2D coll;
     private Rigidbody2D rb;
-
-    public Transform sprite;
-    public GameObject FxDiePrefab;
     private Vector3 position;
 
     void Start()
@@ -57,7 +55,7 @@ public class FlyingEnemy : MonoBehaviour
 
         else if(i>0)
         {
-            Debug.Log("Maybe sounds?");
+            //Debug.Log("Maybe sounds?");
             /*audioSource.pitch = Random.Range(.95f, 1.1f);
             audioSource.PlayOneShot(damageSFX, .8f);*/
         }       
@@ -73,8 +71,7 @@ public class FlyingEnemy : MonoBehaviour
 
         if (dropSilkInPlace)
         {
-            Debug.Log("Random Item");
-            //Instantiate(GameManager.RandomItem());
+            Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
         }
         else
             GameManager.instance.AddSilk(silkReward);

@@ -31,7 +31,7 @@ public class AudioManager : MonoBehaviour
         }
         s.source.pitch = UnityEngine.Random.Range(.9f, 1.1f);
         s.source.Play();
-        Debug.Log("shooting");
+        //Debug.Log("shooting");
 
     }
     public void PlaySpatial(string name, Vector3 position)
@@ -43,7 +43,7 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSource.PlayClipAtPoint(s.clip, position, 1f) ;
-        Debug.Log("shooting");
+        //Debug.Log("shooting");
 
     }
 

@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 curDirection;
     private float bulletOffset = .08f;
-    private bool setup;
 
     SpriteRenderer sp;
     private Vector3 positionBeforeSpinSnap;
@@ -42,8 +41,6 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        setup = true;
-
         GameManager.instance.playerScript = this;
 
         rb = transform.GetComponent<Rigidbody2D>();
@@ -57,7 +54,6 @@ public class Player : MonoBehaviour
         silkCount = silkStart;
         AddHealth(healthStart);
         healthCount = healthStart;
-        setup = false;
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         //Debug.Log(sp);
     }
@@ -66,7 +62,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!spinning && canMove)
+            if (canMove && (silkCount > 0 || godMode))
                 SpinWeb();
         }
 
@@ -79,7 +75,7 @@ public class Player : MonoBehaviour
             ToggleGodMode();
 
         //3 variations of shooting controls
-        if(!spinning && silkCount>0 && canMove)
+        if(canMove && (silkCount>0 || godMode))
         {
             if (controls == ControlScheme.Mouse)
             {               
@@ -118,8 +114,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         if (canMove)
-        {
-            
+        {           
             Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 
@@ -184,8 +179,10 @@ public class Player : MonoBehaviour
     {
         silkCount += i;
         GameManager.instance.silkText.text = $"Silk: {silkCount}";
-        if(!setup && i>0)
-            StartCoroutine(ShowChange(false));
+
+
+        /*if(i>0)
+            StartCoroutine(ShowChange(false));*/
     }
 
     public void AddHealth(int i)
@@ -197,7 +194,7 @@ public class Player : MonoBehaviour
         GameManager.instance.healthText.text = $"Health: {healthCount}";
 
         //colored circle thingy
-        /*if(!setup && i != 0)
+        /*if(i != 0)
             StartCoroutine(ShowChange(true, i>0));*/
 
         if (i < 0)
@@ -230,7 +227,7 @@ public class Player : MonoBehaviour
         animator2.SetTrigger("Shoot");
     }
 
-    private IEnumerator ShowChange(bool health, bool positive = true)
+   /* private IEnumerator ShowChange(bool health, bool positive = true)
     {
         if (health)
             transform.GetComponent<SpriteRenderer>().color = positive ? Color.green : Color.red;
@@ -244,7 +241,8 @@ public class Player : MonoBehaviour
             yield return null;
         }
         transform.GetComponent<SpriteRenderer>().color = Color.black;
-    }
+    }*/
+
     private void Die()
     {
         // Do stuff when dying
@@ -292,7 +290,7 @@ public class Player : MonoBehaviour
                 yield return null;
             }
             transform.position = targetPosition;
-        
+
             // Show Player
             transparent.a = 1;
             sp.color = transparent;
@@ -320,7 +318,7 @@ public class Player : MonoBehaviour
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
             }
+            canMove = true;
         }
-
     }
 }
