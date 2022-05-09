@@ -15,6 +15,7 @@ public class FlyingEnemy : MonoBehaviour
 
     public bool dropSilkInPlace;
     public float speed;
+    public float dropRate;
     public int damage;
     public int health;
     public int silkReward;
@@ -79,8 +80,7 @@ public class FlyingEnemy : MonoBehaviour
 
         if (dropSilkInPlace)
         {
-            Debug.Log("Random Item");
-            //Instantiate(GameManager.RandomItem());
+            Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
         }
         else
             GameManager.instance.AddSilk(silkReward);

@@ -85,13 +85,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  sprite: {fileID: 4832982335223170155}
+  FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
+    type: 3}
+  dropSilkInPlace: 1
   speed: 100
   damage: 1
   health: 2
   silkReward: 5
-  sprite: {fileID: 4832982335223170155}
-  FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
-    type: 3}
 --- !u!1 &7939766425979236054
 GameObject:
   m_ObjectHideFlags: 0

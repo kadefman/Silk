@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Room currentRoom;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
-    [HideInInspector] public Transform webTile;
+    public Transform webTile;
     [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
       
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     }
 
     public IEnumerator SpinCountdown(int startSilk)
-    {           
+    {
         playerScript.spinning = true;
         playerScript.canMove = false;
         spinText.gameObject.SetActive(true);
@@ -116,14 +116,12 @@ public class GameManager : MonoBehaviour
             playerScript.transform.position = (Vector2)playerScript.transform.position + knockBackDir * knockBackFloat;
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, false, tile));
-            playerScript.canMove = true;
         }
 
         else
         {
             CreateWeb(tile);
-            playerScript.spinning = false;
-            playerScript.canMove = true;
+            playerScript.spinning = false;           
 
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, true, tile));
@@ -163,5 +161,11 @@ public class GameManager : MonoBehaviour
     public void AddSilk(int i)
     {
         playerScript.AddSilk(i);
+    }
+
+    public static GameObject RandomObject(GameObject[] objectArray)
+    {
+        int objectIndex = Random.Range(0, objectArray.Length);
+        return objectArray[objectIndex];
     }
 }

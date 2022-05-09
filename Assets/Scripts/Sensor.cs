@@ -28,14 +28,10 @@ public class Sensor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (IsFacingEmpty())
+            if (!GameManager.instance.playerScript.canMove || IsFacingEmpty())
             {
-                Debug.Log("Sensor");
-                if (GameManager.instance.sensor == null)
-                {
-                    GameManager.instance.sensor = transform;
-                    transform.GetComponent<Renderer>().enabled = true;
-                }             
+                GameManager.instance.sensor = transform;
+                transform.GetComponent<Renderer>().enabled = true; 
             }
         }
     }
@@ -45,7 +41,7 @@ public class Sensor : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             transform.GetComponent<Renderer>().enabled = false;
-            if (GameManager.instance.sensor == transform)
+            if (GameManager.instance.sensor == transform && !GameManager.instance.playerScript.spinning)
             {
                 GameManager.instance.sensor = null;
                 GameManager.instance.webTile = null;
