@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public bool saveWebProgress;
 
     public Animator animator;
+    public Animator animator2;
+
+    public GameObject FxDiePrefab;
 
     [HideInInspector] public int silkCount;
     [HideInInspector] public int healthCount;
@@ -27,6 +30,9 @@ public class Player : MonoBehaviour
     private Vector2 curDirection;
     private float bulletOffset = .08f;
     private bool setup;
+
+    SpriteRenderer sp;
+    private Vector3 positionBeforeSpinSnap;
 
     private void Awake()
     {
@@ -49,6 +55,8 @@ public class Player : MonoBehaviour
         AddHealth(healthStart);
         healthCount = healthStart;
         setup = false;
+        sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
+        Debug.Log(sp);
     }
 
     void Update()
@@ -110,8 +118,6 @@ public class Player : MonoBehaviour
         {
             Vector2 movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-            
-
             /*if (isIdle)
             {
                 animator.SetBool("isMoving", false);
@@ -154,15 +160,15 @@ public class Player : MonoBehaviour
 
             if(animator != null)
             {
-                if (Input.GetKey(KeyCode.D))
+                if (movement.x > 0.5f)
                 {
-                    gameObject.transform.localScale = new Vector3(-1.3f, 1.3f, 1);
+                    sp.flipX = true;
                     animator.SetBool("isMoving", true);
                     animator.SetFloat("horizontalMovement", -1f);
-
+                    // Debug.Log("left");
                 }
 
-                if (Input.GetKey(KeyCode.W))
+                if (movement.y == 1)
                 {
 
                     animator.SetBool("isMoving", true);
@@ -170,20 +176,20 @@ public class Player : MonoBehaviour
                     animator.SetFloat("verticalMovement", 1f);
                 }
 
-                if (Input.GetKey(KeyCode.S))
+                if (movement.y == -1)
                 {
-
+                    sp.flipX = false;
                     animator.SetFloat("verticalMovement", -1f);
                     animator.SetFloat("horizontalMovement", 0f);
                     animator.SetBool("isMoving", true);
                 }
 
-                if (Input.GetKey(KeyCode.A))
+                if (movement.x < -0.5f)
                 {
-                    gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1);
+                    sp.flipX = false;
                     animator.SetBool("isMoving", true);
                     animator.SetFloat("horizontalMovement", 1f);
-                    Debug.Log("right");
+                    // Debug.Log("right");
                 }
 
                 bool isIdle = movement.x == 0 && movement.y == 0;
@@ -238,6 +244,14 @@ public class Player : MonoBehaviour
         GameManager.instance.healthText.text = $"Health: {healthCount}";
         if(!setup && i != 0)
             StartCoroutine(ShowChange(true, i>0));
+        if (i < 0)
+        {
+            animator.SetTrigger("Hit");
+        }
+        if (healthCount < 0)
+        {
+            Die();
+        }
     }
 
     public void SpinWeb()
@@ -250,6 +264,8 @@ public class Player : MonoBehaviour
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
+
+        animator2.SetTrigger("Shoot");
     }
 
     private IEnumerator ShowChange(bool health, bool positive = true)
@@ -266,5 +282,82 @@ public class Player : MonoBehaviour
             yield return null;
         }
         transform.GetComponent<SpriteRenderer>().color = Color.black;
+    }
+    private void Die()
+    {
+        // Do stuff when dying
+        animator.Play("Base Layer.Die");
+        Instantiate(FxDiePrefab, transform);
+    }
+    public IEnumerator SpinSnap( bool getIn, bool skip, Transform tile)
+    {
+        /*
+         * (bool) getIn: If true the function makes the player snap inside the web
+         * (bool) skip: If get In, if true skip the cross dash animation, if not get in skip the teleportation
+         */
+        SpriteRenderer sp = GetComponentInChildren<SpriteRenderer>();
+        Collider2D tileCollider = tile.gameObject.GetComponent<Collider2D>();
+
+        if (!(!getIn && skip))
+        {
+            // Hide Player
+            Color transparent = sp.color;
+            transparent.a = 0;
+            sp.color = transparent;
+
+            // Tile Collider disable
+            tileCollider.enabled = false;
+
+            float duration = 0.1f;
+            Vector3 targetPosition = Vector3.zero;
+            if (getIn)
+            {
+                targetPosition = tile.transform.position;
+                positionBeforeSpinSnap = transform.position;
+            }
+            else
+                targetPosition = positionBeforeSpinSnap;
+
+
+            // Lerp Position 
+            float time = 0;
+            Vector3 startPosition = transform.position;
+            while (time < duration)
+            {
+                transform.position = Vector3.Lerp(startPosition, targetPosition, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            transform.position = targetPosition;
+        
+            // Show Player
+            transparent.a = 1;
+            sp.color = transparent;
+        }
+        // Trigger Anims
+        if (getIn) { 
+            if (skip)
+            {
+                animator.Play("Base Layer.SpinBegin");
+            }
+            else
+            {
+                animator.Play("Base Layer.SpinDashes");
+            }
+        }
+        else
+        {
+            if (!skip)
+            {
+                animator.Play("Base Layer.Movement");
+                tileCollider.enabled = true;
+            }
+            else
+            {
+                animator.Play("Base Layer.Movement");
+                tileCollider.enabled = true;
+            }
+        }
+
     }
 }
