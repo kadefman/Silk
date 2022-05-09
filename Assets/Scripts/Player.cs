@@ -264,7 +264,7 @@ public class Player : MonoBehaviour
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
-
+        FindObjectOfType<AudioManager>().Play("Web shot 1");
         animator2.SetTrigger("Shoot");
     }
 
