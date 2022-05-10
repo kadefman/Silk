@@ -16,6 +16,7 @@ public class FlyingEnemy : MonoBehaviour
     public bool dropSilkInPlace;
     public float speed;
     public float dropRate;
+    public float healthProb;
     public int damage;
     public int health;
     public int silkReward;
@@ -48,7 +49,13 @@ public class FlyingEnemy : MonoBehaviour
             angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
             transform.Rotate(0, 0, -angle);
         }
-        
+
+        if (rb.velocity.sqrMagnitude < 3.5)
+        {
+            rb.velocity = Vector2.zero;
+            Vector2 randVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            rb.AddForce(speed * randVector.normalized);
+        }
     }
 
     public void GetHit(int i)
@@ -61,7 +68,7 @@ public class FlyingEnemy : MonoBehaviour
 
         else if(i>0)
         {
-            Debug.Log("Maybe sounds?");
+            //Debug.Log("Maybe sounds?");
             position = gameObject.transform.position;
             FindObjectOfType<AudioManager>().PlaySpatial("Enemy hit 1", position, 1f);
 
@@ -80,7 +87,9 @@ public class FlyingEnemy : MonoBehaviour
 
         if (dropSilkInPlace)
         {
-            Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
+            float dropRoll = Random.Range(0f, 1f);
+            if(dropRoll<=dropRate)
+                Instantiate(GameManager.RandomObject(GameManager.instance.items, healthProb), transform.position, Quaternion.identity);
         }
         else
             GameManager.instance.AddSilk(silkReward);

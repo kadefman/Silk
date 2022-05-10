@@ -5,9 +5,10 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public enum Type { Silk, Health, Key };
-    //public Color[] colors;
-    public Type type;
+ 
+    public Type type;   
     public int value;
+    
 
 
     private void OnTriggerEnter2D(Collider2D collider)

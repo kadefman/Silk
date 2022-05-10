@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public int healthStart;
     public int spinCost;
     public int shotCost;
+    public float shotCoolTime;
     public float spinTime;
     public bool saveWebProgress;
 
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public float speed;
     [HideInInspector] public bool spinning;
     [HideInInspector] public bool canMove;
+    [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
 
     private Rigidbody2D rb;
@@ -53,6 +55,7 @@ public class Player : MonoBehaviour
         spinning = false;
         godMode = false;
         canMove = true;
+        canShoot = true;
         curDirection = Vector2.down;
 
         speed = speedStart;
@@ -86,7 +89,7 @@ public class Player : MonoBehaviour
             ToggleGodMode();
 
         //3 variations of shooting controls
-        if(canMove && (silkCount>0 || godMode))
+        if(canMove && canShoot)
         {
             if (controls == ControlScheme.Mouse)
             {               
@@ -243,8 +246,21 @@ public class Player : MonoBehaviour
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
+        StartCoroutine(Cooldown(shotCoolTime));
         FindObjectOfType<AudioManager>().Play("Web shot 1");
         animator2.SetTrigger("Shoot");
+
+        if(silkCount<=0)
+        {
+            SacrificeHealth();
+        }
+    }
+
+    public void SacrificeHealth()
+    {
+        silkCount = 0;
+        AddSilk(20);
+        AddHealth(-1);
     }
 
    /* private IEnumerator ShowChange(bool health, bool positive = true)
@@ -269,6 +285,19 @@ public class Player : MonoBehaviour
         canMove = false;
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
+    }
+
+    public IEnumerator Cooldown (float time)
+    {
+        canShoot = false;
+        float timer = time;
+
+        while(timer>=float.Epsilon)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        canShoot = true;
     }
     public IEnumerator SpinSnap( bool getIn, bool skip, Transform tile)
     {
