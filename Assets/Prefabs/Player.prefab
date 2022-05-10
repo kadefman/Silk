@@ -338,10 +338,11 @@ MonoBehaviour:
   healthStart: 10
   spinCost: 30
   shotCost: 1
+  shotCoolTime: 0.3
   spinTime: 1.8
   saveWebProgress: 1
-  audioSource: {fileID: 0}
-  walkingSource: {fileID: 0}
+  audioSource: {fileID: 1721393411}
+  walkingSource: {fileID: 1721393411}
   walkingClips: []
   animator: {fileID: 3529270458568819147}
   animator2: {fileID: 9143872696028745762}
@@ -352,6 +353,7 @@ MonoBehaviour:
   speed: 2
   spinning: 0
   canMove: 0
+  canShoot: 0
   godMode: 0
 --- !u!70 &7803034255373278129
 CapsuleCollider2D:

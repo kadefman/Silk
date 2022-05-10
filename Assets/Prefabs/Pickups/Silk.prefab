@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  value: 10
+  value: 25
 --- !u!114 &-1696898343452547095
 MonoBehaviour:
   m_ObjectHideFlags: 0

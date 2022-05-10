@@ -4,26 +4,31 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public GameObject prefabFx;
     public float speed;
+    public float airTime;
     public int damage;
     public bool piercing;
-    public GameObject prefabFx;
-
+    
     private Rigidbody2D rb;
+    private float timer;
 
-    void Start()
+    void Awake()
     {
         rb = transform.GetComponent<Rigidbody2D>();
+        timer = 0f;
     }
 
     void Update()
     {
         rb.MovePosition(rb.position + ((Vector2)transform.up * speed * Time.deltaTime));
+        timer += Time.deltaTime;
+        if (timer >= airTime)
+            Destroy(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
+    {        
         Destroy(gameObject);
     }
 

@@ -91,6 +91,7 @@ MonoBehaviour:
   dropSilkInPlace: 1
   speed: 100
   dropRate: 0.5
+  healthProb: 0.2
   damage: 0
   health: 2
   silkReward: 5
