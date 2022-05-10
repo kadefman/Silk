@@ -322,6 +322,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3689479164833152567, guid: adcc63bae6744be45b7178109629fe6d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adcc63bae6744be45b7178109629fe6d, type: 3}
 --- !u!1 &363516555 stripped
@@ -891,6 +896,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
+      propertyPath: genMark
+      value: 
+      objectReference: {fileID: 5098216594947477444, guid: cdb8073240e158e4d8e593671be96d23,
+        type: 3}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
       propertyPath: exitMark
       value: 
       objectReference: {fileID: 5098216594947477444, guid: 29e2f685521dc3f4682a1c12da237b81,
@@ -913,7 +924,7 @@ PrefabInstance:
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: roomCount
-      value: 8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}

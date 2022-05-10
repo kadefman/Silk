@@ -50,7 +50,7 @@ public class FlyingEnemy : MonoBehaviour
             transform.Rotate(0, 0, -angle);
         }
 
-        if (rb.velocity.sqrMagnitude < 3.5)
+        if (rb.velocity.sqrMagnitude < 3.5f || rb.velocity.sqrMagnitude > 4.5f)
         {
             rb.velocity = Vector2.zero;
             Vector2 randVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));

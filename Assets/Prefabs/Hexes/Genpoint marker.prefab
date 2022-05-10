@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7419595909869798968}
   - component: {fileID: 7440317989003062926}
   m_Layer: 9
-  m_Name: Entrance Marker
+  m_Name: Genpoint marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 70413534e13cec849a2006d3d5b2ec53, type: 3}
-  m_Color: {r: 1, g: 1, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.9277272, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
