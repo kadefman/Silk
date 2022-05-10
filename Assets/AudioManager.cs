@@ -34,7 +34,7 @@ public class AudioManager : MonoBehaviour
         //Debug.Log("shooting");
 
     }
-    public void PlaySpatial(string name, Vector3 position)
+    public void PlaySpatial(string name, Vector3 position, float volume)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
@@ -42,8 +42,8 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioSource.PlayClipAtPoint(s.clip, position, 1f) ;
-        //Debug.Log("shooting");
+        AudioSource.PlayClipAtPoint(s.clip, position, volume) ;
+        Debug.Log("shooting");
 
     }
 

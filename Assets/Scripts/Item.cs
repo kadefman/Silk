@@ -13,13 +13,14 @@ public class Item : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            FindObjectOfType<AudioManager>().Play("Pickup");
             if (type == Type.Silk)
                 collider.transform.GetComponent<Player>().AddSilk(value);
 
             else if (type == Type.Health)
                 collider.transform.GetComponent<Player>().AddHealth(value);
 
-            else if(type == Type.Key)
+            else if (type == Type.Key)
                 GameManager.instance.OpenDoor(true);
 
             Destroy(gameObject);

@@ -22,6 +22,12 @@ public class FlyingEnemy : MonoBehaviour
 
     private Collider2D coll;
     private Rigidbody2D rb;
+
+    private int sfxNum;
+    private string sfxString;
+
+    //public Transform sprite;
+    //public GameObject FxDiePrefab;
     private Vector3 position;
 
     void Start()
@@ -55,7 +61,10 @@ public class FlyingEnemy : MonoBehaviour
 
         else if(i>0)
         {
-            //Debug.Log("Maybe sounds?");
+            Debug.Log("Maybe sounds?");
+            position = gameObject.transform.position;
+            FindObjectOfType<AudioManager>().PlaySpatial("Enemy hit 1", position, 1f);
+
             /*audioSource.pitch = Random.Range(.95f, 1.1f);
             audioSource.PlayOneShot(damageSFX, .8f);*/
         }       
@@ -87,7 +96,9 @@ public class FlyingEnemy : MonoBehaviour
         rb.velocity = Vector3.zero;
         Animator animator = GetComponentInChildren<Animator>();
         position = gameObject.transform.position;
-        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death", position);
+        sfxNum = Random.Range(1, 4);
+        sfxString = sfxNum.ToString();
+        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death " + sfxString, position, .95f);
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
 
