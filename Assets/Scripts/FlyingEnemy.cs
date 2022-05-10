@@ -71,7 +71,9 @@ public class FlyingEnemy : MonoBehaviour
 
         if (dropSilkInPlace)
         {
-            Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
+            float dropRoll = Random.Range(0f, 1f);
+            if(dropRoll<=dropRate)
+                Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);
         }
         else
             GameManager.instance.AddSilk(silkReward);

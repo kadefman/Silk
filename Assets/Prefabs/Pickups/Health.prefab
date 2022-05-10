@@ -113,8 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  healthPlus: 5
-  silkPlus: 50
+  value: 1
 --- !u!1 &7692937241801932687
 GameObject:
   m_ObjectHideFlags: 0

@@ -141,7 +141,8 @@ MonoBehaviour:
     type: 3}
   dropSilkInPlace: 1
   speed: 100
-  damage: 3
+  dropRate: 0.5
+  damage: 1
   health: 2
   silkReward: 10
 --- !u!1 &9134185133437562554
