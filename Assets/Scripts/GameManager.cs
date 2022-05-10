@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public GameObject platform;
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI healthText;
-    public TextMeshProUGUI spinText;
     public GameObject[] items;
 
     [HideInInspector] public static GameManager instance = null;
@@ -18,7 +17,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Room currentRoom;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
-    public Transform webTile;
+    [HideInInspector] public Transform webTile;
     [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
       
@@ -34,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        spinText.gameObject.SetActive(false);
+
     }
 
     public void SetRoom(int index)
@@ -56,8 +55,6 @@ public class GameManager : MonoBehaviour
     {
         playerScript.spinning = true;
         playerScript.canMove = false;
-        spinText.gameObject.SetActive(true);
-        spinText.text = $"Spinning web...";
 
         float silkSpent = 0f;
         float inverseSpinTime = 1f / playerScript.spinTime;
@@ -106,8 +103,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        spinText.gameObject.SetActive(false);
-
         //knockback?
         if(cancelled)
         {
@@ -116,6 +111,12 @@ public class GameManager : MonoBehaviour
             playerScript.transform.position = (Vector2)playerScript.transform.position + knockBackDir * knockBackFloat;
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(false, false, tile));
+
+            //player sacrifices health for silk
+            if(playerScript.silkCount <=0)
+            {
+                playerScript.SacrificeHealth();
+            }
         }
 
         else
@@ -133,6 +134,7 @@ public class GameManager : MonoBehaviour
         Vector2 position = spot.transform.position;
         Destroy(spot.gameObject);
         Instantiate(web, position, Quaternion.identity, transform);
+        FindObjectOfType<AudioManager>().Play("Web complete");
     }
 
     public void OpenDoor(bool key)
@@ -162,9 +164,22 @@ public class GameManager : MonoBehaviour
         playerScript.AddSilk(i);
     }
 
-    public static GameObject RandomObject(GameObject[] objectArray)
+    public static GameObject RandomObject(GameObject[] objects, float prob1 = 0f)
     {
-        int objectIndex = Random.Range(0, objectArray.Length);
-        return objectArray[objectIndex];
+        if(prob1==0f)
+        {
+            float itemRoll = Random.Range(0f, 1f);
+            if (itemRoll <= prob1)
+                return objects[0];
+            else
+                return objects[1];
+        }
+
+        else
+        {
+            int itemRoll = Random.Range(0, objects.Length);
+            return objects[itemRoll];
+        }
+        
     }
 }

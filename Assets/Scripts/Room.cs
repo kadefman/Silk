@@ -11,13 +11,15 @@ public class Room
     public enum WallDirection { UL, UR, R, DR, DL, L}
 
     public Shape shape;
-    public TravelDirection entranceDir;
-    public TravelDirection exitDir;
+    public TravelDirection entranceDir;   
     public WallDirection entranceWall;
+    public Vector2 entrancePoint;
+    public TravelDirection exitDir;
     public WallDirection exitWall;
+    public Vector2 exitPoint;
     public Transform enemyDoor;
     public Transform magicKey;
-    public Transform keyDoor;
+    public Transform keyDoor;      
     public int enemyCount;
     public int itemCount;
 

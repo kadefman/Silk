@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
+    public List<Room> rooms;
     public GameObject[] tiles;
     public GameObject[] enemies;
     public GameObject[] items;
     public GameObject wall;
     public GameObject exitMark;
     public GameObject entranceMark;
+    public GameObject genMark;
     public GameObject player;
     public GameObject cam;
+    //public GameObject startRoom;
 
-    //the following public variables are only for testing single rooms
-    //public Room.Shape shape;
-    public int roomCount;   
+    public int roomCount;
     public int minHallSize;
     public int maxHallSize;
     public int minRoomSize;
@@ -28,16 +29,22 @@ public class Generator : MonoBehaviour
     public int maxItems;
     public float webRatio;
 
-    private Room.TravelDirection recentExit;
-    private Room.WallDirection recentExitWall;
-    private List<Room.TravelDirection> possibleExitDirections;
+    
+    private Room thisRoom;
+    private Room prevRoom;
+    private GameObject roomObject;
+    private List<GameObject> roomObjects;
+
     private List<Vector2> possibleExits;
+    private List<Room.TravelDirection> possibleExitDirections;
+    
     private List<Vector2> tilePoints;
     private List<Vector2> wallPoints;
     private List<Vector2> enemyPoints;
     private List<Vector2> itemPoints;
-    private Vector2 recentExitPoint;
+    
     private Vector2 playerPos = Vector2.zero;
+    private Vector2 rayOffset = new Vector2(0f, 0.1f);
 
     private int currentIndex = 0;
 
@@ -48,6 +55,8 @@ public class Generator : MonoBehaviour
 
     void Start()
     {
+        rooms = new List<Room>();
+        roomObjects = new List<GameObject>();
         GenerateLevel();
         cam.transform.parent = player.transform;
         player.transform.position = playerPos;
@@ -57,10 +66,7 @@ public class Generator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            currentIndex = 0;
-            foreach(Transform child in transform)
-                Destroy(child.gameObject);
-
+            ClearLevel();
             GenerateLevel();
         }
 
@@ -71,10 +77,17 @@ public class Generator : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Minus))
         {
-            currentIndex = 0;
-            foreach (Transform child in transform)
-                Destroy(child.gameObject);
+            ClearLevel();
         }
+    }
+
+    void ClearLevel()
+    {
+        currentIndex = 0;
+        rooms = new List<Room>();
+        roomObjects = new List<GameObject>();
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
     }
 
     void GenerateLevel(bool step = false)
@@ -82,40 +95,47 @@ public class Generator : MonoBehaviour
         if (!step)
         {
             Debug.Log("Generate All");
-            for (int i = 0; i < roomCount; i++)
+            currentIndex = 0;
+            while(currentIndex < roomCount)
             {
                 Debug.Log("Generating room " + currentIndex + "----------");
-                PrepareRoom(i);
+                CreateRoom();
                 currentIndex++;
-            }               
+            }          
         }
 
         else
         {
-            PrepareRoom(currentIndex);
+            Debug.Log("Generating room " + currentIndex + "----------");
+            CreateRoom();
             currentIndex++;
         }
                     
     }
 
-    void PrepareRoom(int roomIndex)
+    //where do I do the startRoom thing? Address this in Room script too
+    void CreateRoom(bool start = false)
     {
-        /*Room.Shape thisShape;
+        PrepareRoom();
+        ChooseExits(currentIndex);
 
-            if (shape == Room.Shape.Random)
-            {
-                int rand = Random.Range(0, 4);
-                thisShape = (Room.Shape)rand;
-            }
-            else
-                thisShape = shape;*/
+        int height = Random.Range(minRoomSize, maxRoomSize);
+        int length = Random.Range(minRoomSize, maxRoomSize);
+        Vector2 genPoint = ChooseGenOffset(height, length);
 
-        //Room thisRoom = new Room(thisShape);
+        BuildShape(height, length, genPoint);
 
+        //index was brought back 2, try again
+        if (CollisionTest())
+            return;
 
-        Room thisRoom;
-        Room.TravelDirection exit;
-        Room.WallDirection exitWall;
+        PlaceTiles();
+        FillRoom();
+    }
+
+    private void PrepareRoom()
+    {
+         //take some stuff from chooseExits?
         tilePoints = new List<Vector2>();
         wallPoints = new List<Vector2>();
         enemyPoints = new List<Vector2>();
@@ -123,41 +143,49 @@ public class Generator : MonoBehaviour
         possibleExits = new List<Vector2>();
         possibleExitDirections = new List<Room.TravelDirection>();
 
+    }
+
+    private void ChooseExits(int roomIndex)
+    {
         //start room, will use prefab
         if (roomIndex == 0)
         {
             thisRoom = new Room(Room.Shape.Hexagon);
             //not sure how much info I'll need here going forward
-            exit = Room.TravelDirection.D;
-            exitWall = Room.WallDirection.DR;           
+            thisRoom.exitDir = Room.TravelDirection.D;
+            thisRoom.exitWall = Room.WallDirection.DR;           
         }
 
         else
         {
-            int newEntranceNum = ((int)recentExit + 3) % 6;
+            //set up entrances
+            prevRoom = rooms[currentIndex - 1];                      
+            int newEntranceNum = ((int)prevRoom.exitDir + 3) % 6;
             Room.TravelDirection newEntrance = (Room.TravelDirection)newEntranceNum;
-            int newWallNum = ((int)recentExitWall + 3) % 6;
+            int newWallNum = ((int)prevRoom.exitWall + 3) % 6;
             Room.WallDirection enterWall = (Room.WallDirection)newWallNum;
+            Debug.Log("coming from wallDir" + (int)enterWall);
 
+            //pick exits:
             //hall, auto exit direction
             if (roomIndex % 2 == 1)
             {
                 thisRoom = new Room(Room.Shape.Hall, newEntrance, enterWall);
-                exit = recentExit;
-                exitWall = recentExitWall;
+                /*int exitInt = (Random.Range(5, 7) + (int)prevRoom.exitDir)%6;
+                thisRoom.exitDir = (Room.TravelDirection)exitInt;*/
+                thisRoom.exitDir = prevRoom.exitDir;
+                thisRoom.exitWall = prevRoom.exitWall;                
             }
 
             //hex, 1 of 5 possible exit directions, 1 of 5 exit walls
             else
             {
-                int rand;
-                //choose direction
                 thisRoom = new Room(Room.Shape.Hexagon, newEntrance, enterWall);
-                rand = Random.Range(0, 6);
+                int rand = Random.Range(0, 6);
                 int exitInt = rand;
                 if (exitInt == newEntranceNum)
                     exitInt = newEntranceNum == 5 ? 0 : newEntranceNum + 1;
-                exit = (Room.TravelDirection)exitInt;
+                thisRoom.exitDir = (Room.TravelDirection)exitInt;
 
                 //choose wall
                 rand = Random.Range(0, 2);
@@ -168,77 +196,257 @@ public class Generator : MonoBehaviour
                     exitWallInt = (exitInt + rand) % 6;
                 }
                     
-                exitWall = (Room.WallDirection)exitWallInt;
-
-                /*Debug.Log("entrance dir " + newEntranceNum);
-                Debug.Log("entrance Wall dir " + newWallNum);*/
+                thisRoom.exitWall = (Room.WallDirection)exitWallInt;
             }
+            thisRoom.entrancePoint = prevRoom.exitPoint;          
         }
-          
-        GenerateRoom(thisRoom, recentExitPoint, exit, exitWall);
-        
+        rooms.Add(thisRoom);
     }
 
-    void GenerateRoom(Room room, Vector2 entrancePoint, Room.TravelDirection exitDir, Room.WallDirection exitWallDir)
+    private Vector2 ChooseGenOffset(int height, int length)
     {
-        //Debug.Log("Room entrance at " + entrancePoint);
-        GameObject roomObject = new GameObject();
-        roomObject.name = $"Room {currentIndex}";
-        roomObject.transform.parent = transform;
-        int length = Random.Range(minRoomSize, maxRoomSize + 1);
-        int height = Random.Range(minRoomSize, maxRoomSize+1);
-        int orientation;
+        if (currentIndex == 0)
+            return Vector2.zero;
 
-        //does this code belong all the way up here?
-        Vector2 genOffset;        
-        Vector2 genPoint = Vector2.zero;
+        Vector2 genOffset = Vector2.zero;   
 
-        switch (room.shape)
+        switch(thisRoom.shape)
         {
-            case Room.Shape.Rect:
-                orientation = Random.Range(0, 2);
-                Debug.Log("Rectangle type " + (orientation == 0 ? "upDown, " : "downUp, ") + length + "by " + height);
-
-                for (int x = 0; x <= length + 1; x++)
+            case Room.Shape.Hall:
+                switch(thisRoom.exitDir)
                 {
-                    for (int y = 0; y <= height + 1; y++)
-                    {
-                        float pointX = genPoint.x + xOffset * x;
-                        float pointY;
-                        if (x % 2 == 1)
-                            pointY = genPoint.y + (yOffset * (y + (orientation == 0 ? -.5f : .5f)));
-                        else
-                            pointY = genPoint.y + yOffset * y;
+                    case Room.TravelDirection.U:
+                        genOffset = new Vector2(0, yOffset);
+                        break;
 
-                        Vector2 thisPoint = new Vector2(pointX, pointY);
+                    case Room.TravelDirection.UR:
+                        genOffset = new Vector2(xOffset, .5f * yOffset);
+                        break;
 
-                        if (x == 0 || x == length + 1 || y == 0 || y == height + 1)
-                            wallPoints.Add(thisPoint);
+                    case Room.TravelDirection.DR:
+                        genOffset = new Vector2(xOffset, .5f * -yOffset);
+                        break;
 
-                        else
-                            tilePoints.Add(thisPoint);
-                    }
+                    case Room.TravelDirection.D:
+                        genOffset = new Vector2(0, -yOffset);
+                        break;
+
+                    case Room.TravelDirection.DL:
+                        genOffset = new Vector2(-xOffset, .5f * -yOffset);
+                        break;
+
+                    case Room.TravelDirection.UL:
+                        genOffset = new Vector2(-xOffset, .5f * yOffset);
+                        break;
+
+                }
+                break;
+
+            case Room.Shape.Hexagon:
+                if (length < 2)
+                    length = 2;
+
+                int randOffset = Random.Range(1, length);
+                Debug.Log("Hex randOffset " + randOffset);
+                Debug.Log("coming from wallDir" + (int)thisRoom.entranceWall);
+
+                //choose genPoint from which the room is built
+                switch (thisRoom.entranceWall)
+                {
+                    case Room.WallDirection.L:
+                        Debug.Log("coming from L");
+                        genOffset = new Vector2(0, -randOffset * yOffset);
+                        break;
+
+                    case Room.WallDirection.UL:
+                        Debug.Log("coming from UL");
+                        genOffset = new Vector2(-randOffset * xOffset, -yOffset * (length + .5f * randOffset));
+                        break;
+
+                    case Room.WallDirection.DL:
+                        Debug.Log("coming from DL");
+                        genOffset = new Vector2(-randOffset * xOffset, randOffset * .5f * yOffset);
+                        break;
+
+                    case Room.WallDirection.R:
+                        Debug.Log("coming from R");
+                        genOffset = new Vector2(-2 * length * xOffset, -randOffset * yOffset);
+                        break;
+
+                    case Room.WallDirection.UR:
+                        Debug.Log("coming from UR");
+                        genOffset = new Vector2(-xOffset * (randOffset + length), -yOffset * (length + .5f * (length - randOffset)));
+                        break;
+
+
+                    case Room.WallDirection.DR:
+                        Debug.Log("coming from DR");
+                        genOffset = new Vector2(-xOffset * (randOffset + length), yOffset * .5f * (length - randOffset));
+                        break;
+
+                    default:
+                        genOffset = Vector2.zero;
+                        Debug.Log("You didn't pick a valid entrance direction");
+                        break;
                 }
                 break;
 
             case Room.Shape.Diamond:
 
-                orientation = Random.Range(0, 3);
-                string debugString;
-                if (orientation == 0)
-                    debugString = "upDown, ";
-                else if (orientation == 1)
-                    debugString = "downUp, ";
-                else
-                    debugString = "horizontal, ";
+                break;
 
-                Debug.Log("Diamond type " + debugString + length + " by " + height);
+            case Room.Shape.Triangle:
+
+                break;
+
+            case Room.Shape.Rect:
+
+                break;
+
+            default:
+
+                break;
+        }
+        return genOffset;
+    }
+
+    private void BuildShape(int height, int length, Vector2 genOffset)
+    {
+        //Debug.Log("genOffset " + genOffset + "entrancePoint " + thisRoom.entrancePoint);
+        Vector2 genPoint = genOffset + thisRoom.entrancePoint;
+        //Instantiate(genMark, genPoint, Quaternion.identity);
+        int orientation;
+        
+        switch (thisRoom.shape)
+        {
+            case Room.Shape.Hall:
+                Debug.Log("Hall, length " + length);
+
+                if (length < 3)
+                    length = 3;
+
+                for (int i = 0; i <= length; i++)
+                {
+                    Vector2 thisPoint = genPoint + i * genOffset;
+                    if (i < length)
+                        tilePoints.Add(thisPoint);
+                    else
+                    {
+                        //exit needs to be a "wall point"
+                        wallPoints.Add(thisPoint);
+                        possibleExits.Add(thisPoint);
+                        break;
+                    }
+
+                    switch (thisRoom.exitDir)
+                    {
+                        case Room.TravelDirection.U:
+                            wallPoints.Add(thisPoint + new Vector2(-xOffset, yOffset * (thisRoom.exitWall == Room.WallDirection.UL ? -.5f : .5f)));
+                            wallPoints.Add(thisPoint + new Vector2(xOffset, yOffset * (thisRoom.exitWall == Room.WallDirection.UL ? .5f : -.5f)));
+                            break;
+
+                        case Room.TravelDirection.UR:
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.R ? yOffset * Vector2.up : new Vector2(-xOffset, .5f * yOffset)));
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.R ? yOffset * Vector2.down : new Vector2(xOffset, -.5f * yOffset)));
+                            break;
+
+                        case Room.TravelDirection.DR:
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.R ? yOffset * Vector2.up : new Vector2(xOffset, .5f * yOffset)));
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.R ? yOffset * Vector2.down : new Vector2(-xOffset, -.5f * yOffset)));
+                            break;
+
+                        case Room.TravelDirection.D:
+                            wallPoints.Add(thisPoint + new Vector2(-xOffset, yOffset * (thisRoom.exitWall == Room.WallDirection.DR ? -.5f : .5f)));
+                            wallPoints.Add(thisPoint + new Vector2(xOffset, yOffset * (thisRoom.exitWall == Room.WallDirection.DR ? .5f : -.5f)));
+                            break;
+
+                        case Room.TravelDirection.DL:
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.L ? yOffset * Vector2.up : new Vector2(-xOffset, .5f * yOffset)));
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.L ? yOffset * Vector2.down : new Vector2(xOffset, -.5f * yOffset)));
+                            break;
+
+                        case Room.TravelDirection.UL:
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.L ? yOffset * Vector2.up : new Vector2(xOffset, .5f * yOffset)));
+                            wallPoints.Add(thisPoint + (thisRoom.exitWall == Room.WallDirection.L ? yOffset * Vector2.down : new Vector2(-xOffset, -.5f * yOffset)));
+                            break;
+                    }
+                }
+                break;
+
+            case Room.Shape.Hexagon:
+                Debug.Log("Hexagon, side " + length);
+
+                for (int x = 0; x <= 2 * length; x++)
+                {
+                    int lineHeight;
+                    if (x <= length)
+                        lineHeight = x + length + 1;
+                    else
+                        lineHeight = 3 * length + 1 - x;
+
+                    for (int y = 0; y < lineHeight; y++)
+                    {
+                        float pointX = genPoint.x + xOffset * x;
+                        float pointY;
+                        if (x < length)
+                            pointY = genPoint.y + (yOffset * (y - .5f * x));
+                        else
+                            pointY = genPoint.y + (yOffset * (1 + y - .5f * (2 * length + 2 - x)));
+
+                        Vector2 thisPoint = new Vector2(pointX, pointY);
+
+                        //We'll handle corners another time
+                        if (x == 0)
+                        {
+                            wallPoints.Add(thisPoint);
+                            if (thisRoom.exitWall == Room.WallDirection.L && y != 0 && y != lineHeight - 1)
+                                possibleExits.Add(thisPoint);
+                        }
+
+                        else if (x == 2 * length)
+                        {
+                            wallPoints.Add(thisPoint);
+                            if (thisRoom.exitWall == Room.WallDirection.R && y != 0 && y != lineHeight - 1)
+                                possibleExits.Add(thisPoint);
+                        }
+
+                        else if (y == 0)
+                        {
+                            wallPoints.Add(thisPoint);
+                            if (thisRoom.exitWall == Room.WallDirection.DL && x < length && x != 0)
+                                possibleExits.Add(thisPoint);
+
+                            else if (thisRoom.exitWall == Room.WallDirection.DR && x > length && x != 2 * length)
+                                possibleExits.Add(thisPoint);
+                        }
+
+                        else if (y == lineHeight - 1)
+                        {
+                            wallPoints.Add(thisPoint);
+                            if (thisRoom.exitWall == Room.WallDirection.UL && x < length && x != 0)
+                                possibleExits.Add(thisPoint);
+
+                            else if (thisRoom.exitWall == Room.WallDirection.UR && x > length && x != 2 * length)
+                                possibleExits.Add(thisPoint);
+                        }
+
+                        else
+                            tilePoints.Add(thisPoint);
+                    }
+                }
+
+                break;
+
+            case Room.Shape.Diamond:
+                orientation = Random.Range(0, 3);
+                string[] debugStrings = new string[] { "upDown, ", "downUp, ", "horizontal, " };
+                Debug.Log("Diamond type " + debugStrings[orientation] + length + " by " + height);
 
                 //slanted walls all around
-                if(orientation == 2)
+                if (orientation == 2)
                 {
                     for (int x = 0; x <= length + height + 2; x++)
-                    {                      
+                    {
                         int lineHeight;
 
                         if (x < length + 2 && x < height + 2)
@@ -247,8 +455,8 @@ public class Generator : MonoBehaviour
                             lineHeight = length + height + 3 - x;
                         else
                             lineHeight = Mathf.Min(length, height) + 2;
-                            
-                            
+
+
                         //Debug.Log($"{x}, {length}, {height}, {lineHeight}");
 
                         for (int y = 0; y < lineHeight; y++)
@@ -292,125 +500,6 @@ public class Generator : MonoBehaviour
                 }
                 break;
 
-            case Room.Shape.Hexagon:
-                Debug.Log("Hexagon, side = " + length);
-                if (length < 2)
-                    length = 2;
-
-                int randOffset = Random.Range(1, length);
-
-                //choose genPoint from which the room is built
-                switch (room.entranceWall)
-                {
-                    case Room.WallDirection.L:
-                        Debug.Log("coming from L");
-                        genOffset = new Vector2(0, -randOffset * yOffset);
-                        room.entranceWall = Room.WallDirection.L;
-                        break;
-
-                    case Room.WallDirection.UL:
-                        Debug.Log("coming from UL");
-                        genOffset = new Vector2(-randOffset * xOffset, -yOffset*(length + .5f*randOffset));
-                        room.entranceWall = Room.WallDirection.UL;
-                        break;
-                 
-                    case Room.WallDirection.DL:
-                        Debug.Log("coming from DL");
-                        genOffset = new Vector2(-randOffset * xOffset, randOffset * .5f * yOffset);
-                        room.entranceWall = Room.WallDirection.DL;
-                        break;
-
-                    case Room.WallDirection.R:
-                        Debug.Log("coming from R");
-                        genOffset = new Vector2(-2*length*xOffset, -randOffset * yOffset);
-                        room.entranceWall = Room.WallDirection.R;
-                        break;
-
-                    case Room.WallDirection.UR:
-                        Debug.Log("coming from UR");
-                        genOffset = new Vector2(-xOffset * (randOffset + length), -yOffset * .5f * (randOffset + length));
-                        room.entranceWall = Room.WallDirection.UL;
-                        break;
-
-                        
-                    case Room.WallDirection.DR:
-                        Debug.Log("coming from DR");
-                        genOffset = new Vector2(-xOffset * (randOffset + length), yOffset *.5f * (randOffset - length));
-                        room.entranceWall = Room.WallDirection.UL;
-                        break;
-
-                    default:
-                        genOffset = Vector2.zero;
-                        Debug.Log("You didn't pick a valid entrance direction");
-                        break;
-
-                }
-                //Debug.Log("genOffset " + genOffset + ", randOffset " + randOffset);
-
-                genPoint = entrancePoint + genOffset;
-
-                //build room, choose potential exit points
-                for (int x = 0; x <= 2 * length; x++)
-                {
-                    int lineHeight;
-                    if (x <= length)
-                        lineHeight = x + length + 1;
-                    else
-                        lineHeight = 3* length + 1 - x;
-
-                    for(int y=0; y< lineHeight; y++)
-                    {
-                        float pointX = genPoint.x + xOffset * x;
-                        float pointY;
-                        if(x < length)
-                            pointY = genPoint.y + (yOffset * (y - .5f * x));
-                        else
-                            pointY = genPoint.y + (yOffset * (1 + y - .5f * (2* length + 2 - x)));
-
-                        Vector2 thisPoint = new Vector2(pointX, pointY);
-
-                        //We'll handle corners another time
-                        if(x==0)
-                        {
-                            wallPoints.Add(thisPoint);
-                            if (exitWallDir == Room.WallDirection.L && y != 0 && y != lineHeight-1)
-                                possibleExits.Add(thisPoint);
-                        }
-
-                        else if(x==2*length)
-                        {
-                            wallPoints.Add(thisPoint);
-                            if (exitWallDir ==  Room.WallDirection.R && y != 0 && y != lineHeight-1)
-                                possibleExits.Add(thisPoint);
-                        }
-
-                        else if(y==0)
-                        {
-                            wallPoints.Add(thisPoint);
-                            if (exitWallDir == Room.WallDirection.DL && x < length && x != 0)
-                                possibleExits.Add(thisPoint);
-
-                            else if (exitWallDir == Room.WallDirection.DR && x > length && x != 2*length)
-                                possibleExits.Add(thisPoint);
-                        }
-
-                        else if (y == lineHeight-1)
-                        {
-                            wallPoints.Add(thisPoint);
-                            if (exitWallDir == Room.WallDirection.UL && x < length && x != 0)
-                                possibleExits.Add(thisPoint);
-
-                            else if (exitWallDir == Room.WallDirection.UR && x > length && x != 2*length)
-                                possibleExits.Add(thisPoint);
-                        }
-
-                        else
-                            tilePoints.Add(thisPoint);
-                    }
-                }
-
-                break;
-
             case Room.Shape.Triangle:
                 orientation = Random.Range(0, 2);
                 Debug.Log("Triangle type " + (orientation == 0 ? "upDown, " : "downUp, ") + "side = " + length);
@@ -425,7 +514,7 @@ public class Generator : MonoBehaviour
                         float pointY = genPoint.y + (yOffset * (y + (orientation == 0 ? -.5f * x : .5f * x)));
                         Vector2 thisPoint = new Vector2(pointX, pointY);
 
-                        if (x == 0 || x == length + 2 || y == 0 || y == lineHeight-1)
+                        if (x == 0 || x == length + 2 || y == 0 || y == lineHeight - 1)
                             wallPoints.Add(thisPoint);
 
                         else
@@ -434,92 +523,83 @@ public class Generator : MonoBehaviour
                 }
                 break;
 
-            case Room.Shape.Hall:
-                //auto direction
-                genPoint = entrancePoint;              
-                Debug.Log("Hall, length " + length);
-                //Debug.Log("genPoint: " + genPoint);
+            case Room.Shape.Rect:
+                orientation = Random.Range(0, 2);
+                Debug.Log("Rectangle type " + (orientation == 0 ? "upDown, " : "downUp, ") + length + "by " + height);
 
-                length = Random.Range(minHallSize, maxHallSize + 1);
-                if (length < 3)
-                    length = 3;
-
-                for (int i=0; i<length; i++)
+                for (int x = 0; x <= length + 1; x++)
                 {
-                    Vector2 thisPoint;
-                    switch(exitDir)
+                    for (int y = 0; y <= height + 1; y++)
                     {
-                        case Room.TravelDirection.UL:
-                            thisPoint = new Vector2(genPoint.x + -xOffset * i, genPoint.y + .5f * yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(0, yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(0, -yOffset));                            
-                            break;
+                        float pointX = genPoint.x + xOffset * x;
+                        float pointY;
+                        if (x % 2 == 1)
+                            pointY = genPoint.y + (yOffset * (y + (orientation == 0 ? -.5f : .5f)));
+                        else
+                            pointY = genPoint.y + yOffset * y;
 
-                        case Room.TravelDirection.DL:
-                            thisPoint = new Vector2(genPoint.x + -xOffset * i, genPoint.y - .5f * yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(0, yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(0, -yOffset));
-                            break;
+                        Vector2 thisPoint = new Vector2(pointX, pointY);
 
-                        //walls are lower than tiles
-                        case Room.TravelDirection.U:
-                            thisPoint = new Vector2(genPoint.x, genPoint.y + yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(-xOffset, -.5f * yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(xOffset, -.5f * yOffset));
-                            break;
+                        if (x == 0 || x == length + 1 || y == 0 || y == height + 1)
+                            wallPoints.Add(thisPoint);
 
-                        case Room.TravelDirection.UR:
-                            thisPoint = new Vector2(genPoint.x + xOffset * i, genPoint.y + .5f * yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(0, yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(0, -yOffset));
-                            break;
-
-                        case Room.TravelDirection.DR:
-                            thisPoint = new Vector2(genPoint.x + xOffset * i, genPoint.y - .5f * yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(0, yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(0, -yOffset));
-                            break;
-
-                        //walls are higher than tiles
-                        case Room.TravelDirection.D:
-                            thisPoint = new Vector2(genPoint.x, genPoint.y - yOffset * i);
-                            wallPoints.Add(thisPoint + new Vector2(-xOffset, .5f * yOffset));
-                            wallPoints.Add(thisPoint + new Vector2(xOffset, .5f * yOffset));
-                            break;
-
-                        default:
-                            thisPoint = Vector2.zero;
-                            Debug.Log("You're missing an exit direction");
-                            break;
+                        else
+                            tilePoints.Add(thisPoint);
                     }
-
-                    if (i == length - 1)
-                    {
-                        possibleExits.Add(thisPoint);
-                        wallPoints.Add(thisPoint);
-                    }
-                        
-                    else
-                        tilePoints.Add(thisPoint);                  
                 }
                 break;
+
+            default:
+
+                break;
         }
+    }
 
-        /*Debug.Log("Exit dir: " + (int)exitDir);
-        Debug.Log("Exit wall dir " + (int)exitWallDir);*/
-        Debug.Log($"{tilePoints.Count} tiles, {wallPoints.Count} walls, {possibleExits.Count} possible exits");
-        
-        int exitIndex = Random.Range(0, possibleExits.Count);      
-        recentExitPoint = possibleExits[exitIndex]; 
-        recentExit = exitDir;
-        recentExitWall = exitWallDir;
+    private bool CollisionTest()
+    {
+        List<Vector2> spotsToCheck = new List<Vector2>(tilePoints);
+        spotsToCheck.AddRange(wallPoints);
 
-        //Debug.Log("Exit located at " + recentExitPoint);
+        foreach(Vector2 point in spotsToCheck)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
+
+            //go back 2 rooms, try again
+            if (hit.transform != null)
+            {
+                Debug.Log("COLLISION! Can't make room " + currentIndex);
+                Debug.Log(rooms.Count + " " + roomObjects.Count);
+
+                Destroy(roomObjects[roomObjects.Count - 1]);
+                Destroy(roomObjects[roomObjects.Count - 2]);
+                roomObjects.RemoveRange(roomObjects.Count - 2,2);
+                rooms.RemoveRange(rooms.Count - 3, 3);
+                currentIndex -= 3;
+
+                Debug.Log(rooms.Count + " " + roomObjects.Count);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void PlaceTiles()
+    {
+        //room object
+        roomObject = new GameObject();
+        roomObjects.Add(roomObject);
+        roomObject.name = $"Room {currentIndex}";
+        roomObject.transform.parent = transform;
+
+        //Debug.Log($"{tilePoints.Count} tiles, {wallPoints.Count} walls, {possibleExits.Count} possible exits");
+
+        //establish entrance, set new exit
+        Vector2 entrancePoint = currentIndex == 0 ? Vector2.zero : prevRoom.exitPoint;
+        int exitIndex = Random.Range(0, possibleExits.Count);
+        thisRoom.exitPoint = possibleExits[exitIndex];
 
         int randIndex;
 
-        //Fill room with platforms and walls
-       
         //extra walls
         if (currentIndex % 2 == 0 && currentIndex != 0)
         {
@@ -533,22 +613,26 @@ public class Generator : MonoBehaviour
                 tilePoints.RemoveAt(randIndex);
             }
         }
-        
+
         foreach (Vector2 point in wallPoints)
         {
-            if (point == recentExitPoint)
+            if (point == thisRoom.exitPoint)
+            {
                 Instantiate(exitMark, point, Quaternion.identity, roomObject.transform);
-            else if(point != entrancePoint)
+                Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform);
+            }
+
+            else if (point != entrancePoint)
                 Instantiate(wall, point, Quaternion.identity, roomObject.transform);
         }
-       
+
         //tiles[0] empty, tiles[1] platform, will need to rework with more plat assets
-        foreach(Vector2 point in tilePoints)
+        foreach (Vector2 point in tilePoints)
         {
             float tileChooser = Random.Range(0f, 1f);
             if (currentIndex == 0)
                 tileChooser = 1f;
-            if(tileChooser <= webRatio)
+            if (tileChooser <= webRatio)
                 Instantiate(tiles[0], point, Quaternion.identity, roomObject.transform);
             else
                 Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform);
@@ -562,28 +646,28 @@ public class Generator : MonoBehaviour
             Instantiate(tiles[1], tilePoints[randIndex], Quaternion.identity, roomObject.transform);
             tilePoints.RemoveAt(randIndex);
         }
+
         else
-        {
             Instantiate(entranceMark, entrancePoint, Quaternion.identity, roomObject.transform);
-            Instantiate(tiles[1], entrancePoint, Quaternion.identity, roomObject.transform);
-        }
-            
+    }
 
-
-        Debug.Log(tilePoints.Count + " tiles remaining");
+    private void FillRoom()
+    {       
+        //Debug.Log(tilePoints.Count + " tiles remaining");
 
         //Fill room with enemies and items
 
         int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
-        int itemCount = Random.Range(minItems, maxItems + 1);      
+        int itemCount = Random.Range(minItems, maxItems + 1);
+        int randIndex;
 
         for (int i = 0; i < enemyCount; i++)
         {
             if (tilePoints.Count == 0)
                 break;
             randIndex = Random.Range(0, tilePoints.Count);
-            Debug.Log(tilePoints.Count + " " + randIndex);
-            Debug.Log(enemyPoints.Count);
+            /*Debug.Log(tilePoints.Count + " " + randIndex);
+            Debug.Log(enemyPoints.Count);*/
             enemyPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
         }
@@ -593,12 +677,12 @@ public class Generator : MonoBehaviour
             if (tilePoints.Count == 0)
                 break;
             randIndex = Random.Range(0, tilePoints.Count);
-            Debug.Log(tilePoints.Count + " " + randIndex);           
+            //Debug.Log(tilePoints.Count + " " + randIndex);
             itemPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
         }
 
-        foreach(Vector2 point in itemPoints)
+        foreach (Vector2 point in itemPoints)
         {
             randIndex = Random.Range(0, items.Length);
             Instantiate(items[randIndex], point, Quaternion.identity, roomObject.transform);

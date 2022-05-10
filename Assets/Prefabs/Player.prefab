@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 521655343}
   - component: {fileID: 521655342}
-  - component: {fileID: 521655341}
   - component: {fileID: 521655344}
   m_Layer: 0
   m_Name: Camera
@@ -76,14 +75,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &521655341
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 521655340}
-  m_Enabled: 1
 --- !u!114 &521655344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,6 +244,7 @@ Transform:
   m_Children:
   - {fileID: 9033157012513501429}
   - {fileID: 521655343}
+  - {fileID: 1648550830063295627}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -346,8 +338,12 @@ MonoBehaviour:
   healthStart: 10
   spinCost: 30
   shotCost: 1
+  shotCoolTime: 0.3
   spinTime: 1.8
   saveWebProgress: 1
+  audioSource: {fileID: 1721393411}
+  walkingSource: {fileID: 1721393411}
+  walkingClips: []
   animator: {fileID: 3529270458568819147}
   animator2: {fileID: 9143872696028745762}
   FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
@@ -357,6 +353,7 @@ MonoBehaviour:
   speed: 2
   spinning: 0
   canMove: 0
+  canShoot: 0
   godMode: 0
 --- !u!70 &7803034255373278129
 CapsuleCollider2D:
@@ -597,6 +594,45 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &4029144845555354873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1648550830063295627}
+  - component: {fileID: 4087227313233766396}
+  m_Layer: 10
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1648550830063295627
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4029144845555354873}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2335087186768354628}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &4087227313233766396
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4029144845555354873}
+  m_Enabled: 1
 --- !u!1 &6271092547816559853
 GameObject:
   m_ObjectHideFlags: 0

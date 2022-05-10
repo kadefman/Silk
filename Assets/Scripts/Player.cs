@@ -9,12 +9,19 @@ public class Player : MonoBehaviour
     public GameObject bullet;
     public ControlScheme controls;
     public float speedStart;
-    public int silkStart;   
+    public int silkStart;
     public int healthStart;
     public int spinCost;
     public int shotCost;
+    public float shotCoolTime;
     public float spinTime;
     public bool saveWebProgress;
+
+    public AudioSource audioSource; //for spinning
+    public AudioSource walkingSource; //for walking
+
+    public AudioClip[] walkingClips;
+  
 
     public Animator animator;
     public Animator animator2;
@@ -25,6 +32,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public float speed;
     [HideInInspector] public bool spinning;
     [HideInInspector] public bool canMove;
+    [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
 
     private Rigidbody2D rb;
@@ -47,6 +55,7 @@ public class Player : MonoBehaviour
         spinning = false;
         godMode = false;
         canMove = true;
+        canShoot = true;
         curDirection = Vector2.down;
 
         speed = speedStart;
@@ -64,18 +73,23 @@ public class Player : MonoBehaviour
         {
             if (canMove && (silkCount > 0 || godMode))
                 SpinWeb();
+            if (spinning)
+                audioSource.Play();
+
         }
 
+        
         if (Input.GetKeyUp(KeyCode.Space))
         {
             spinning = false;
+            audioSource.Stop();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftBracket))
             ToggleGodMode();
 
         //3 variations of shooting controls
-        if(canMove && (silkCount>0 || godMode))
+        if(canMove && canShoot)
         {
             if (controls == ControlScheme.Mouse)
             {               
@@ -121,11 +135,19 @@ public class Player : MonoBehaviour
             if (movement == Vector2.zero)
             {
                 animator.SetBool("isMoving", false);
+                walkingSource.Stop();
             }
 
             else
             {
                 animator.SetBool("isMoving", true);
+                //walkingSource.clip = walkingClips[Random.Range(0, walkingClips.Length)];
+                if (!walkingSource.isPlaying)
+                {
+                    walkingSource.clip = walkingClips[Random.Range(0, walkingClips.Length)];
+                    walkingSource.Play();
+                }
+                
 
                 if (movement.y == 1)
                 {
@@ -200,6 +222,7 @@ public class Player : MonoBehaviour
         if (i < 0)
         {
             animator.SetTrigger("Hit");
+            FindObjectOfType<AudioManager>().Play("Player hurt");
         }
 
         if (healthCount <= 0)
@@ -223,8 +246,21 @@ public class Player : MonoBehaviour
     {
         Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
+        StartCoroutine(Cooldown(shotCoolTime));
         FindObjectOfType<AudioManager>().Play("Web shot 1");
         animator2.SetTrigger("Shoot");
+
+        if(silkCount<=0)
+        {
+            SacrificeHealth();
+        }
+    }
+
+    public void SacrificeHealth()
+    {
+        silkCount = 0;
+        AddSilk(20);
+        AddHealth(-1);
     }
 
    /* private IEnumerator ShowChange(bool health, bool positive = true)
@@ -249,6 +285,19 @@ public class Player : MonoBehaviour
         canMove = false;
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
+    }
+
+    public IEnumerator Cooldown (float time)
+    {
+        canShoot = false;
+        float timer = time;
+
+        while(timer>=float.Epsilon)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        canShoot = true;
     }
     public IEnumerator SpinSnap( bool getIn, bool skip, Transform tile)
     {
