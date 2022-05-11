@@ -331,7 +331,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48124c493b16c24dacf16fee7aad03c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 89674033662669932, guid: cc85dc9a8896aa1468cc21df476e48ef, type: 3}
+  bulletPrefabs:
+  - {fileID: 89674033662669932, guid: cc85dc9a8896aa1468cc21df476e48ef, type: 3}
+  - {fileID: 89674033662669932, guid: 904b8c04e542fb64cac39bb63d1ef4fa, type: 3}
+  - {fileID: 89674033662669932, guid: 7c713e5d4544a6246bfee8c1db2129a7, type: 3}
   controls: 2
   speedStart: 2
   silkStart: 50
@@ -355,6 +358,9 @@ MonoBehaviour:
   canMove: 0
   canShoot: 0
   godMode: 0
+  piercing: 0
+  tripleShot: 0
+  bigBullets: 0
 --- !u!70 &7803034255373278129
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
