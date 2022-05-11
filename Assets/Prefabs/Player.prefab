@@ -346,7 +346,11 @@ MonoBehaviour:
   saveWebProgress: 1
   audioSource: {fileID: 1721393411}
   walkingSource: {fileID: 1721393411}
-  walkingClips: []
+  walkingClips:
+  - {fileID: 8300000, guid: ff365ee43971c2045aadef8b6fdd278e, type: 3}
+  - {fileID: 8300000, guid: b409a86a948e5d44bae6f3ce5ce1a529, type: 3}
+  - {fileID: 8300000, guid: 7cc9f95ef6aed8342ac233a69eee4aa4, type: 3}
+  - {fileID: 8300000, guid: bb32be7112f261e4f8c0cdfef0509b99, type: 3}
   animator: {fileID: 3529270458568819147}
   animator2: {fileID: 9143872696028745762}
   FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
