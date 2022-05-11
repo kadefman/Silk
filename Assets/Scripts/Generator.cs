@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
+    public static float xOffset = .96f;
+    public static float yOffset = 1.12f;
+
     public List<Room> rooms;
     public GameObject[] tiles;
     public GameObject[] enemies;
@@ -28,15 +31,13 @@ public class Generator : MonoBehaviour
     public int minItems;
     public int maxItems;
     public float webRatio;
-
-    
+  
     private Room thisRoom;
     private Room prevRoom;
     private GameObject roomObject;
     private List<GameObject> roomObjects;
 
     private List<Vector2> possibleExits;
-    private List<Room.TravelDirection> possibleExitDirections;
     
     private List<Vector2> tilePoints;
     private List<Vector2> wallPoints;
@@ -47,12 +48,7 @@ public class Generator : MonoBehaviour
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
 
     private int currentIndex = 0;
-
-    private float xOffset = .96f;
-    private float yOffset = 1.12f;
-
     
-
     void Start()
     {
         rooms = new List<Room>();
@@ -141,8 +137,6 @@ public class Generator : MonoBehaviour
         enemyPoints = new List<Vector2>();
         itemPoints = new List<Vector2>();
         possibleExits = new List<Vector2>();
-        possibleExitDirections = new List<Room.TravelDirection>();
-
     }
 
     private void ChooseExits(int roomIndex)
