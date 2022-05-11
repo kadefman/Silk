@@ -961,6 +961,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
+      propertyPath: startRoom
+      value: 
+      objectReference: {fileID: 3957494239912597327, guid: cd1515d60b3688949bf1414846295fc0,
+        type: 3}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
       propertyPath: maxEnemies
       value: 10
       objectReference: {fileID: 0}

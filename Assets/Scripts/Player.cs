@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     public enum ControlScheme { ArrowAuto, ArrowManual, Mouse }
 
-    public GameObject bullet;
+    public GameObject[] bulletPrefabs;
     public ControlScheme controls;
     public float speedStart;
     public int silkStart;
@@ -19,10 +19,7 @@ public class Player : MonoBehaviour
 
     public AudioSource audioSource; //for spinning
     public AudioSource walkingSource; //for walking
-
     public AudioClip[] walkingClips;
-  
-
     public Animator animator;
     public Animator animator2;
     public GameObject FxDiePrefab;
@@ -34,6 +31,10 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
+
+    [HideInInspector] public bool piercing;
+    [HideInInspector] public bool tripleShot;
+    [HideInInspector] public bool bigBullets;
 
     private Rigidbody2D rb;
     private Vector2 curDirection;
@@ -244,7 +245,7 @@ public class Player : MonoBehaviour
 
     public void Shoot(Vector2 dir)
     {
-        Instantiate(bullet, (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
+        Instantiate(bulletPrefabs[0], (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
         AddSilk(-shotCost);
         StartCoroutine(Cooldown(shotCoolTime));
         FindObjectOfType<AudioManager>().Play("Web shot 1");
