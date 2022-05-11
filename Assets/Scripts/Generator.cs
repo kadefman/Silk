@@ -54,10 +54,11 @@ public class Generator : MonoBehaviour
     
     void Start()
     {
+        currentIndex = 0;
         collisionCount = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
-        GenerateLevel();
+        CreateNextRoom();
         cam.transform.parent = player.transform;
         player.transform.position = playerPos;
     }
@@ -67,29 +68,17 @@ public class Generator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             ClearLevel();
-            GenerateLevel();
+            CreateNextRoom();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
-        {           
-            GenerateLevel(true);            
+        {
+            CollisionTest();           
         }
 
         if (Input.GetKeyDown(KeyCode.Minus))
         {
             ClearLevel();
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            Debug.Log(rooms.Count + " " + roomObjects.Count);
-            Destroy(roomObjects[roomObjects.Count - 1]);
-            Destroy(roomObjects[roomObjects.Count - 2]);
-            roomObjects.RemoveRange(roomObjects.Count - 2, 2);
-            rooms.RemoveRange(rooms.Count - 2, 2);
-            currentIndex -= 2;
-            Debug.Log(rooms.Count + " " + roomObjects.Count);
-            
         }
     }
 
@@ -103,57 +92,40 @@ public class Generator : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    void GenerateLevel(bool step = false)
-    {
-        GameManager.instance.generating = true;
-        if (!step)
-        {
-            Debug.Log("Generate All");
-            currentIndex = 0;
-            while(currentIndex < roomCount)
-            {
-                Debug.Log("Generating room " + currentIndex + "----------");
-                if (backTrack)
-                {
-                    Debug.Log("Hello!");
-                    backTrack = false;
-                    Invoke("CreateRoom", .05f);
-                }
-                    
-                else
-                    CreateRoom();
-                currentIndex++;
-            }          
-        }
-
-        else
-        {
-            Debug.Log("Generating room " + currentIndex + "----------");
-            CreateRoom();
-            currentIndex++;
-        }
-        GameManager.instance.generating = false;
-
-    }
-
     //where do I do the startRoom thing? Address this in Room script too
-    void CreateRoom(bool start = false)
+    void CreateNextRoom(bool start = false)
     {
+        Debug.Log("Creating room " + currentIndex + " ------------");
+        GameManager.instance.generating = true;
         PrepareRoom();
         ChooseExits(currentIndex);
 
         int height = Random.Range(minRoomSize, maxRoomSize);
-        int length = Random.Range(minRoomSize, maxRoomSize);
+        //int length = Random.Range(minRoomSize, maxRoomSize);
+        int length = 2;
         Vector2 genPoint = ChooseGenOffset(height, length);
 
         BuildShape(height, length, genPoint);
 
         //index was brought back 2, try again
         if (CollisionTest())
+        {
+            Invoke("Redo", .05f);
             return;
+        }
 
         PlaceTiles();
         FillRoom();
+        currentIndex++;
+        if (roomObjects.Count < roomCount)
+            CreateNextRoom();
+        else
+            GameManager.instance.generating = false;
+    }
+
+    void Redo()
+    {
+        CreateNextRoom();
     }
 
     private void PrepareRoom()
@@ -399,7 +371,7 @@ public class Generator : MonoBehaviour
 
             case Room.Shape.Hexagon:
                 Debug.Log("Hexagon, side " + length);
-                maxWalls = length;
+                maxWalls = length-1;
                 for (int x = 0; x <= 2 * length; x++)
                 {
                     int lineHeight;
@@ -581,11 +553,13 @@ public class Generator : MonoBehaviour
 
     private bool CollisionTest()
     {
+        //collisionCount = 0;
         List<Vector2> spotsToCheck = new List<Vector2>(tilePoints);
         spotsToCheck.AddRange(wallPoints);
+        Debug.Log(spotsToCheck.Count);
 
         foreach(Vector2 point in spotsToCheck)
-        {
+        {          
             RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
 
             //go back 2 rooms, try again
@@ -593,18 +567,17 @@ public class Generator : MonoBehaviour
             {
                 Debug.Log("COLLISION! Can't make room " + currentIndex);
                 Debug.Log("COLLISION AT " + hit.transform.position);
+                collisionCount++;
 
                 Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);
                 roomObjects.RemoveRange(roomObjects.Count - 2, 2);
                 rooms.RemoveRange(rooms.Count - 3, 3);
-                currentIndex -= 3;
-
-                backTrack = true;
-                return true;
-                        
+                currentIndex -= 2;
+                return true;                      
             }
         }
+        //Debug.Log(collisionCount + " collisions");
         return false;
     }
 
