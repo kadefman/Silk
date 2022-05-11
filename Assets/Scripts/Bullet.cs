@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour
     public float airTime;
     public int damage;
     public bool piercing;
+
+    [HideInInspector] public bool longRange;
     
     private Rigidbody2D rb;
     private float timer;
@@ -22,7 +24,8 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         rb.MovePosition(rb.position + ((Vector2)transform.up * speed * Time.deltaTime));
-        timer += Time.deltaTime;
+        if(!longRange)
+            timer += Time.deltaTime;
         if (timer >= airTime)
             Destroy(gameObject);
     }

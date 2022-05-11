@@ -150,6 +150,7 @@ MonoBehaviour:
   airTime: 0.2
   damage: 1
   piercing: 1
+  longRange: 0
 --- !u!1 &6849894530378691217
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +223,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 12
   m_Sprite: {fileID: 21300000, guid: 13c0a3b429b319245b16fd85521f108e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.019000754, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

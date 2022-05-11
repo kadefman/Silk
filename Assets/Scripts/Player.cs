@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public enum ControlScheme { ArrowAuto, ArrowManual, Mouse }
-
-    public GameObject[] bulletPrefabs;
-    public ControlScheme controls;
-    public float speedStart;
+    public GameObject[] bullets;
+    public float defaultSpeed;
     public int silkStart;
     public int healthStart;
     public int spinCost;
@@ -32,9 +29,10 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
 
-    [HideInInspector] public bool piercing;
-    [HideInInspector] public bool tripleShot;
-    [HideInInspector] public bool bigBullets;
+    public bool piercing;
+    public bool tripleShot;
+    public bool bigBullets;
+    public bool longRange;
 
     private Rigidbody2D rb;
     private Vector2 curDirection;
@@ -59,7 +57,7 @@ public class Player : MonoBehaviour
         canShoot = true;
         curDirection = Vector2.down;
 
-        speed = speedStart;
+        speed = defaultSpeed;
         AddSilk(silkStart);
         silkCount = silkStart;
         AddHealth(healthStart);
@@ -92,15 +90,18 @@ public class Player : MonoBehaviour
         //3 variations of shooting controls
         if(canMove && canShoot)
         {
-            if (controls == ControlScheme.Mouse)
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = 10;
+                Vector2 dir = Camera.main.ScreenToWorldPoint(mousePos) - transform.position;
+                Shoot(dir);
+            }
+
+            /*if (controls == ControlScheme.Mouse)
             {               
-                if (Input.GetMouseButtonDown(0))
-                {                  
-                    Vector3 mousePos = Input.mousePosition;
-                    mousePos.z = 10;
-                    Vector2 dir = Camera.main.ScreenToWorldPoint(mousePos) - transform.position;
-                    Shoot(dir);
-                }                   
+                               
             }
 
             else if (controls == ControlScheme.ArrowAuto)
@@ -122,7 +123,7 @@ public class Player : MonoBehaviour
 
                 else if (Input.GetKeyDown(KeyCode.F))
                     Shoot(Vector2.left);
-            }
+            }*/
         }              
     }
 
@@ -194,7 +195,7 @@ public class Player : MonoBehaviour
         else
         {
             godMode = false;
-            speed = speedStart;
+            speed = defaultSpeed;
         }
     } 
 
@@ -245,7 +246,24 @@ public class Player : MonoBehaviour
 
     public void Shoot(Vector2 dir)
     {
-        Instantiate(bulletPrefabs[0], (Vector2)transform.position + dir*bulletOffset, Quaternion.LookRotation(Vector3.back, dir));
+        GameObject bulletPrefab = piercing ? bullets[1] : bullets[0];
+        int bulletCount = tripleShot ? 3 : 1;
+        Vector2[] shotDirections = new Vector2[] { dir, Quaternion.Euler(0, -20, 0) * dir, Quaternion.Euler(0, -20, 0) * dir };
+
+        for(int i=0; i<bulletCount; i++)
+        {
+            Vector2 bulletDirection = shotDirections[i];
+            GameObject newBullet = Instantiate(bulletPrefab, (Vector2)transform.position + bulletDirection * bulletOffset, 
+                Quaternion.LookRotation(Vector3.back, bulletDirection));
+
+            Bullet bulletScript = newBullet.transform.GetComponent<Bullet>();
+            if (bigBullets)
+                newBullet.transform.localScale = new Vector3(2, 2, 1);
+
+            if (longRange)
+                bulletScript.longRange = true;
+        }
+                           
         AddSilk(-shotCost);
         StartCoroutine(Cooldown(shotCoolTime));
         FindObjectOfType<AudioManager>().Play("Web shot 1");
