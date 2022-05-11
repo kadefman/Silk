@@ -11,7 +11,8 @@ public class Generator : MonoBehaviour
     public GameObject[] tiles;
     public GameObject[] enemies;
     public GameObject[] items;
-    public GameObject wall;
+    public GameObject outerWall;
+    public GameObject innerWall;
     public GameObject exitMark;
     public GameObject entranceMark;
     public GameObject genMark;
@@ -26,8 +27,6 @@ public class Generator : MonoBehaviour
     public int maxRoomSize;  
     public int minEnemies;
     public int maxEnemies;
-    public int minWalls;
-    public int maxWalls;
     public int minItems;
     public int maxItems;
     public float webRatio;
@@ -41,6 +40,7 @@ public class Generator : MonoBehaviour
     
     private List<Vector2> tilePoints;
     private List<Vector2> wallPoints;
+    private List<Vector2> inWallPoints;
     private List<Vector2> enemyPoints;
     private List<Vector2> itemPoints;
     
@@ -48,9 +48,13 @@ public class Generator : MonoBehaviour
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
 
     private int currentIndex = 0;
+    private int maxWalls;
+    private int collisionCount;
+    private bool backTrack = false;
     
     void Start()
     {
+        collisionCount = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
         GenerateLevel();
@@ -75,10 +79,23 @@ public class Generator : MonoBehaviour
         {
             ClearLevel();
         }
+
+        if(Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            Debug.Log(rooms.Count + " " + roomObjects.Count);
+            Destroy(roomObjects[roomObjects.Count - 1]);
+            Destroy(roomObjects[roomObjects.Count - 2]);
+            roomObjects.RemoveRange(roomObjects.Count - 2, 2);
+            rooms.RemoveRange(rooms.Count - 2, 2);
+            currentIndex -= 2;
+            Debug.Log(rooms.Count + " " + roomObjects.Count);
+            
+        }
     }
 
     void ClearLevel()
     {
+        collisionCount = 0;
         currentIndex = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
@@ -88,6 +105,7 @@ public class Generator : MonoBehaviour
 
     void GenerateLevel(bool step = false)
     {
+        GameManager.instance.generating = true;
         if (!step)
         {
             Debug.Log("Generate All");
@@ -95,7 +113,15 @@ public class Generator : MonoBehaviour
             while(currentIndex < roomCount)
             {
                 Debug.Log("Generating room " + currentIndex + "----------");
-                CreateRoom();
+                if (backTrack)
+                {
+                    Debug.Log("Hello!");
+                    backTrack = false;
+                    Invoke("CreateRoom", .05f);
+                }
+                    
+                else
+                    CreateRoom();
                 currentIndex++;
             }          
         }
@@ -106,7 +132,8 @@ public class Generator : MonoBehaviour
             CreateRoom();
             currentIndex++;
         }
-                    
+        GameManager.instance.generating = false;
+
     }
 
     //where do I do the startRoom thing? Address this in Room script too
@@ -134,6 +161,7 @@ public class Generator : MonoBehaviour
          //take some stuff from chooseExits?
         tilePoints = new List<Vector2>();
         wallPoints = new List<Vector2>();
+        inWallPoints = new List<Vector2>();
         enemyPoints = new List<Vector2>();
         itemPoints = new List<Vector2>();
         possibleExits = new List<Vector2>();
@@ -153,6 +181,7 @@ public class Generator : MonoBehaviour
         else
         {
             //set up entrances
+            Debug.Log(currentIndex + "currentIndex " + roomCount + " rooms Total");
             prevRoom = rooms[currentIndex - 1];                      
             int newEntranceNum = ((int)prevRoom.exitDir + 3) % 6;
             Room.TravelDirection newEntrance = (Room.TravelDirection)newEntranceNum;
@@ -241,8 +270,8 @@ public class Generator : MonoBehaviour
                     length = 2;
 
                 int randOffset = Random.Range(1, length);
-                Debug.Log("Hex randOffset " + randOffset);
-                Debug.Log("coming from wallDir" + (int)thisRoom.entranceWall);
+                //Debug.Log("Hex randOffset " + randOffset);
+                //Debug.Log("coming from wallDir" + (int)thisRoom.entranceWall);
 
                 //choose genPoint from which the room is built
                 switch (thisRoom.entranceWall)
@@ -315,6 +344,7 @@ public class Generator : MonoBehaviour
         {
             case Room.Shape.Hall:
                 Debug.Log("Hall, length " + length);
+                maxWalls = 0;
 
                 if (length < 3)
                     length = 3;
@@ -369,7 +399,7 @@ public class Generator : MonoBehaviour
 
             case Room.Shape.Hexagon:
                 Debug.Log("Hexagon, side " + length);
-
+                maxWalls = length;
                 for (int x = 0; x <= 2 * length; x++)
                 {
                     int lineHeight;
@@ -562,16 +592,17 @@ public class Generator : MonoBehaviour
             if (hit.transform != null)
             {
                 Debug.Log("COLLISION! Can't make room " + currentIndex);
-                Debug.Log(rooms.Count + " " + roomObjects.Count);
+                Debug.Log("COLLISION AT " + hit.transform.position);
 
                 Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);
-                roomObjects.RemoveRange(roomObjects.Count - 2,2);
+                roomObjects.RemoveRange(roomObjects.Count - 2, 2);
                 rooms.RemoveRange(rooms.Count - 3, 3);
                 currentIndex -= 3;
 
-                Debug.Log(rooms.Count + " " + roomObjects.Count);
+                backTrack = true;
                 return true;
+                        
             }
         }
         return false;
@@ -584,6 +615,7 @@ public class Generator : MonoBehaviour
         roomObjects.Add(roomObject);
         roomObject.name = $"Room {currentIndex}";
         roomObject.transform.parent = transform;
+        List<GameObject> hexObjects = new List<GameObject>();
 
         //Debug.Log($"{tilePoints.Count} tiles, {wallPoints.Count} walls, {possibleExits.Count} possible exits");
 
@@ -597,13 +629,13 @@ public class Generator : MonoBehaviour
         //extra walls
         if (currentIndex % 2 == 0 && currentIndex != 0)
         {
-            int wallCount = Random.Range(minWalls, maxWalls + 1);
+            int wallCount = Random.Range(0, maxWalls + 1);
             for (int i = 0; i < wallCount; i++)
             {
                 if (tilePoints.Count == 0)
                     break;
                 randIndex = Random.Range(0, tilePoints.Count);
-                wallPoints.Add(tilePoints[randIndex]);
+                inWallPoints.Add(tilePoints[randIndex]);
                 tilePoints.RemoveAt(randIndex);
             }
         }
@@ -613,12 +645,15 @@ public class Generator : MonoBehaviour
             if (point == thisRoom.exitPoint)
             {
                 Instantiate(exitMark, point, Quaternion.identity, roomObject.transform);
-                Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform);
+                hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
             }
 
             else if (point != entrancePoint)
-                Instantiate(wall, point, Quaternion.identity, roomObject.transform);
+                hexObjects.Add(Instantiate(outerWall, point, Quaternion.identity, roomObject.transform));
         }
+
+        foreach (Vector2 point in inWallPoints)
+            Instantiate(innerWall, point, Quaternion.identity, roomObject.transform);
 
         //tiles[0] empty, tiles[1] platform, will need to rework with more plat assets
         foreach (Vector2 point in tilePoints)
@@ -629,12 +664,13 @@ public class Generator : MonoBehaviour
             if (tileChooser <= webRatio)
                 Instantiate(tiles[0], point, Quaternion.identity, roomObject.transform);
             else
-                Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform);
+                hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
         }
 
+        //create entrance Mark
         if (currentIndex == 0)
         {
-            Instantiate(wall, entrancePoint, Quaternion.identity, roomObject.transform);
+            hexObjects.Add(Instantiate(outerWall, entrancePoint, Quaternion.identity, roomObject.transform));
             randIndex = Random.Range(0, tilePoints.Count);
             playerPos = tilePoints[randIndex];
             Instantiate(tiles[1], tilePoints[randIndex], Quaternion.identity, roomObject.transform);
@@ -643,6 +679,13 @@ public class Generator : MonoBehaviour
 
         else
             Instantiate(entranceMark, entrancePoint, Quaternion.identity, roomObject.transform);
+
+        //we need to redo the ChooseSprite method because the objects spawned at different times
+        foreach (GameObject go in hexObjects)
+        {
+            HexTile hexScript = go.transform.GetComponent<HexTile>();
+            hexScript.ChooseSprite(hexScript.type);
+        }
     }
 
     private void FillRoom()
@@ -660,8 +703,6 @@ public class Generator : MonoBehaviour
             if (tilePoints.Count == 0)
                 break;
             randIndex = Random.Range(0, tilePoints.Count);
-            /*Debug.Log(tilePoints.Count + " " + randIndex);
-            Debug.Log(enemyPoints.Count);*/
             enemyPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
         }
@@ -671,7 +712,6 @@ public class Generator : MonoBehaviour
             if (tilePoints.Count == 0)
                 break;
             randIndex = Random.Range(0, tilePoints.Count);
-            //Debug.Log(tilePoints.Count + " " + randIndex);
             itemPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
         }

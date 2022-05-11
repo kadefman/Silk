@@ -20,7 +20,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Transform webTile;
     [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
-      
+    [HideInInspector] public bool generating;
+
     private void Awake()
     {
         if (instance == null)

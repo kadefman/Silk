@@ -845,6 +845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3327472262223775474, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327472262223775474, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -923,8 +928,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
+      propertyPath: innerWall
+      value: 
+      objectReference: {fileID: 5098216594947477444, guid: 997789c5742067947bc5b9096e0793ff,
+        type: 3}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
+      propertyPath: outerWall
+      value: 
+      objectReference: {fileID: 2637553448455175219, guid: c8de477f5a3e42046bf64d23557a5342,
+        type: 3}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
       propertyPath: roomCount
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
