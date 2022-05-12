@@ -44,7 +44,7 @@ public class Generator : MonoBehaviour
     private List<Vector2> enemyPoints;
     private List<Vector2> itemPoints;
 
-    private Vector2 playerPos = new Vector2(-.96f, -6.16f);
+    private Vector2 playerPos = new Vector2(-.96f, -7.28f);
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
 
     private int currentIndex = 0;
