@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3583,6 +3583,11 @@ PrefabInstance:
       propertyPath: healthText
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: currencyText
+      value: 
+      objectReference: {fileID: 549371746987670429}
     - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
         type: 3}
       propertyPath: followSpider
@@ -11091,6 +11096,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 023739f0dadac3a459047ff696777fef, type: 3}
+--- !u!114 &549371746987670429 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5100218144152001333, guid: 023739f0dadac3a459047ff696777fef,
+    type: 3}
+  m_PrefabInstance: {fileID: 549371746987670428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2637553449189100089
 PrefabInstance:
   m_ObjectHideFlags: 0

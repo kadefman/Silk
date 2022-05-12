@@ -245,6 +245,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
         type: 3}
+      propertyPath: currencyText
+      value: 
+      objectReference: {fileID: 1674807799}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
       propertyPath: followSpider
       value: 1
       objectReference: {fileID: 0}
@@ -254,6 +259,56 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1103459915979417612, guid: 03673d42558143143b7f7ebcb987b59d,
         type: 3}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: silkPermValues.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: damagePermValues.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: silkPermValues.Array.data[0]
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: silkPermValues.Array.data[1]
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: silkPermValues.Array.data[2]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: silkPermValues.Array.data[3]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: damagePermValues.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: damagePermValues.Array.data[1]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: damagePermValues.Array.data[2]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264479858898897228, guid: d047da5350d9fb14b9f2eb7fb7d5ac04,
+        type: 3}
+      propertyPath: damagePermValues.Array.data[3]
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d047da5350d9fb14b9f2eb7fb7d5ac04, type: 3}
 --- !u!1001 &222987784
@@ -627,6 +682,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d53a7f891bcb1ea4799f89f917dc60d3, type: 3}
+--- !u!114 &1674807799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5100218144152001333, guid: 023739f0dadac3a459047ff696777fef,
+    type: 3}
+  m_PrefabInstance: {fileID: 956992578}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1945794703 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3689479164833152567, guid: adcc63bae6744be45b7178109629fe6d,

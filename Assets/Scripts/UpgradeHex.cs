@@ -72,16 +72,16 @@ public class UpgradeHex : MonoBehaviour
 
     private void DisplayText()
     {
-        int upgradeCount = UpgradeCount();        
+        int upgradeCount = UpgradeCount();
 
         if (upgradeCount < 3)
         {
             costText.gameObject.SetActive(true);
             costText.transform.GetComponent<TextMeshPro>().text = prices[upgradeCount].ToString();
         }
-            
+
         else
-            costText.gameObject.SetActive(false);
+            costText.transform.GetComponent<TextMeshPro>().text = "SOLD OUT";
     }
 
     private void GiveUpgrade()
@@ -108,5 +108,8 @@ public class UpgradeHex : MonoBehaviour
         }
 
         DisplayText();
+        GameManager.instance.merchant.Animate();
+        transform.GetComponent<Collider2D>().enabled = false;
+        transform.GetComponent<Collider2D>().enabled = true;
     }
 }

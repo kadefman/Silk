@@ -87,8 +87,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftBracket))
             ToggleGodMode();
 
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+            GameManager.instance.AddCurrency(10);
+
         //3 variations of shooting controls
-        if(canMove && canShoot)
+        if (canMove && canShoot)
         {
 
             if (Input.GetMouseButtonDown(0))
