@@ -334,10 +334,9 @@ MonoBehaviour:
   bullets:
   - {fileID: 89674033662669932, guid: cc85dc9a8896aa1468cc21df476e48ef, type: 3}
   - {fileID: 89674033662669932, guid: 904b8c04e542fb64cac39bb63d1ef4fa, type: 3}
-  controls: 2
   defaultSpeed: 2
   silkStart: 50
-  healthStart: 10
+  maxHealth: 6
   spinCost: 30
   shotCost: 1
   shotCoolTime: 0.3
@@ -365,6 +364,9 @@ MonoBehaviour:
   tripleShot: 0
   bigBullets: 0
   longRange: 0
+  healthUpgrades: 0
+  damageUpgrades: 0
+  silkUpgrades: 0
 --- !u!70 &7803034255373278129
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

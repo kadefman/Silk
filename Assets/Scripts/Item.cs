@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum Type { Silk, Health, Key, Pierce, Big, Triple, FastSpin, Speed, Range };
+    public enum Type { Silk, Health, Key, Pierce, Big, Triple, FastSpin, Speed, Range, Currency };
  
     public Type type;   
     public int value;
@@ -53,6 +53,10 @@ public class Item : MonoBehaviour
 
                 case Type.Range:
                     playerScript.longRange = true;
+                    break;
+
+                case Type.Currency:
+                    playerScript.AddCurrency(1);
                     break;
             }
 

@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
     public GameObject webCounter;
     public GameObject platform;
     public TextMeshProUGUI silkText;
+    public TextMeshProUGUI currencyText;
     public GameObject healthBar;
     public GameObject[] items;
+    public int currency;
 
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        currency = 0;
     }
 
     public void SetRoom(int index)

@@ -208,6 +208,12 @@ public class Player : MonoBehaviour
         GameManager.instance.silkText.text = $"Silk: {silkCount}";
     }
 
+    public void AddCurrency(int i)
+    {
+        GameManager.instance.currency += i;
+        GameManager.instance.currencyText.text = $"Currency: {GameManager.instance.currency}";
+    }
+
     public void AddHealth(int i)
     {
         if (godMode && i < 0)

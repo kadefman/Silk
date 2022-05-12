@@ -200,13 +200,13 @@ public class Generator : MonoBehaviour
     private void ChooseExits(int roomIndex)
     {
         //set up entrances
-        Debug.Log(currentIndex + "currentIndex " + roomCount + " rooms Total");
+        //Debug.Log(currentIndex + "currentIndex " + roomCount + " rooms Total");
         prevRoom = rooms[currentIndex - 1];
         int newEntranceNum = ((int)prevRoom.exitDir + 3) % 6;
         Room.TravelDirection newEntrance = (Room.TravelDirection)newEntranceNum;
         int newWallNum = ((int)prevRoom.exitWall + 3) % 6;
         Room.WallDirection enterWall = (Room.WallDirection)newWallNum;
-        Debug.Log("coming from wallDir" + (int)enterWall);
+        //Debug.Log("coming from wallDir" + (int)enterWall);
 
         //pick exits:
         //hall, auto exit direction
