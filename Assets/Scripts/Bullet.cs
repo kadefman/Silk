@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
         timer = 0f;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         rb.MovePosition(rb.position + ((Vector2)transform.up * speed * Time.deltaTime));
         if(!longRange)

@@ -620,6 +620,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: sounds.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: sounds.Array.data[10].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: d6accc6f1a650284ca5fa61fde79f929, type: 3}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: sounds.Array.data[10].name
+      value: Player Death
+      objectReference: {fileID: 0}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: sounds.Array.data[10].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: sounds.Array.data[10].volume
+      value: 0.944
+      objectReference: {fileID: 0}
     - target: {fileID: 4516856335797710829, guid: d53a7f891bcb1ea4799f89f917dc60d3,
         type: 3}
       propertyPath: m_RootOrder
