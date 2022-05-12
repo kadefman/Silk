@@ -29,8 +29,15 @@ public class FlyingEnemy : MonoBehaviour
     //public GameObject FxDiePrefab;
     private Vector3 position;
 
+    public float seekSpeed;
+    private Transform target;
+    public bool isSeeker = false;
+    private float rotationModifier = 90;
+
+
     void Start()
     {
+        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         rb = transform.GetComponent<Rigidbody2D>();
         coll = transform.GetComponent<Collider2D>();
         Vector2 randVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
@@ -39,16 +46,42 @@ public class FlyingEnemy : MonoBehaviour
     void Update()
     {
         if(sprite != null) {
-            var lookAtPoint = sprite.position+ new Vector3(rb.velocity.x, rb.velocity.y, 0);
-            lookAtPoint.z = sprite.position.z;
-            float angle = 0;
+            if (isSeeker == false)
+            {
+                var lookAtPoint = sprite.position + new Vector3(rb.velocity.x, rb.velocity.y, 0);
+                lookAtPoint.z = sprite.position.z;
+                float angle = 0;
 
-            Vector3 relative = transform.InverseTransformPoint(lookAtPoint);
-            angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
-            transform.Rotate(0, 0, -angle);
+                Vector3 relative = transform.InverseTransformPoint(lookAtPoint);
+                angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
+                transform.Rotate(0, 0, -angle);
+            }
+            
+            if (isSeeker)
+            {
+                if (rb.velocity.magnitude > seekSpeed)
+                {
+                    rb.velocity = new Vector2(.1f, .1f);
+                    
+                }
+                target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+                transform.position = Vector2.MoveTowards(transform.position, target.position, seekSpeed * Time.deltaTime);
+                Vector3 vectorToTarget = target.transform.position - transform.position;
+                float seekAngle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - rotationModifier;
+                Quaternion q = Quaternion.AngleAxis(seekAngle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
+            }
+                
+
 
         }
         
+        /*if (isSeeker)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, target.position, seekSpeed * Time.deltaTime);
+            //transform.LookAt(target);
+        }*/
+
     }
 
     public void GetHit(int i)
