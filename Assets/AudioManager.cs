@@ -53,7 +53,7 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSource.PlayClipAtPoint(s.clip, position, volume) ;
-        Debug.Log("shooting");
+        //Debug.Log("shooting");
 
     }
 

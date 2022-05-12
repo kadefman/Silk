@@ -19,12 +19,10 @@ public class Item : MonoBehaviour
             switch(type)
             {
                 case Type.Silk:
-                    value = 20;
                     collider.transform.GetComponent<Player>().AddSilk(value);
                     break;
 
                 case Type.Health:
-                    value = 10;
                     collider.transform.GetComponent<Player>().AddHealth(value);
                     break;
 
@@ -45,12 +43,12 @@ public class Item : MonoBehaviour
                     break;
 
                 case Type.FastSpin:
-                    playerScript.spinTime = .9f;
+                    playerScript.spinTime = 1.3f;
                     break;
 
                 case Type.Speed:
-                    playerScript.defaultSpeed = 3.5f;
-                    playerScript.speed = 3.5f;
+                    playerScript.defaultSpeed = 3;
+                    playerScript.speed = 3f;
                     break;
 
                 case Type.Range:

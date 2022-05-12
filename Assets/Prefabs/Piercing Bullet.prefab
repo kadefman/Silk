@@ -147,7 +147,7 @@ MonoBehaviour:
   prefabFx: {fileID: 6505338092035888528, guid: 04cdee46e06c65b49893ac830d5cd603,
     type: 3}
   speed: 20
-  airTime: 0.2
+  airTime: 0.15
   damage: 1
   piercing: 1
   longRange: 0

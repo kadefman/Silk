@@ -43,8 +43,8 @@ public class Generator : MonoBehaviour
     private List<Vector2> inWallPoints;
     private List<Vector2> enemyPoints;
     private List<Vector2> itemPoints;
-    
-    private Vector2 playerPos = Vector2.zero;
+
+    private Vector2 playerPos = new Vector2(-.96f, -6.16f);
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
 
     private int currentIndex = 0;
@@ -185,12 +185,12 @@ public class Generator : MonoBehaviour
                 Debug.Log("COLLISION AT " + hit.transform.position);
                 //collisionCount++;
 
-                /*Destroy(roomObjects[roomObjects.Count - 1]);
+                Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);
                 roomObjects.RemoveRange(roomObjects.Count - 2, 2);
                 rooms.RemoveRange(rooms.Count - 3, 3);
                 currentIndex -= 2;
-                return true;*/
+                return true;
             }
         }
         //Debug.Log(collisionCount + " collisions");

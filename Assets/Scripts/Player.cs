@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     public GameObject[] bullets;
     public float defaultSpeed;
     public int silkStart;
-    public int healthStart;
+    public int maxHealth;
     public int spinCost;
     public int shotCost;
     public float shotCoolTime;
@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
     public bool tripleShot;
     public bool bigBullets;
     public bool longRange;
+    public int healthUpgrades;
+    public int damageUpgrades;
+    public int silkUpgrades;
 
     private Rigidbody2D rb;
     private Vector2 curDirection;
@@ -60,8 +63,8 @@ public class Player : MonoBehaviour
         speed = defaultSpeed;
         AddSilk(silkStart);
         silkCount = silkStart;
-        AddHealth(healthStart);
-        healthCount = healthStart;
+        AddHealth(maxHealth);
+        healthCount = maxHealth;
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         //Debug.Log(sp);
     }
@@ -203,10 +206,6 @@ public class Player : MonoBehaviour
     {
         silkCount += i;
         GameManager.instance.silkText.text = $"Silk: {silkCount}";
-
-
-        /*if(i>0)
-            StartCoroutine(ShowChange(false));*/
     }
 
     public void AddHealth(int i)
@@ -215,11 +214,11 @@ public class Player : MonoBehaviour
             return;
 
         healthCount += i;
-        GameManager.instance.healthText.text = $"Health: {healthCount}";
 
-        //colored circle thingy
-        /*if(i != 0)
-            StartCoroutine(ShowChange(true, i>0));*/
+        if (healthCount > maxHealth)
+            healthCount = maxHealth;
+
+        GameManager.instance.SetHealth(healthCount);
 
         if (i < 0)
         {
@@ -248,9 +247,10 @@ public class Player : MonoBehaviour
     {
         GameObject bulletPrefab = piercing ? bullets[1] : bullets[0];
         int bulletCount = tripleShot ? 3 : 1;
-        Vector2[] shotDirections = new Vector2[] { dir, Quaternion.Euler(0, -20, 0) * dir, Quaternion.Euler(0, -20, 0) * dir };
+        Vector2[] shotDirections = new Vector2[] { dir, Quaternion.AngleAxis(20, Vector3.forward) * dir, 
+            Quaternion.AngleAxis(-20, Vector3.forward) * dir };
 
-        for(int i=0; i<bulletCount; i++)
+        for (int i = 0; i < bulletCount; i++)
         {
             Vector2 bulletDirection = shotDirections[i];
             GameObject newBullet = Instantiate(bulletPrefab, (Vector2)transform.position + bulletDirection * bulletOffset, 
@@ -281,22 +281,6 @@ public class Player : MonoBehaviour
         AddSilk(20);
         AddHealth(-1);
     }
-
-   /* private IEnumerator ShowChange(bool health, bool positive = true)
-    {
-        if (health)
-            transform.GetComponent<SpriteRenderer>().color = positive ? Color.green : Color.red;
-        else
-            transform.GetComponent<SpriteRenderer>().color = Color.blue;
-
-        float timer = .2f;
-        while (timer >= float.Epsilon)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-        transform.GetComponent<SpriteRenderer>().color = Color.black;
-    }*/
 
     private void Die()
     {

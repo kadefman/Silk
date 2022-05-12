@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject webCounter;
     public GameObject platform;
     public TextMeshProUGUI silkText;
-    public TextMeshProUGUI healthText;
+    public GameObject healthBar;
     public GameObject[] items;
 
     [HideInInspector] public static GameManager instance = null;
@@ -158,11 +158,22 @@ public class GameManager : MonoBehaviour
             Debug.Log("No door");
     }
 
-    //this is a duplicate method, only exists so that enemies can reward silk directly 
-    //(which may not permanently be the case anyway)
-    public void AddSilk(int i)
+    public void SetHealth(int health)
     {
-        playerScript.AddSilk(i);
+        playerScript.maxHealth = 6 + 2 * playerScript.healthUpgrades;
+        for(int i=1; i<=6; i++)
+        {
+            Transform healthBubble = healthBar.transform.GetChild(i);
+            foreach(Transform child in healthBubble)
+                child.gameObject.SetActive(false);
+
+            if (health >= 2 * i)
+                healthBubble.GetChild(0).gameObject.SetActive(true);
+            else if (health == 2 * i - 1)
+                healthBubble.GetChild(1).gameObject.SetActive(true);
+            else if (playerScript.maxHealth >= 2*i)
+                healthBubble.GetChild(2).gameObject.SetActive(true);
+        }
     }
 
     public static GameObject RandomObject(GameObject[] objects, float prob1 = 0f)
