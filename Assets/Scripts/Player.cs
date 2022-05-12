@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
     private Vector2 curDirection;
     private float bulletOffset = .08f;
 
+    private Collider2D playerCollider;
+
     SpriteRenderer sp;
     private Vector3 positionBeforeSpinSnap;
 
@@ -63,6 +65,7 @@ public class Player : MonoBehaviour
         AddHealth(maxHealth);
         healthCount = maxHealth;
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<CapsuleCollider2D>();
         //Debug.Log(sp);
     }
 
@@ -291,9 +294,13 @@ public class Player : MonoBehaviour
     private void Die()
     {
         // Do stuff when dying
+        FindObjectOfType<AudioManager>().Play("Player Death");
+        walkingSource.Stop();
+        
         canMove = false;
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
+        playerCollider.enabled = !playerCollider.enabled;
     }
 
     public IEnumerator Cooldown (float time)
