@@ -215,11 +215,12 @@ public class Player : MonoBehaviour
 
         healthCount += i;
 
-        if (healthCount > maxHealth)
-            healthCount = maxHealth;
-
+        //maxHealth is changed here if necessary
         GameManager.instance.SetHealth(healthCount);
 
+        if (healthCount > maxHealth)
+            healthCount = maxHealth;
+      
         if (i < 0)
         {
             animator.SetTrigger("Hit");

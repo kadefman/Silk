@@ -32,13 +32,24 @@ public class UpgradeHex : MonoBehaviour
             return;
 
         int upgradeCount = UpgradeCount();
+        Color c;
 
         if (upgradeCount < 3 && prices[upgradeCount] <= GameManager.instance.currency)
         {
             canPurchase = true;
-            Debug.Log("Can Purchase");
+            c = Color.green;
         }
-            
+
+        else
+            c = Color.grey;
+
+        
+        for (int i = 0; i < 6; i++)
+        {
+            transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
+            transform.GetChild(i).GetComponent<SpriteRenderer>().color = c;
+        }
+
 
     }
 
@@ -47,7 +58,11 @@ public class UpgradeHex : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             canPurchase = false;
-            Debug.Log("Can't purchase");
+            for (int i = 0; i < 6; i++)
+            {
+                transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
+            }
+            //Debug.Log("Can't purchase");
         }
             
     }

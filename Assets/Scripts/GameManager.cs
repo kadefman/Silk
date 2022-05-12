@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int roomIndex;
     [HideInInspector] public bool generating;
     [HideInInspector] public int spinCost;
-    [HideInInspector] public int baseDamage = 1;
+    [HideInInspector] public int baseDamage;
 
     private void Awake()
     {
@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currency = 0;
+        spinCost = silkPermValues[0];
+        baseDamage = damagePermValues[0];
     }
 
     public void SetRoom(int index)
@@ -77,6 +79,7 @@ public class GameManager : MonoBehaviour
 
         if (tile.childCount == 0)
         {
+            Debug.Log("Make the text dummy");
             counter = Instantiate(webCounter, tile.transform.position, Quaternion.identity, tile);
             counter.GetComponent<TextMeshPro>().text = spinCost.ToString();
             // Player Anim
@@ -133,9 +136,10 @@ public class GameManager : MonoBehaviour
         else
         {
             CreateWeb(tile);
-            playerScript.spinning = false;           
+            playerScript.spinning = false;
 
             // Player Anim
+            playerScript.StopAllCoroutines();
             playerScript.StartCoroutine(playerScript.SpinSnap(false, true, tile));
         }                
     }
@@ -171,6 +175,9 @@ public class GameManager : MonoBehaviour
     public void SetHealth(int health)
     {
         playerScript.maxHealth = 6 + 2 * healthUpgrades;
+        if (health > playerScript.maxHealth)
+            health = playerScript.maxHealth;
+
         for(int i=1; i<=6; i++)
         {
             Transform healthBubble = healthBar.transform.GetChild(i);

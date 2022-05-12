@@ -833,7 +833,7 @@ PrefabInstance:
         type: 3}
       propertyPath: exitMark
       value: 
-      objectReference: {fileID: 5098216594947477444, guid: 29e2f685521dc3f4682a1c12da237b81,
+      objectReference: {fileID: 5098216594947477444, guid: 50950bf70c6c6e14ba57d07a0d9c1d3f,
         type: 3}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
