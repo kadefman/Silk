@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -828,6 +828,17 @@ PrefabInstance:
       propertyPath: genMark
       value: 
       objectReference: {fileID: 5098216594947477444, guid: cdb8073240e158e4d8e593671be96d23,
+        type: 3}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
+      propertyPath: autoBoss
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
+      propertyPath: bossRoom
+      value: 
+      objectReference: {fileID: 4892621805195009443, guid: 7959a6f56034c7640954d41921625bb2,
         type: 3}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}

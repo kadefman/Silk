@@ -6,7 +6,7 @@ using UnityEngine;
 public class Room
 {   
     //fork, symmRect (oscillating, maybe for hallway), rect in other 2 angles?, start Room
-    public enum Shape { Diamond, Hexagon, Triangle, Hall, Random, Rect, SymmRect, Fork, Start }
+    public enum Shape { Diamond, Hexagon, Triangle, Hall, Random, Rect, SymmRect, Fork, Special }
     public enum TravelDirection { U, UR, DR, D, DL, UL }
     public enum WallDirection { UL, UR, R, DR, DL, L}
 
