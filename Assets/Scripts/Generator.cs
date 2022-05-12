@@ -49,13 +49,10 @@ public class Generator : MonoBehaviour
 
     private int currentIndex = 0;
     private int maxWalls;
-    private int collisionCount;
-    private bool backTrack = false;
     
     void Start()
     {
         currentIndex = 0;
-        collisionCount = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
         CreateNextRoom();
@@ -84,7 +81,6 @@ public class Generator : MonoBehaviour
 
     void ClearLevel()
     {
-        collisionCount = 0;
         currentIndex = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();

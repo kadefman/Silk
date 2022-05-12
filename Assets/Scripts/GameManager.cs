@@ -11,7 +11,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI currencyText;
     public GameObject healthBar;
-    public GameObject[] items;
+    public GameObject[] items;  
+    public int[] damagePermValues;
+    public int[] silkPermValues;
+    public int healthUpgrades;
+    public int damageUpgrades;
+    public int silkUpgrades;
     public int currency;
 
     [HideInInspector] public static GameManager instance = null;
@@ -20,9 +25,12 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;
+    [HideInInspector] public Merchant merchant;
     [HideInInspector] public int enemyCount;
     [HideInInspector] public int roomIndex;
     [HideInInspector] public bool generating;
+    [HideInInspector] public int spinCost;
+    [HideInInspector] public int baseDamage = 1;
 
     private void Awake()
     {
@@ -31,7 +39,7 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -70,7 +78,7 @@ public class GameManager : MonoBehaviour
         if (tile.childCount == 0)
         {
             counter = Instantiate(webCounter, tile.transform.position, Quaternion.identity, tile);
-            counter.GetComponent<TextMeshPro>().text = playerScript.spinCost.ToString();
+            counter.GetComponent<TextMeshPro>().text = spinCost.ToString();
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(true, false, tile));
         }
@@ -78,12 +86,12 @@ public class GameManager : MonoBehaviour
         else
         {
             counter = tile.GetChild(0).gameObject;
-            silkUnitsSpent = playerScript.spinCost - int.Parse(counter.GetComponent<TextMeshPro>().text);
+            silkUnitsSpent = spinCost - int.Parse(counter.GetComponent<TextMeshPro>().text);
             // Player Anim
             playerScript.StartCoroutine(playerScript.SpinSnap(true, true, tile));
         }
                            
-        while (silkUnitsSpent< playerScript.spinCost)
+        while (silkUnitsSpent< spinCost)
         {
             if (!playerScript.spinning || playerScript.silkCount <=0)
             {
@@ -94,12 +102,12 @@ public class GameManager : MonoBehaviour
                 break;
             }
 
-            silkSpent += playerScript.spinCost * inverseSpinTime * Time.deltaTime;
+            silkSpent += spinCost * inverseSpinTime * Time.deltaTime;
             if (silkSpent > 1f)
             {
                 silkSpent -= 1f;
                 silkUnitsSpent += 1;
-                counter.GetComponent<TextMeshPro>().text = (playerScript.spinCost - silkUnitsSpent).ToString();
+                counter.GetComponent<TextMeshPro>().text = (spinCost - silkUnitsSpent).ToString();
                 playerScript.AddSilk(-1);
             }
             
@@ -162,7 +170,7 @@ public class GameManager : MonoBehaviour
 
     public void SetHealth(int health)
     {
-        playerScript.maxHealth = 6 + 2 * playerScript.healthUpgrades;
+        playerScript.maxHealth = 6 + 2 * healthUpgrades;
         for(int i=1; i<=6; i++)
         {
             Transform healthBubble = healthBar.transform.GetChild(i);
@@ -176,6 +184,12 @@ public class GameManager : MonoBehaviour
             else if (playerScript.maxHealth >= 2*i)
                 healthBubble.GetChild(2).gameObject.SetActive(true);
         }
+    }
+
+    public void AddCurrency(int i)
+    {
+        currency += i;
+        currencyText.text = currency.ToString();
     }
 
     public static GameObject RandomObject(GameObject[] objects, float prob1 = 0f)
@@ -193,7 +207,19 @@ public class GameManager : MonoBehaviour
         {
             int itemRoll = Random.Range(0, objects.Length);
             return objects[itemRoll];
-        }
-        
+        }       
+    }
+
+    public void ResetUpgrades()
+    {
+        healthUpgrades = 0;
+        playerScript.healthCount = 1;
+        playerScript.AddHealth(5);
+
+        damageUpgrades = 0;
+        baseDamage = damagePermValues[damageUpgrades];
+
+        silkUpgrades = 0;
+        spinCost = silkPermValues[silkUpgrades];
     }
 }

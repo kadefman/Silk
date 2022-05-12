@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 51541744823365334}
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 2401802152899015746}
+  - component: {fileID: 4861905703001697899}
   m_Layer: 12
   m_Name: Max Health
   m_TagString: Untagged
@@ -114,6 +115,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   value: 1
+--- !u!114 &4861905703001697899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3689479164833152567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7692937241801932687
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +152,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7692937241801932687}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.028, z: 0}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 0.72875, y: 0.72875, z: 0.2915}
   m_Children: []
   m_Father: {fileID: 2335087186768354628}

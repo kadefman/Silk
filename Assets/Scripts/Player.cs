@@ -8,12 +8,12 @@ public class Player : MonoBehaviour
     public float defaultSpeed;
     public int silkStart;
     public int maxHealth;
-    public int spinCost;
+    //public int spinCost;
     public int shotCost;
     public float shotCoolTime;
     public float spinTime;
     public bool saveWebProgress;
-
+       
     public AudioSource audioSource; //for spinning
     public AudioSource walkingSource; //for walking
     public AudioClip[] walkingClips;
@@ -33,10 +33,7 @@ public class Player : MonoBehaviour
     public bool tripleShot;
     public bool bigBullets;
     public bool longRange;
-    public int healthUpgrades;
-    public int damageUpgrades;
-    public int silkUpgrades;
-
+    
     private Rigidbody2D rb;
     private Vector2 curDirection;
     private float bulletOffset = .08f;
@@ -205,13 +202,7 @@ public class Player : MonoBehaviour
     public void AddSilk(int i)
     {
         silkCount += i;
-        GameManager.instance.silkText.text = $"Silk: {silkCount}";
-    }
-
-    public void AddCurrency(int i)
-    {
-        GameManager.instance.currency += i;
-        GameManager.instance.currencyText.text = $"Currency: {GameManager.instance.currency}";
+        GameManager.instance.silkText.text = silkCount.ToString();
     }
 
     public void AddHealth(int i)
@@ -263,9 +254,14 @@ public class Player : MonoBehaviour
                 Quaternion.LookRotation(Vector3.back, bulletDirection));
 
             Bullet bulletScript = newBullet.transform.GetComponent<Bullet>();
-            if (bigBullets)
-                newBullet.transform.localScale = new Vector3(2, 2, 1);
+            bulletScript.damage = GameManager.instance.baseDamage;
 
+            if (bigBullets)
+            {
+                newBullet.transform.localScale = new Vector3(2, 2, 1);
+                bulletScript.damage *= 2;
+            }
+                
             if (longRange)
                 bulletScript.longRange = true;
         }

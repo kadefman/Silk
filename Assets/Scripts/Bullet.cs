@@ -7,12 +7,13 @@ public class Bullet : MonoBehaviour
     public GameObject prefabFx;
     public float speed;
     public float airTime;
-    public int damage;
-    public bool piercing;
-
-    [HideInInspector] public bool longRange;
     
+    [HideInInspector] public bool longRange;
+    [HideInInspector] public bool piercing;
+    [HideInInspector] public int damage = 1;
+
     private Rigidbody2D rb;
+    
     private float timer;
 
     void Awake()

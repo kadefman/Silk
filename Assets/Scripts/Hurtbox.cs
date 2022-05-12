@@ -35,21 +35,6 @@ public class Hurtbox : MonoBehaviour
                 Destroy(collider.gameObject);
                 collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
             }
-            //StartCoroutine(ShowDamage());
         }
     }
-
-
-    //circle thingy
-    /*private IEnumerator ShowDamage()
-    {
-        transform.GetComponent<SpriteRenderer>().enabled = true;
-        float timer = displayTime;
-        while(timer >= float.Epsilon)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-        transform.GetComponent<SpriteRenderer>().enabled = false;
-    }*/
 }
