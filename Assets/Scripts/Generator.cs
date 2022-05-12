@@ -13,14 +13,15 @@ public class Generator : MonoBehaviour
     public GameObject[] items;
     public GameObject outerWall;
     public GameObject innerWall;
-    public GameObject exitMark;
     public GameObject entranceMark;
     public GameObject genMark;
     public GameObject player;
     public GameObject cam;
     public GameObject startRoom;
+    public GameObject bossRoom;
 
     public int roomCount;
+    public bool autoBoss;
     public int minHallSize;
     public int maxHallSize;
     public int minRoomSize;
@@ -49,15 +50,21 @@ public class Generator : MonoBehaviour
 
     private int currentIndex = 0;
     private int maxWalls;
+    private int bossRoomIndex;
     
     void Start()
-    {
+    {       
+        if (roomCount < 4 || autoBoss)
+            roomCount = 4;
+        bossRoomIndex = roomCount % 2 == 0 ? roomCount - 1 : roomCount - 2;
+
         currentIndex = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
         CreateNextRoom();
         cam.transform.parent = player.transform;
         player.transform.position = playerPos;
+        GameManager.instance.rooms = rooms;
     }
 
     private void Update()
@@ -94,9 +101,12 @@ public class Generator : MonoBehaviour
         Debug.Log("Creating room " + currentIndex + " ------------");
         GameManager.instance.generating = true;
 
-        if(currentIndex == 0)
-            CreateStartRoom();      
-        
+        if (currentIndex == 0)
+            CreateStartRoom();
+
+        else if (currentIndex == bossRoomIndex)
+            CreateBossRoom();
+
         else
         {
             PrepareRoom();
@@ -131,7 +141,7 @@ public class Generator : MonoBehaviour
     {
         roomObject = Instantiate(startRoom, Vector2.zero, Quaternion.identity, transform);
         roomObjects.Add(roomObject);
-        Room thisRoom = new Room(Room.Shape.Start);
+        Room thisRoom = new Room(Room.Shape.Special);
         rooms.Add(thisRoom);
         thisRoom.exitDir = Room.TravelDirection.UR;
         thisRoom.exitWall = Room.WallDirection.UR;
@@ -145,7 +155,23 @@ public class Generator : MonoBehaviour
             if (hexScript != null)
                 hexScript.ChooseSprite(hexScript.type);
         }
+    }
 
+    void CreateBossRoom()
+    {
+        prevRoom = rooms[currentIndex - 1];
+        roomObject = Instantiate(bossRoom, prevRoom.exitPoint, Quaternion.identity, transform);
+        roomObjects.Add(roomObject);
+        Room thisRoom = new Room(Room.Shape.Special);
+        rooms.Add(thisRoom);
+
+        //activate tile rotations
+        foreach (Transform t in roomObject.transform)
+        {
+            HexTile hexScript = t.GetComponent<HexTile>();
+            if (hexScript != null)
+                hexScript.ChooseSprite(hexScript.type);
+        }
     }
 
     void Redo()
@@ -196,7 +222,6 @@ public class Generator : MonoBehaviour
     private void ChooseExits(int roomIndex)
     {
         //set up entrances
-        //Debug.Log(currentIndex + "currentIndex " + roomCount + " rooms Total");
         prevRoom = rooms[currentIndex - 1];
         int newEntranceNum = ((int)prevRoom.exitDir + 3) % 6;
         Room.TravelDirection newEntrance = (Room.TravelDirection)newEntranceNum;
@@ -209,17 +234,30 @@ public class Generator : MonoBehaviour
         if (roomIndex % 2 == 0)
         {
             thisRoom = new Room(Room.Shape.Hall, newEntrance, enterWall);
-            /*int exitInt = (Random.Range(5, 7) + (int)prevRoom.exitDir)%6;
-            thisRoom.exitDir = (Room.TravelDirection)exitInt;*/
             thisRoom.exitDir = prevRoom.exitDir;
             thisRoom.exitWall = prevRoom.exitWall;
+        }
+
+        else if(roomIndex == bossRoomIndex - 2)
+        {
+            //this should always be valid
+            thisRoom = new Room(Room.Shape.Hexagon, newEntrance, enterWall);
+            thisRoom.exitDir = Room.TravelDirection.U;
+            thisRoom.exitWall = Room.WallDirection.UL;
         }
 
         //hex, 1 of 5 possible exit directions, 1 of 5 exit walls
         else
         {
             thisRoom = new Room(Room.Shape.Hexagon, newEntrance, enterWall);
-            int rand = Random.Range(0, 6);
+            int rand;
+
+            //prepare for boss room - exitDir is only UL U or UR
+            if (roomIndex == bossRoomIndex - 4)
+                rand = Random.Range(5, 8) % 6;
+            else
+                rand = Random.Range(0, 6);
+
             int exitInt = rand;
             if (exitInt == newEntranceNum)
                 exitInt = newEntranceNum == 5 ? 0 : newEntranceNum + 1;
@@ -591,8 +629,6 @@ public class Generator : MonoBehaviour
         }
     }
 
- 
-
     private void PlaceTiles()
     {
         //room object
@@ -625,11 +661,11 @@ public class Generator : MonoBehaviour
             }
         }
 
+        //platofrm on the exit, nothing on the entrance(which was the previous room's exit)
         foreach (Vector2 point in wallPoints)
         {
             if (point == thisRoom.exitPoint)
             {
-                Instantiate(exitMark, point, Quaternion.identity, roomObject.transform);
                 hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
             }
 
@@ -650,8 +686,39 @@ public class Generator : MonoBehaviour
                 hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
         }
 
-        //create entrance Mark
-        Instantiate(entranceMark, entrancePoint, Quaternion.identity, roomObject.transform);          
+        //create and rotate entrance Mark
+        GameObject ent = Instantiate(entranceMark, entrancePoint, Quaternion.identity, roomObject.transform);
+        for(int i=0; i<3; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex;
+        for (int i = 3; i < 6; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex-1;
+
+        switch(prevRoom.exitDir)
+        {
+            case Room.TravelDirection.U:
+                ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+                break;
+
+            case Room.TravelDirection.UR:
+                break;
+
+            case Room.TravelDirection.DR:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 60);
+                break;
+
+            case Room.TravelDirection.D:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 120);
+                break;
+
+            case Room.TravelDirection.DL:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 180);
+                break;
+
+            case Room.TravelDirection.UL:
+                ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+                break;
+        }
+
 
         //we need to redo the ChooseSprite method because the objects spawned at different times
         foreach (GameObject go in hexObjects)

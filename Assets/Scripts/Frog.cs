@@ -47,7 +47,7 @@ public class Frog : MonoBehaviour
         int clockWiseFlip = Random.Range(0, 2);
         bool clockwise = clockWiseFlip == 0;
 
-        transform.Rotate(Vector3.back, clockwise ? 60f : -60f);
+        transform.Rotate(Vector3.back, clockwise ? 30f : -30f);
         tongueOrigin = tongueHitBox.transform.position;
 
 

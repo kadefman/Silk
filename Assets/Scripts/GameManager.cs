@@ -21,13 +21,13 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
-    [HideInInspector] public Room currentRoom;
+    public Room currentRoom;
+    public int roomIndex;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;
     [HideInInspector] public Merchant merchant;
-    [HideInInspector] public int enemyCount;
-    [HideInInspector] public int roomIndex;
+    [HideInInspector] public int enemyCount;  
     [HideInInspector] public bool generating;
     [HideInInspector] public int spinCost;
     [HideInInspector] public int baseDamage;
