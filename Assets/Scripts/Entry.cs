@@ -8,11 +8,10 @@ public class Entry : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("Found someone!");
         if (collision.transform.CompareTag("Player"))
         {
             GameManager.instance.SetRoom(roomNumber);
-            Destroy(gameObject);
+            transform.parent.parent.GetComponent<PolygonCollider2D>().enabled = false;
         }                    
     }
 }

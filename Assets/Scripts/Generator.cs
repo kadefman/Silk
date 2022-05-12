@@ -13,7 +13,6 @@ public class Generator : MonoBehaviour
     public GameObject[] items;
     public GameObject outerWall;
     public GameObject innerWall;
-    public GameObject exitMark;
     public GameObject entranceMark;
     public GameObject genMark;
     public GameObject player;
@@ -65,6 +64,7 @@ public class Generator : MonoBehaviour
         CreateNextRoom();
         cam.transform.parent = player.transform;
         player.transform.position = playerPos;
+        GameManager.instance.rooms = rooms;
     }
 
     private void Update()
@@ -159,6 +159,7 @@ public class Generator : MonoBehaviour
 
     void CreateBossRoom()
     {
+        prevRoom = rooms[currentIndex - 1];
         roomObject = Instantiate(bossRoom, prevRoom.exitPoint, Quaternion.identity, transform);
         roomObjects.Add(roomObject);
         Room thisRoom = new Room(Room.Shape.Special);
@@ -660,11 +661,11 @@ public class Generator : MonoBehaviour
             }
         }
 
+        //platofrm on the exit, nothing on the entrance(which was the previous room's exit)
         foreach (Vector2 point in wallPoints)
         {
             if (point == thisRoom.exitPoint)
             {
-                Instantiate(exitMark, point, Quaternion.identity, roomObject.transform);
                 hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
             }
 
@@ -685,9 +686,38 @@ public class Generator : MonoBehaviour
                 hexObjects.Add(Instantiate(tiles[1], point, Quaternion.identity, roomObject.transform));
         }
 
-        //create entrance Mark
+        //create and rotate entrance Mark
         GameObject ent = Instantiate(entranceMark, entrancePoint, Quaternion.identity, roomObject.transform);
-        ent.transform.GetChild(0).GetComponent<Entry>().roomNumber = currentIndex;
+        for(int i=0; i<3; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex;
+        for (int i = 3; i < 6; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex-1;
+
+        switch(prevRoom.exitDir)
+        {
+            case Room.TravelDirection.U:
+                ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+                break;
+
+            case Room.TravelDirection.UR:
+                break;
+
+            case Room.TravelDirection.DR:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 60);
+                break;
+
+            case Room.TravelDirection.D:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 120);
+                break;
+
+            case Room.TravelDirection.DL:
+                ent.transform.GetChild(0).Rotate(Vector3.back, 180);
+                break;
+
+            case Room.TravelDirection.UL:
+                ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+                break;
+        }
 
 
         //we need to redo the ChooseSprite method because the objects spawned at different times
