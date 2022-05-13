@@ -3,73 +3,120 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Frog : MonoBehaviour
-{ 
-    public GameObject tongueHitBox;   
+{
+    
     public Animator anim;
 
-    //public float turnTime;
-    private Vector2 tongueOrigin;
-    public float tongueOutTime;
-    public float tongueInTime;   
-    public float tongueDistance;
+    public float stabTime;
+    public float tongueWhipTime;    
+    public float flyTime;
+    public float stabDist;
+    public float coolTime;
 
-    
-    private bool attacking;
-    private bool turning;
-    private float inverseTurnTime;
-    private float inverseOutTime;
-    private float inverseInTime;    
+    private Transform body;
+    private Transform tongue;
+    private Transform tongueHitBox;
+    private bool canAttack;
 
     void Start()
     {
-        attacking = false;
-        turning = false;
-        inverseOutTime = 1 / tongueOutTime;
-        inverseInTime = 1 / tongueInTime;
-        tongueOrigin = tongueHitBox.transform.position;
+        body = transform.GetChild(0);
+        tongue = transform.GetChild(0).GetChild(0);
+        tongueHitBox = transform.GetChild(0).GetChild(0).GetChild(1);
+        canAttack = true;
     }
 
     void Update()
     {
-        if (attacking || turning)
+        if (!canAttack)
             return;
 
+        //center stab
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            anim.SetTrigger("tongueAttack");
+            StabAttack();
 
-        //left
+        //left stab
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            anim.SetTrigger("tongueWhip");
+        {
+            TurnTongueLeft();
+            StabAttack();
+            Invoke("TurnTongueRight", stabTime);
+        }
 
-        //right
+        //right stab
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            FlipTongue();
-            anim.SetTrigger("tongueWhip");
-            Invoke("FlipTongue", .08f);
+            TurnTongueRight();
+            StabAttack();
+            Invoke("TurnTongueLeft", stabTime);
         }
-            
 
+
+        //left whip
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            anim.SetTrigger("tongueWhip");
+
+
+        //right whip
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            FlipBody();
+            anim.SetTrigger("tongueWhip");
+            Invoke("FlipBody", tongueWhipTime);
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            anim.SetTrigger("flyAttack");
+        }
     }
 
-    void FlipTongue()
+    void StabAttack()
     {
-        Debug.Log("flipTongue");
-        transform.GetChild(3).GetChild(0).GetComponent<SpriteRenderer>().flipX = true;
-        //transform.GetChild(3).GetComponent<SpriteRenderer>().flipX = true;
+        anim.SetTrigger("tongueAttack");
+        StartCoroutine(Stab());
+        canAttack = false;
+        Invoke("EndCoolTime", coolTime);
     }
 
-    //this should be gradual but it's 3am lol
-    private void Turn()
+    IEnumerator Stab(bool down = true)
     {
-        int clockWiseFlip = Random.Range(0, 2);
-        bool clockwise = clockWiseFlip == 0;
+        float inverseTime = 2 / stabTime;
+        Vector3 targetPosition = tongueHitBox.transform.position - stabDist * (down ? Vector3.down : Vector3.up);
 
-        transform.Rotate(Vector3.back, clockwise ? 30f : -30f);
-        tongueOrigin = tongueHitBox.transform.position;
+        float sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
 
+        while(sqrRemainingDistance > float.Epsilon)
+        {
+            Vector3 newPosition = Vector3.MoveTowards(tongueHitBox.transform.position, targetPosition, inverseTime * Time.deltaTime);
+            tongueHitBox.transform.position = newPosition;
+            sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
+            yield return null;
+        }       
 
-        turning = false;
+        StartCoroutine(Stab(false));
     }
 
+    void FlipBody()
+    {
+        body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
+        tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
+    }
+
+    void TurnTongueLeft()
+    {
+        tongue.transform.Rotate(Vector3.back, 30);
+    }
+
+    void TurnTongueRight()
+    {
+        tongue.transform.Rotate(Vector3.back, -30);
+    }
+
+    void EndCoolTime()
+    {
+        canAttack = true;
+        Debug.Log("can attack");
+    }
 }
