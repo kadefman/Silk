@@ -7,7 +7,7 @@ public class Hurtbox : MonoBehaviour
     private FlyingEnemy enemy;  
     
     public int damage;
-    private int origDamage;
+    public int origDamage;
     
     void Awake()
     {
@@ -25,7 +25,7 @@ public class Hurtbox : MonoBehaviour
 
     private void OnEnable()
     {
-        damage = origDamage;
+        //damage = origDamage;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -38,7 +38,7 @@ public class Hurtbox : MonoBehaviour
             if (player.spinning)
                 player.spinning = false;
 
-            StartCoroutine(TempDisable());
+            TempDisable();
 
             /*if(transform.CompareTag("Tongue"))
             {
@@ -70,10 +70,14 @@ public class Hurtbox : MonoBehaviour
         }
     }
 
-    IEnumerator TempDisable()
+    void TempDisable()
     {
         damage = 0;
-        yield return new WaitForSeconds(1);
+        Invoke("EnableHitbox", .7f);
+    }
+
+    void EnableHitbox()
+    {
         damage = origDamage;
     }
 }

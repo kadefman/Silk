@@ -1049,7 +1049,7 @@ PrefabInstance:
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: roomCount
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
@@ -1097,6 +1097,11 @@ PrefabInstance:
         type: 3}
       propertyPath: items.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
+        type: 3}
+      propertyPath: rooms.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
@@ -1194,22 +1199,22 @@ PrefabInstance:
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: difficultyStarts.Array.data[1]
-      value: 10
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: difficultyStarts.Array.data[2]
-      value: 20
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: difficultyStarts.Array.data[3]
-      value: 30
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 5504573724278133771, guid: ec56b37b8e9773c4db0c558356d4763f,
         type: 3}
       propertyPath: difficultyStarts.Array.data[4]
-      value: 40
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec56b37b8e9773c4db0c558356d4763f, type: 3}
