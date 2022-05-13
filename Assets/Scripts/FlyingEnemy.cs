@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class FlyingEnemy : MonoBehaviour
 {
-    public enum Type {Fly, Bee};
-
     //each small array must add to 1
     //7 enemies: stillFly, movingFly, bee, angryBee, fastFly, bigBee, bigAngryBee
     //8 items: nothing, silk, health, currency, bigSilk, bigHealth, bigCurrency, powerup
@@ -24,19 +22,17 @@ public class FlyingEnemy : MonoBehaviour
     {0, 0, 0, .4f, .2f, .2f, .1f, .1f},
     //bigAngryBee
     {0, 0, 0, .2f, .2f, .2f, .2f, .2f}};
-
-    public Type type;
+  
     public Transform sprite;
     public GameObject FxDiePrefab;
     /*public AudioSource audioSource;
     public AudioClip damageSFX;
     public AudioClip deathSFX;*/
 
-    public float speed;
-    public float dropRate;
+    public int enemyIndex;
+    public float speed;   
     public int damage;
     public int health;
-    public int silkReward;
 
     private Collider2D coll;
     private Rigidbody2D rb;
@@ -51,12 +47,12 @@ public class FlyingEnemy : MonoBehaviour
     public float seekSpeed;
     private Transform target;
     public bool isSeeker = false;
+    public bool isStill = false;
     private float rotationModifier = 90;
 
+    private float[] dropRates;
     private float xVelocity;
     private float yVelocity;
-
-
 
     void Start()
     {
@@ -65,9 +61,19 @@ public class FlyingEnemy : MonoBehaviour
         coll = transform.GetComponent<Collider2D>();
         Vector2 randVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         rb.AddForce(speed * randVector.normalized);
+
+        dropRates = new float[8];
+        for(int i=0; i<dropRates.Length; i++)
+        {
+            dropRates[i] = itemRarities[enemyIndex,i];
+        }
+
     }
     void Update()
     {
+        if (isStill)
+            return;
+
         if(sprite != null) {
             if (isSeeker == false)
             {
@@ -132,15 +138,43 @@ public class FlyingEnemy : MonoBehaviour
             audioSource.PlayOneShot(damageSFX, .8f);*/
         }       
     }
+
+    private void DropItem()
+    {
+        //which item to place
+        float itemRoll = Random.Range(0, 1);
+        int itemIndex = 0;
+
+        for (int i = 0; i < dropRates.Length; i++)
+        {
+            itemRoll -= dropRates[i];
+            if (itemRoll <= 0)
+                itemIndex = i;
+        }
+
+        if(itemIndex < 7 && itemIndex > 0)
+            Instantiate(GameManager.instance.items[itemIndex-1], transform.position, Quaternion.identity);
+        
+        //random powerup, uniform
+        else if(itemIndex == 7)
+        {
+            int powerupIndex = Random.Range(0, GameManager.instance.powerupsRemaining.Count);
+            GameObject powerup = GameManager.instance.powerupsRemaining[powerupIndex];
+            Instantiate(powerup, transform.position, Quaternion.identity);
+            GameManager.instance.powerupsRemaining.Remove(powerup);
+        }
+    }
+
     IEnumerator Die()
     {
-        //game
         Destroy(transform.GetChild(0).gameObject);
 
         GameManager.instance.enemyCount--;
         if (GameManager.instance.enemyCount == 0)
             GameManager.instance.OpenDoor(false);
-        Instantiate(GameManager.RandomObject(GameManager.instance.items), transform.position, Quaternion.identity);      
+
+        DropItem();
+           
 
         //audio
         /*audioSource.pitch = Random.Range(.95f, 1.1f);

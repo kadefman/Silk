@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7803034255373278129}
   - component: {fileID: 1017012220701539823}
   m_Layer: 8
-  m_Name: Bee
+  m_Name: Big Bee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3689479164833152567}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
+  m_LocalScale: {x: 2.6, y: 2.6, z: 1}
   m_Children:
   - {fileID: 7834622592582712571}
   - {fileID: 6294752580915590823}
@@ -138,10 +138,10 @@ MonoBehaviour:
   sprite: {fileID: 6294752580915590823}
   FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
     type: 3}
-  enemyIndex: 2
-  speed: 100
-  damage: 1
-  health: 5
+  enemyIndex: 5
+  speed: 80
+  damage: 2
+  health: 15
   seekSpeed: 0
   isSeeker: 0
   isStill: 0

@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 { 
-    public GameObject tongueHitBox;
+    public GameObject tongueHitBox;   
+    public Animator anim;
+
     //public float turnTime;
+    private Vector2 tongueOrigin;
     public float tongueOutTime;
     public float tongueInTime;   
     public float tongueDistance;
 
-    private Vector2 tongueOrigin;
+    
     private bool attacking;
     private bool turning;
     private float inverseTurnTime;
     private float inverseOutTime;
-    private float inverseInTime;
-    
-    
+    private float inverseInTime;    
 
     void Start()
     {
@@ -34,11 +35,28 @@ public class Frog : MonoBehaviour
             return;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Turn();
+            anim.SetTrigger("tongueAttack");
 
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            StartCoroutine(TongueOut());
+        //left
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            anim.SetTrigger("tongueWhip");
 
+        //right
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            FlipTongue();
+            anim.SetTrigger("tongueWhip");
+            Invoke("FlipTongue", .08f);
+        }
+            
+
+    }
+
+    void FlipTongue()
+    {
+        Debug.Log("flipTongue");
+        transform.GetChild(3).GetChild(0).GetComponent<SpriteRenderer>().flipX = true;
+        //transform.GetChild(3).GetComponent<SpriteRenderer>().flipX = true;
     }
 
     //this should be gradual but it's 3am lol
@@ -54,44 +72,4 @@ public class Frog : MonoBehaviour
         turning = false;
     }
 
-    private IEnumerator TongueOut()
-    {
-        Debug.Log("Tongue Out");
-        attacking = true;
-        Vector2 startPoint = tongueHitBox.transform.position;
-        Vector2 endPoint = startPoint + -(Vector2)transform.up * tongueDistance;
-        float sqrRemainingDistance = (startPoint - endPoint).sqrMagnitude;
-
-        while(sqrRemainingDistance > float.Epsilon)
-        {
-            Vector3 newPosition = Vector3.MoveTowards(tongueHitBox.transform.position, endPoint, inverseOutTime * Time.deltaTime);
-            tongueHitBox.transform.position = newPosition;
-            sqrRemainingDistance = ((Vector2)newPosition - endPoint).sqrMagnitude;
-            Debug.Log(sqrRemainingDistance);
-            yield return null;
-        }
-
-        tongueHitBox.transform.position = endPoint;
-        StartCoroutine(TongueIn());
-    }
-
-    private IEnumerator TongueIn()
-    {
-        Debug.Log("Tongue In");
-        attacking = true;
-        Vector2 startPoint = tongueHitBox.transform.position;
-        Vector2 endPoint = tongueOrigin;
-        float sqrRemainingDistance = (startPoint - endPoint).sqrMagnitude;
-
-        while (sqrRemainingDistance > float.Epsilon)
-        {
-            Vector3 newPosition = Vector3.MoveTowards(tongueHitBox.transform.position, endPoint, inverseInTime * Time.deltaTime);
-            tongueHitBox.transform.position = newPosition;
-            sqrRemainingDistance = ((Vector2)newPosition - endPoint).sqrMagnitude;
-            yield return null;
-        }
-
-        tongueHitBox.transform.position = tongueOrigin;
-        attacking = false;
-    }
 }

@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         GameManager.instance.playerScript = this;
+        GameManager.instance.ResetPowerups();
 
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;
@@ -66,6 +67,7 @@ public class Player : MonoBehaviour
         healthCount = maxHealth;
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<CapsuleCollider2D>();
+        
         //Debug.Log(sp);
     }
 

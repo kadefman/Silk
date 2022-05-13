@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI currencyText;
     public GameObject healthBar;
-    public GameObject[] items;  
+    public GameObject[] items;
+    public GameObject[] powerups;
     public int[] damagePermValues;
     public int[] silkPermValues;
     public int healthUpgrades;
@@ -19,10 +20,12 @@ public class GameManager : MonoBehaviour
     public int silkUpgrades;
     public int currency;
 
+    [HideInInspector] public int roomIndex;
+    [HideInInspector] public int bossRoomIndex;
+    
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
-    [HideInInspector] public Room currentRoom;
-    [HideInInspector] public int roomIndex;
+    [HideInInspector] public Room currentRoom;  
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;
@@ -31,6 +34,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool generating;
     [HideInInspector] public int spinCost;
     [HideInInspector] public int baseDamage;
+    [HideInInspector] public List<GameObject> powerupsRemaining;
 
     private void Awake()
     {
@@ -62,6 +66,11 @@ public class GameManager : MonoBehaviour
 
         else
             roomIndex = -1;
+
+        if(roomIndex == bossRoomIndex)
+        {
+            //Boss stuff happens
+        }
     }
 
     public IEnumerator SpinCountdown(int startSilk)
@@ -199,22 +208,11 @@ public class GameManager : MonoBehaviour
         currencyText.text = currency.ToString();
     }
 
-    public static GameObject RandomObject(GameObject[] objects, float prob1 = 0f)
+    public void ResetPowerups()
     {
-        if(prob1==0f)
-        {
-            float itemRoll = Random.Range(0f, 1f);
-            if (itemRoll <= prob1)
-                return objects[0];
-            else
-                return objects[1];
-        }
-
-        else
-        {
-            int itemRoll = Random.Range(0, objects.Length);
-            return objects[itemRoll];
-        }       
+        powerupsRemaining = new List<GameObject>();
+        foreach (GameObject go in powerups)
+            powerupsRemaining.Add(go);
     }
 
     public void ResetUpgrades()

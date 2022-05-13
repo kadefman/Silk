@@ -57,13 +57,14 @@ public class Generator : MonoBehaviour
         if (roomCount < 4 || autoBoss)
             roomCount = 4;
         bossRoomIndex = roomCount % 2 == 0 ? roomCount - 1 : roomCount - 2;
+        GameManager.instance.bossRoomIndex = bossRoomIndex;
 
         currentIndex = 0;
         rooms = new List<Room>();
         roomObjects = new List<GameObject>();
-        CreateNextRoom();
-        cam.transform.parent = player.transform;
         player.transform.position = playerPos;
+        CreateNextRoom();
+        cam.transform.parent = player.transform;  
         GameManager.instance.rooms = rooms;
     }
 
@@ -642,14 +643,24 @@ public class Generator : MonoBehaviour
             }
         }
 
-        webRatio = Room.webRatios[difficulty];
-        minEnemies = Room.minEnemies[difficulty];
-        maxEnemies = Room.maxEnemies[difficulty];
-        enemyRates = new float[7];
-        for(int i=0; i<7; i++)
+        if(difficulty == -1)
         {
-            enemyRates[i] = Room.enemyRarities[difficulty, i];
+            webRatio = 0;
+            minEnemies = 0;
+            maxEnemies = 0;
         }
+
+        else
+        {
+            webRatio = Room.webRatios[difficulty];
+            minEnemies = Room.minEnemies[difficulty];
+            maxEnemies = Room.maxEnemies[difficulty];
+            enemyRates = new float[7];
+            for (int i = 0; i < 7; i++)
+            {
+                enemyRates[i] = Room.enemyRarities[difficulty, i];
+            }
+        }      
     }
 
     private void PlaceTiles()
@@ -755,24 +766,32 @@ public class Generator : MonoBehaviour
 
     private void AddEnemies()
     {       
-        //Fill room with enemies
 
         int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
-        int randIndex;
 
+        //where to put enemies
         for (int i = 0; i < enemyCount; i++)
         {
             if (tilePoints.Count == 0)
                 break;
-            randIndex = Random.Range(0, tilePoints.Count);
+            int randIndex = Random.Range(0, tilePoints.Count);
             enemyPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
         }
 
+        //which enemy to place
         foreach (Vector2 point in enemyPoints)
         {
-            randIndex = Random.Range(0, enemies.Length);
-            Instantiate(enemies[randIndex], point, Quaternion.identity, roomObject.transform);
+            float enemyRoll = Random.Range(0, 1);
+            int enemyIndex = 0;
+            for(int i=0; i<enemyRates.Length; i++)
+            {
+                enemyRoll -= enemyRates[i];
+                if (enemyRoll <= 0)
+                    enemyIndex = i;
+            }
+
+            Instantiate(enemies[enemyIndex], point, Quaternion.identity, roomObject.transform);
         }
     }
 }

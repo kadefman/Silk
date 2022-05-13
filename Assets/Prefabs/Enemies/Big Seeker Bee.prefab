@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 2912477436184628051}
   - component: {fileID: 5350249581596634381}
   m_Layer: 8
-  m_Name: Seeker Bee
+  m_Name: Big Seeker Bee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 8579754611316829909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
+  m_LocalScale: {x: 2.6, y: 2.6, z: 1}
   m_Children:
   - {fileID: 2925346485979507737}
   - {fileID: 1403351234574345797}
@@ -351,10 +351,10 @@ MonoBehaviour:
   sprite: {fileID: 1403351234574345797}
   FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
     type: 3}
-  enemyIndex: 3
-  speed: 100
-  damage: 1
-  health: 10
+  enemyIndex: 6
+  speed: 80
+  damage: 2
+  health: 20
   seekSpeed: 0.5
   isSeeker: 1
   isStill: 0

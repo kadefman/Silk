@@ -425,6 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tongueHitBox: {fileID: 4280571793013823417}
+  anim: {fileID: 5000200015185521923}
   tongueOutTime: 0.08
   tongueInTime: 0.14
   tongueDistance: 4
