@@ -111,7 +111,7 @@ public class Generator : MonoBehaviour
             CreateStartRoom();
 
         else if (currentIndex == bossRoomIndex)
-            CreateBossRoom();
+            TryCreateBossRoom();
 
         else
         {
@@ -173,6 +173,59 @@ public class Generator : MonoBehaviour
             if (hexScript != null)
                 hexScript.ChooseSprite(hexScript.type);
         }
+    }
+
+    void TryCreateBossRoom()
+    {
+        int length = 4;
+        Vector2 genPoint = thisRoom.exitPoint + 4 * new Vector2(-.96f, .56f);
+        for(int x=0; x<=8; x++)
+        {
+            int lineHeight;
+            if (x <= length)
+                lineHeight = x + length + 1;
+            else
+                lineHeight = 3 * length + 1 - x;
+
+            for (int y = 0; y < lineHeight; y++)
+            {
+                float pointX = genPoint.x + xOffset * x;
+                float pointY;
+                if (x < length)
+                    pointY = genPoint.y + (yOffset * (y - .5f * x));
+                else
+                    pointY = genPoint.y + (yOffset * (1 + y - .5f * (2 * length + 2 - x)));
+
+                Vector2 point = new Vector2(pointX, pointY);
+                if(!(y==0 & x==length))
+                {
+                    tilePoints.Add(point);
+                }
+            }
+        }
+
+        foreach (Vector2 point in tilePoints)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
+
+            //go back 2 rooms, try again
+            if (hit.transform != null)
+            {
+                Debug.Log("COLLISION! Can't make room " + currentIndex);
+                Debug.Log("COLLISION AT " + hit.transform.position);
+                //collisionCount++;
+
+                Destroy(roomObjects[roomObjects.Count - 1]);
+                Destroy(roomObjects[roomObjects.Count - 2]);
+                roomObjects.RemoveRange(roomObjects.Count - 2, 2);
+                rooms.RemoveRange(rooms.Count - 3, 3);
+                currentIndex -= 2;
+                Invoke("Redo", .05f);
+                return;
+            }
+        }
+        //Debug.Log(collisionCount + " collisions");
+        CreateBossRoom();
     }
 
     void CreateBossRoom()

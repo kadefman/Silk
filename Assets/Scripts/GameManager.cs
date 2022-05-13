@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,6 +40,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public List<GameObject> powerupsRemaining;
     [HideInInspector] public bool canReset;
 
+    public GameObject canvasPrefab;
+    [HideInInspector] public GameObject canvas;
+
     private void Awake()
     {
         if (instance == null)
@@ -54,6 +58,9 @@ public class GameManager : MonoBehaviour
         currency = 0;
         spinCost = silkPermValues[0];
         baseDamage = damagePermValues[0];
+        canvas = Instantiate(canvasPrefab);
+        silkText = canvas.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        currencyText = canvas.transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
 
     public void SetRoom(int index)
@@ -231,5 +238,16 @@ public class GameManager : MonoBehaviour
         spinCost = silkPermValues[silkUpgrades];
 
         runCount = 0;
+    }
+
+    public IEnumerator reloadRoutine()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene(0);
+    }
+
+    public void reload()
+    {
+        StartCoroutine(reloadRoutine());
     }
 }
