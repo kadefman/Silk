@@ -782,7 +782,7 @@ public class Generator : MonoBehaviour
         //which enemy to place
         foreach (Vector2 point in enemyPoints)
         {
-            float enemyRoll = Random.Range(0, 1);
+            float enemyRoll = Random.Range(0f, 1f);
             int enemyIndex = 0;
             for(int i=0; i<enemyRates.Length; i++)
             {

@@ -142,7 +142,7 @@ public class FlyingEnemy : MonoBehaviour
     private void DropItem()
     {
         //which item to place
-        float itemRoll = Random.Range(0, 1);
+        float itemRoll = Random.Range(0f, 1f);
         int itemIndex = 0;
 
         for (int i = 0; i < dropRates.Length; i++)
