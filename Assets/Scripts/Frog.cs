@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
-    public GameObject tongueHitBox;
+    
     public Animator anim;
 
     public float stabTime;
     public float tongueWhipTime;    
     public float flyTime;
-    public float tongueShift;
+    public float stabDist;
+    public float coolTime;
 
     private Transform body;
     private Transform tongue;
+    private Transform tongueHitBox;
     private bool canAttack;
 
     void Start()
     {
         body = transform.GetChild(0);
-        tongue = transform.GetChild(0).GetChild(0).GetChild(0);
+        tongue = transform.GetChild(0).GetChild(0);
+        tongueHitBox = transform.GetChild(0).GetChild(0).GetChild(1);
         canAttack = true;
     }
 
@@ -30,13 +33,13 @@ public class Frog : MonoBehaviour
 
         //center stab
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            anim.SetTrigger("tongueAttack");
+            StabAttack();
 
         //left stab
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             TurnTongueLeft();
-            anim.SetTrigger("tongueAttack");
+            StabAttack();
             Invoke("TurnTongueRight", stabTime);
         }
 
@@ -44,7 +47,7 @@ public class Frog : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             TurnTongueRight();
-            anim.SetTrigger("tongueAttack");
+            StabAttack();
             Invoke("TurnTongueLeft", stabTime);
         }
 
@@ -53,24 +56,49 @@ public class Frog : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4))
             anim.SetTrigger("tongueWhip");
 
+
         //right whip
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            FlipTongue();
+            FlipBody();
             anim.SetTrigger("tongueWhip");
-            Invoke("FlipTongue", tongueWhipTime);
+            Invoke("FlipBody", tongueWhipTime);
         }
 
 
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            FlipTongue();
             anim.SetTrigger("flyAttack");
-            Invoke("FlipTongue", tongueWhipTime);
         }
     }
 
-    void FlipTongue()
+    void StabAttack()
+    {
+        anim.SetTrigger("tongueAttack");
+        StartCoroutine(Stab());
+        canAttack = false;
+        Invoke("EndCoolTime", coolTime);
+    }
+
+    IEnumerator Stab(bool down = true)
+    {
+        float inverseTime = 2 / stabTime;
+        Vector3 targetPosition = tongueHitBox.transform.position - stabDist * (down ? Vector3.down : Vector3.up);
+
+        float sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
+
+        while(sqrRemainingDistance > float.Epsilon)
+        {
+            Vector3 newPosition = Vector3.MoveTowards(tongueHitBox.transform.position, targetPosition, inverseTime * Time.deltaTime);
+            tongueHitBox.transform.position = newPosition;
+            sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
+            yield return null;
+        }       
+
+        StartCoroutine(Stab(false));
+    }
+
+    void FlipBody()
     {
         body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
         tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
@@ -79,17 +107,16 @@ public class Frog : MonoBehaviour
     void TurnTongueLeft()
     {
         tongue.transform.Rotate(Vector3.back, 30);
-        tongue.transform.position += Vector3.left * tongueShift;
     }
 
     void TurnTongueRight()
     {
         tongue.transform.Rotate(Vector3.back, -30);
-        tongue.transform.position += Vector3.right * tongueShift;
     }
 
     void EndCoolTime()
     {
-
+        canAttack = true;
+        Debug.Log("can attack");
     }
 }

@@ -12,8 +12,14 @@ public class Hurtbox : MonoBehaviour
 
     void Awake()
     {
-        enemy = transform.parent.GetComponent<FlyingEnemy>();
-        damage = enemy.damage;
+        if (transform.parent.GetComponent<FlyingEnemy>())
+        {
+            enemy = transform.parent.GetComponent<FlyingEnemy>();
+            damage = enemy.damage;
+        }
+
+        else
+            damage = 1;       
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
