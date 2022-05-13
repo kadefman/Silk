@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 5221777552533394566}
   - component: {fileID: 6783334197611070822}
   - component: {fileID: -7067453396794799327}
-  m_Layer: 9
+  m_Layer: 13
   m_Name: Boss Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

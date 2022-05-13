@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject web;
     public GameObject webCounter;
     public GameObject platform;
+    public GameObject invisWall;
     public TextMeshProUGUI silkText;
     public TextMeshProUGUI currencyText;
     public GameObject healthBar;
@@ -20,10 +21,10 @@ public class GameManager : MonoBehaviour
     public int damageUpgrades;
     public int silkUpgrades;
     public int currency;
+    public int runCount;
 
     [HideInInspector] public int roomIndex;
-    [HideInInspector] public int bossRoomIndex;
-    [HideInInspector] public int runCount;
+    [HideInInspector] public int bossRoomIndex;   
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
     [HideInInspector] public Room currentRoom;  
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int spinCost;
     [HideInInspector] public int baseDamage;
     [HideInInspector] public List<GameObject> powerupsRemaining;
+    [HideInInspector] public bool canReset;
 
     private void Awake()
     {

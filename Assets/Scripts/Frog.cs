@@ -6,24 +6,36 @@ public class Frog : MonoBehaviour
 {
     
     public Animator anim;
+    public List<GameObject> enemiesToSpawn;
 
+    public int maxHealth;   
     public float stabTime;
-    public float tongueWhipTime;    
+    public float tongueWhipTime;
+    public float flyPrepareTime;
     public float flyTime;
-    public float stabDist;
+    public float enemyGapTime;
     public float coolTime;
+    public float bossDeathTime;
+    public float flySpawnOffset;
+
+    public int health;
 
     private Transform body;
     private Transform tongue;
-    private Transform tongueHitBox;
+    private Transform tongueSprite;
+    private Transform tongueHitbox;
+    private int turnAngle;
     private bool canAttack;
 
     void Start()
     {
         body = transform.GetChild(0);
         tongue = transform.GetChild(0).GetChild(0);
-        tongueHitBox = transform.GetChild(0).GetChild(0).GetChild(1);
+        tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
+        tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
+        HideHitbox();
         canAttack = true;
+        health = maxHealth;
     }
 
     void Update()
@@ -35,88 +47,105 @@ public class Frog : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
             StabAttack();
 
-        //left stab
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            TurnTongueLeft();
-            StabAttack();
-            Invoke("TurnTongueRight", stabTime);
-        }
-
-        //right stab
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            TurnTongueRight();
-            StabAttack();
-            Invoke("TurnTongueLeft", stabTime);
-        }
-
-
         //left whip
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            anim.SetTrigger("tongueWhip");
-
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            LeftWhip();
 
         //right whip
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            RightWhip();
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            FlyAttack();
+
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             //FlipBody();
             anim.SetTrigger("tongueWhipRight");
             //Invoke("FlipBody", tongueWhipTime);
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            anim.SetTrigger("flyAttack");
-        }
+        }       
     }
 
     void StabAttack()
     {
+        tongueHitbox.gameObject.SetActive(true);
+        canAttack = false;        
+        turnAngle = Random.Range(-15, 15);
+        TurnTongue();
+        turnAngle *= -1;
         anim.SetTrigger("tongueAttack");
-        //StartCoroutine(Stab());
-        canAttack = false;
+        Invoke("TurnTongue", stabTime);
+        Invoke("HideHitbox", stabTime);
         Invoke("EndCoolTime", coolTime);
     }
 
-    /*IEnumerator Stab(bool down = true)
+    void LeftWhip()
     {
-        float inverseTime = 2 / stabTime;
-        Vector3 targetPosition = tongueHitBox.transform.position - stabDist * (down ? Vector3.down : Vector3.up);
+        tongueHitbox.gameObject.SetActive(true);
+        canAttack = false;
+        anim.SetTrigger("tongueWhip");
+        Invoke("HideHitbox", tongueWhipTime);
+        Invoke("EndCoolTime", coolTime); 
+    }
+    void RightWhip()
+    {
+        canAttack = false;
+        //FlipBody();
+        anim.SetTrigger("tongueWhipRight");
+        //Invoke("FlipBody", tongueWhipTime);
+        Invoke("HideHitbox", tongueWhipTime);
+        Invoke("EndCoolTime", coolTime);
+    }
 
-        float sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
+    void FlyAttack()
+    {
+        tongueHitbox.gameObject.SetActive(true);
+        canAttack = false;
+        anim.SetTrigger("flyAttack");
+        StartCoroutine(PrepareFlies());
+        Invoke("EndCoolTime", coolTime);
+    }
 
-        while(sqrRemainingDistance > float.Epsilon)
+    void TurnTongue()
+    {
+        tongue.transform.Rotate(Vector3.back, turnAngle);
+    }
+
+    IEnumerator PrepareFlies()
+    {
+        yield return new WaitForSeconds(flyPrepareTime);
+        StartCoroutine(SpawnFlies());
+    }
+
+    IEnumerator SpawnFlies()
+    {
+        int enemyIndex = 0;
+        while(enemyIndex < enemiesToSpawn.Count)
         {
-            Vector3 newPosition = Vector3.MoveTowards(tongueHitBox.transform.position, targetPosition, inverseTime * Time.deltaTime);
-            tongueHitBox.transform.position = newPosition;
-            sqrRemainingDistance = (tongueHitBox.transform.position - targetPosition).sqrMagnitude;
-            yield return null;
-        }       
-
-        StartCoroutine(Stab(false));
-    }*/
-
-    void FlipBody()
-    {
-        body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
-        //tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
+            Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset*Vector3.down, Quaternion.identity);
+            enemyIndex++;
+            Debug.Log(enemyIndex);
+            yield return new WaitForSeconds(enemyGapTime);
+        }
     }
 
-    void TurnTongueLeft()
+    public void HideHitbox()
     {
-        tongue.transform.Rotate(Vector3.back, 30);
-    }
-
-    void TurnTongueRight()
-    {
-        tongue.transform.Rotate(Vector3.back, -30);
+        tongueHitbox.gameObject.SetActive(false);
+        //tongueHitbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     void EndCoolTime()
     {
         canAttack = true;
         Debug.Log("can attack");
+    }
+
+    public IEnumerator Die()
+    {
+        anim.SetTrigger("death");
+        yield return new WaitForSeconds(bossDeathTime);
+        Destroy(gameObject);
+        GameManager.instance.panels.Win();
     }
 }

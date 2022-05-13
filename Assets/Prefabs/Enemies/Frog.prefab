@@ -25,13 +25,74 @@ Transform:
   m_GameObject: {fileID: 281177091842554919}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 5.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1}
   m_Children:
   - {fileID: 1512148371895987893}
   - {fileID: 5964387747630635255}
   m_Father: {fileID: 1598406548033385542}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3038819765617192753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3049894309206224050}
+  - component: {fileID: 6678125603956321945}
+  - component: {fileID: 8400988297548718340}
+  m_Layer: 12
+  m_Name: Frog Hurtbox
+  m_TagString: Frog
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3049894309206224050
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038819765617192753}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.01, z: 0.0005514622}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7902304831084219595}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &6678125603956321945
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038819765617192753}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.013299624}
+  m_Size: {x: 0.5, y: 0.5}
+  m_Direction: 0
+--- !u!114 &8400988297548718340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038819765617192753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 393931b75917ee44cbf7ee1e15a2cebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &4056076614601201098
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,9 +321,10 @@ GameObject:
   - component: {fileID: 5964387747630635255}
   - component: {fileID: 5655485261598449416}
   - component: {fileID: 922778342757690554}
-  m_Layer: 0
+  - component: {fileID: 6959528557296625242}
+  m_Layer: 12
   m_Name: Tongue Hitbox
-  m_TagString: Untagged
+  m_TagString: Tongue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -341,7 +403,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -357,6 +419,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.64, y: 0.64}
   m_EdgeRadius: 0
+--- !u!114 &6959528557296625242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4280571793013823417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 393931b75917ee44cbf7ee1e15a2cebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
 --- !u!1 &4335018087238377176
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +462,7 @@ Transform:
   m_Children:
   - {fileID: 1598406548033385542}
   - {fileID: 6044822316186166366}
+  - {fileID: 3049894309206224050}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -403,11 +479,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 5000200015185521923}
-  stabTime: 0
+  enemiesToSpawn:
+  - {fileID: 8579754611316829909, guid: 2a1ed86ae7815a64e961156f7e73e06f, type: 3}
+  - {fileID: 3689479164833152567, guid: 11767c589d58e9149ac0cd2b13a2869c, type: 3}
+  - {fileID: 8579754611316829909, guid: 2a1ed86ae7815a64e961156f7e73e06f, type: 3}
+  - {fileID: 8579754611316829909, guid: 9d9ce4a3347e12a4aa15928d2162cd95, type: 3}
+  maxHealth: 10
+  stabTime: 0.5
   tongueWhipTime: 0.45
+  flyPrepareTime: 0
   flyTime: 1
-  stabDist: 0
-  coolTime: 0
+  enemyGapTime: 0.1
+  coolTime: 1.5
+  bossDeathTime: 1.5
+  flySpawnOffset: 1
+  health: 10
 --- !u!1 &6699283376423614135
 GameObject:
   m_ObjectHideFlags: 0
