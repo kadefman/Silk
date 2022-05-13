@@ -10,9 +10,9 @@ public class GameManager : MonoBehaviour
     public GameObject webCounter;
     public GameObject platform;
     public GameObject invisWall;
-    public TextMeshProUGUI silkText;
-    public TextMeshProUGUI currencyText;
-    public GameObject healthBar;
+    [HideInInspector] public TextMeshProUGUI silkText;
+    [HideInInspector] public TextMeshProUGUI currencyText;
+    [HideInInspector] public GameObject healthBar;
     public GameObject[] items;
     public GameObject[] powerups;
     public PanelHolder panels;
@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public List<GameObject> powerupsRemaining;
     [HideInInspector] public bool canReset;
 
+    public GameObject canvasPrefab;
+    [HideInInspector] public GameObject canvas;
+
     private void Awake()
     {
         if (instance == null)
@@ -55,6 +58,12 @@ public class GameManager : MonoBehaviour
         currency = 0;
         spinCost = silkPermValues[0];
         baseDamage = damagePermValues[0];
+        canvas = Instantiate(canvasPrefab);
+        healthBar = canvas.transform.GetChild(0).GetChild(0).gameObject;
+        silkText = canvas.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        Debug.Log(silkText.text);
+        currencyText = canvas.transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
+        
     }
 
     public void SetRoom(int index)

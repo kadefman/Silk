@@ -9,19 +9,19 @@ public class FlyingEnemy : MonoBehaviour
     //8 items: nothing, silk, health, currency, bigSilk, bigHealth, bigCurrency, powerup
     public static float[,] itemRarities = new float[7, 8]
     //stillFly
-    {{.4f, .4f, .2f, 0, 0, 0, 0, 0},
+    {{.3f, .4f, .2f, .1f, 0, 0, 0, 0},
     //movingFly
-    {.4f, .4f, .2f, 0, 0, 0, 0, 0},
+    {.3f, .4f, .2f, .1f, 0, 0, 0, 0},
     //bee
-    {.35f, .4f, .2f, .05f, 0, 0, 0, 0},
+    {.2f, .35f, .15f, .2f, 0, 0, 0, .1f},
     //angryBee
-    {.2f, .5f, .2f, 0, .1f, .1f, 0, .05f},
+    {.2f, .2f, .1f, .2f, .1f, .1f, 0, .1f},
     //fastFly
-    {.3f, .05f, .05f, .2f, .2f, .2f, 0, 0},
+    {.15f, .05f, .05f, .2f, .2f, .2f, 0, .15f},
     //bigBee
-    {0, 0, 0, .4f, .2f, .2f, .1f, .1f},
+    {0, 0, 0, .4f, .2f, .2f, .1f, .15f},
     //bigAngryBee
-    {0, 0, 0, .2f, .2f, .2f, .2f, .2f}};
+    {0, 0, 0, .2f, .2f, .2f, .2f, .3f}};
   
     public Transform sprite;
     public GameObject FxDiePrefab;

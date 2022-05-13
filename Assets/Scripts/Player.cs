@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public GameObject[] bullets;
+    
     public float defaultSpeed;
     public int silkStart;
     public int maxHealth;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
+    
 
     public bool piercing;
     public bool tripleShot;
@@ -55,6 +57,7 @@ public class Player : MonoBehaviour
         GameManager.instance.playerScript = this;
         GameManager.instance.ResetPowerups();
         GameManager.instance.runCount++;
+        
 
         die = false;
 
@@ -223,6 +226,21 @@ public class Player : MonoBehaviour
     {
         silkCount += i;
         GameManager.instance.silkText.text = silkCount.ToString();
+
+        if(silkCount <20)
+        {
+            GameManager.instance.silkText.color = Color.red;
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(true);
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).gameObject.SetActive(false);
+        }
+
+        else
+        {
+            GameManager.instance.silkText.color = Color.white;
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).gameObject.SetActive(true);
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(false);
+        }
+        
     }
 
     public void AddHealth(int i)

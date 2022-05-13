@@ -11,7 +11,7 @@ public class Room
     public enum WallDirection { UL, UR, R, DR, DL, L}
 
     public static int maxDifficulty = 5;
-    public static float[] webRatios = new float[] { .1f, .2f, .3f, .5f, .7f };
+    public static float[] webRatios = new float[] { .2f, .3f, .45f, .6f, .8f };
     public static int[] minEnemies = new int[] { 1, 1, 2, 2, 3 };
     public static int[] maxEnemies = new int[] { 3, 5, 6, 6, 6 };
 

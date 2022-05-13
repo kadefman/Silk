@@ -12,6 +12,7 @@ public class Entry : MonoBehaviour
         {
             GameManager.instance.SetRoom(roomNumber);
             transform.parent.parent.GetComponent<PolygonCollider2D>().enabled = false;
+            Debug.Log(GameManager.instance.bossRoomIndex);
 
 
             Vector3 dropOffset;
