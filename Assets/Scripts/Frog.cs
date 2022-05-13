@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
-    
+
     public Animator anim;
     public List<GameObject> enemiesToSpawn;
 
-    public int maxHealth;   
+    public int maxHealth;
     public float stabTime;
     public float tongueWhipTime;
     public float flyPrepareTime;
     public float flyTime;
     public float enemyGapTime;
-    public float coolTime;
+    private float coolTime;
     public float bossDeathTime;
     public float flySpawnOffset;
 
@@ -25,10 +25,11 @@ public class Frog : MonoBehaviour
     private Transform tongueSprite;
     private Transform tongueHitbox;
     private int turnAngle;
-    private bool canAttack;
+    public bool canAttack;
 
     void Start()
     {
+        //GameManager.instance.frog = this;
         body = transform.GetChild(0);
         tongue = transform.GetChild(0).GetChild(0);
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
@@ -40,36 +41,30 @@ public class Frog : MonoBehaviour
 
     void Update()
     {
+        coolTime = Random.Range(2f, 4f);
+
         if (!canAttack)
             return;
 
-        //center stab
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        int attackChoice = Random.Range(0, 4);
+
+        if (attackChoice == 0)
             StabAttack();
 
-        //left whip
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (attackChoice == 1)
             LeftWhip();
 
-        //right whip
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (attackChoice == 2)
             RightWhip();
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (attackChoice == 3)
             FlyAttack();
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            //FlipBody();
-            anim.SetTrigger("tongueWhipRight");
-            //Invoke("FlipBody", tongueWhipTime);
-        }       
     }
 
     void StabAttack()
     {
         tongueHitbox.gameObject.SetActive(true);
-        canAttack = false;        
+        canAttack = false;
         turnAngle = Random.Range(-15, 15);
         TurnTongue();
         turnAngle *= -1;
@@ -85,7 +80,7 @@ public class Frog : MonoBehaviour
         canAttack = false;
         anim.SetTrigger("tongueWhip");
         Invoke("HideHitbox", tongueWhipTime);
-        Invoke("EndCoolTime", coolTime); 
+        Invoke("EndCoolTime", coolTime);
     }
     void RightWhip()
     {
@@ -120,9 +115,9 @@ public class Frog : MonoBehaviour
     IEnumerator SpawnFlies()
     {
         int enemyIndex = 0;
-        while(enemyIndex < enemiesToSpawn.Count)
+        while (enemyIndex < enemiesToSpawn.Count)
         {
-            Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset*Vector3.down, Quaternion.identity);
+            Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset * Vector3.down, Quaternion.identity);
             enemyIndex++;
             Debug.Log(enemyIndex);
             yield return new WaitForSeconds(enemyGapTime);
@@ -149,3 +144,4 @@ public class Frog : MonoBehaviour
         GameManager.instance.panels.Win();
     }
 }
+

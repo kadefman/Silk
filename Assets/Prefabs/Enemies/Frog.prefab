@@ -254,7 +254,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.945
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -492,10 +492,10 @@ MonoBehaviour:
   flyPrepareTime: 0
   flyTime: 1
   enemyGapTime: 0.1
-  coolTime: 1.5
   bossDeathTime: 1.5
   flySpawnOffset: 1
   health: 10
+  canAttack: 0
 --- !u!1 &6699283376423614135
 GameObject:
   m_ObjectHideFlags: 0

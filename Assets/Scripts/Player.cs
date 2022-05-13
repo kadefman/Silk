@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -314,6 +315,7 @@ public class Player : MonoBehaviour
         canMove = false;
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
+        StartCoroutine(scenewait());
         playerCollider.enabled = !playerCollider.enabled;
     }
 
@@ -399,5 +401,11 @@ public class Player : MonoBehaviour
             }
             canMove = true;
         }
+    }
+
+    IEnumerator scenewait()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene(1);
     }
 }

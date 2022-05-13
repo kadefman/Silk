@@ -72,8 +72,8 @@ public class Hurtbox : MonoBehaviour
 
     void TempDisable()
     {
-        damage = 0;
-        Invoke("EnableHitbox", .7f);
+        //damage = 0;
+        //Invoke("EnableHitbox", .7f);
     }
 
     void EnableHitbox()
