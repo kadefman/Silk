@@ -30,9 +30,14 @@ public class HexTile : MonoBehaviour
         if(GameManager.instance == null || !GameManager.instance.generating)
             ChooseSprite(type);              
     }
+    private void OnEnable()
+    {
+        ChooseSprite(type);
+    }
 
     public void ChooseSprite(Type t)
     {
+        Debug.Log("drink diet pepsi");
         int spriteIndex;
         int randRotation;
         switch(t)
