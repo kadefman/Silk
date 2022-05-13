@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
     SpriteRenderer sp;
     private Vector3 positionBeforeSpinSnap;
 
+    private bool die = false; 
+
     private void Awake()
     {
         //animator = GetComponent<Animator>();
@@ -56,6 +58,8 @@ public class Player : MonoBehaviour
         GameManager.instance.ResetPowerups();
         GameManager.instance.runCount++;
         
+
+        die = false;
 
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;
@@ -330,7 +334,9 @@ public class Player : MonoBehaviour
         walkingSource.Stop();
         
         canMove = false;
-        animator.Play("Base Layer.Die");
+        die = true;
+        //animator.Play("Base Layer.Die");
+        animator.SetTrigger("die");
         Instantiate(FxDiePrefab, transform);
         playerCollider.enabled = !playerCollider.enabled;
         GameManager.instance.reload();
@@ -397,11 +403,24 @@ public class Player : MonoBehaviour
         if (getIn) { 
             if (skip)
             {
+                if (die)
+                {
+                    animator.SetTrigger("die");
+                    canMove = false;
+                    Destroy(rb);
+                }
                 animator.Play("Base Layer.SpinBegin");
+                
             }
             else
             {
                 animator.Play("Base Layer.SpinDashes");
+                if (die)
+                {
+                    animator.SetTrigger("die");
+                    canMove = false;
+                    Destroy(rb);
+                }
             }
         }
         else
@@ -410,11 +429,23 @@ public class Player : MonoBehaviour
             {
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
+                if (die)
+                {
+                    animator.SetTrigger("die");
+                    canMove = false;
+                    Destroy(rb);
+                }
             }
             else
             {
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
+                if (die)
+                {
+                    animator.SetTrigger("die");
+                    canMove = false;
+                    Destroy(rb);
+                }
             }
             canMove = true;
         }
