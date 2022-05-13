@@ -3,73 +3,93 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Frog : MonoBehaviour
-{ 
-    public GameObject tongueHitBox;   
+{
+    public GameObject tongueHitBox;
     public Animator anim;
 
-    //public float turnTime;
-    private Vector2 tongueOrigin;
-    public float tongueOutTime;
-    public float tongueInTime;   
-    public float tongueDistance;
+    public float stabTime;
+    public float tongueWhipTime;    
+    public float flyTime;
+    public float tongueShift;
 
-    
-    private bool attacking;
-    private bool turning;
-    private float inverseTurnTime;
-    private float inverseOutTime;
-    private float inverseInTime;    
+    private Transform body;
+    private Transform tongue;
+    private bool canAttack;
 
     void Start()
     {
-        attacking = false;
-        turning = false;
-        inverseOutTime = 1 / tongueOutTime;
-        inverseInTime = 1 / tongueInTime;
-        tongueOrigin = tongueHitBox.transform.position;
+        body = transform.GetChild(0);
+        tongue = transform.GetChild(0).GetChild(0).GetChild(0);
+        canAttack = true;
     }
 
     void Update()
     {
-        if (attacking || turning)
+        if (!canAttack)
             return;
 
+        //center stab
         if (Input.GetKeyDown(KeyCode.Alpha1))
             anim.SetTrigger("tongueAttack");
 
-        //left
+        //left stab
         if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            TurnTongueLeft();
+            anim.SetTrigger("tongueAttack");
+            Invoke("TurnTongueRight", stabTime);
+        }
+
+        //right stab
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            TurnTongueRight();
+            anim.SetTrigger("tongueAttack");
+            Invoke("TurnTongueLeft", stabTime);
+        }
+
+
+        //left whip
+        if (Input.GetKeyDown(KeyCode.Alpha4))
             anim.SetTrigger("tongueWhip");
 
-        //right
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        //right whip
+        if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             FlipTongue();
             anim.SetTrigger("tongueWhip");
-            Invoke("FlipTongue", .08f);
+            Invoke("FlipTongue", tongueWhipTime);
         }
-            
 
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            FlipTongue();
+            anim.SetTrigger("flyAttack");
+            Invoke("FlipTongue", tongueWhipTime);
+        }
     }
 
     void FlipTongue()
     {
-        Debug.Log("flipTongue");
-        transform.GetChild(3).GetChild(0).GetComponent<SpriteRenderer>().flipX = true;
-        //transform.GetChild(3).GetComponent<SpriteRenderer>().flipX = true;
+        body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
+        tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
     }
 
-    //this should be gradual but it's 3am lol
-    private void Turn()
+    void TurnTongueLeft()
     {
-        int clockWiseFlip = Random.Range(0, 2);
-        bool clockwise = clockWiseFlip == 0;
-
-        transform.Rotate(Vector3.back, clockwise ? 30f : -30f);
-        tongueOrigin = tongueHitBox.transform.position;
-
-
-        turning = false;
+        tongue.transform.Rotate(Vector3.back, 30);
+        tongue.transform.position += Vector3.left * tongueShift;
     }
 
+    void TurnTongueRight()
+    {
+        tongue.transform.Rotate(Vector3.back, -30);
+        tongue.transform.position += Vector3.right * tongueShift;
+    }
+
+    void EndCoolTime()
+    {
+
+    }
 }
