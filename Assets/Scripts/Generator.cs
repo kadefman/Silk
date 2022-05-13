@@ -21,28 +21,29 @@ public class Generator : MonoBehaviour
 
     public int roomCount;
     public bool autoBoss;
+    public int[] difficultyStarts;
     public int minHallSize;
     public int maxHallSize;
     public int minRoomSize;
-    public int maxRoomSize;  
+    public int maxRoomSize;
+    
+    //diff curve stuff
     public int minEnemies;
-    public int maxEnemies;
-    public int minItems;
-    public int maxItems;
+    public int maxEnemies;    
+    public int difficulty;
     public float webRatio;
-  
+    public float[] enemyRates;
+
     private Room thisRoom;
     private Room prevRoom;
     private GameObject roomObject;
     private List<GameObject> roomObjects;
 
-    private List<Vector2> possibleExits;
-    
+    private List<Vector2> possibleExits;    
     private List<Vector2> tilePoints;
     private List<Vector2> wallPoints;
     private List<Vector2> inWallPoints;
     private List<Vector2> enemyPoints;
-    private List<Vector2> itemPoints;
 
     private Vector2 playerPos = new Vector2(-.96f, -7.28f);
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
@@ -125,8 +126,9 @@ public class Generator : MonoBehaviour
                 return;
             }
 
+            SetDifficulty();
             PlaceTiles();
-            FillRoom();
+            AddEnemies();
         }
 
         currentIndex++;
@@ -185,7 +187,6 @@ public class Generator : MonoBehaviour
         wallPoints = new List<Vector2>();
         inWallPoints = new List<Vector2>();
         enemyPoints = new List<Vector2>();
-        itemPoints = new List<Vector2>();
         possibleExits = new List<Vector2>();
     }
 
@@ -628,6 +629,29 @@ public class Generator : MonoBehaviour
         }
     }
 
+    private void SetDifficulty()
+    {
+        if (currentIndex % 2 == 0)
+            difficulty = -1;
+        else
+        {
+            for(int i=0; i<Room.maxDifficulty; i++)
+            {
+                if (currentIndex >= difficultyStarts[i])
+                    difficulty = i;
+            }
+        }
+
+        webRatio = Room.webRatios[difficulty];
+        minEnemies = Room.minEnemies[difficulty];
+        maxEnemies = Room.maxEnemies[difficulty];
+        enemyRates = new float[7];
+        for(int i=0; i<7; i++)
+        {
+            enemyRates[i] = Room.enemyRarities[difficulty, i];
+        }
+    }
+
     private void PlaceTiles()
     {
         //room object
@@ -675,7 +699,8 @@ public class Generator : MonoBehaviour
         foreach (Vector2 point in inWallPoints)
             Instantiate(innerWall, point, Quaternion.identity, roomObject.transform);
 
-        //tiles[0] empty, tiles[1] platform, will need to rework with more plat assets
+        //tiles[0] empty, tiles[1] platform, factor in web Ratio
+
         foreach (Vector2 point in tilePoints)
         {
             float tileChooser = Random.Range(0f, 1f);
@@ -728,14 +753,11 @@ public class Generator : MonoBehaviour
         }
     }
 
-    private void FillRoom()
+    private void AddEnemies()
     {       
-        //Debug.Log(tilePoints.Count + " tiles remaining");
-
-        //Fill room with enemies and items
+        //Fill room with enemies
 
         int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
-        int itemCount = Random.Range(minItems, maxItems + 1);
         int randIndex;
 
         for (int i = 0; i < enemyCount; i++)
@@ -745,21 +767,6 @@ public class Generator : MonoBehaviour
             randIndex = Random.Range(0, tilePoints.Count);
             enemyPoints.Add(tilePoints[randIndex]);
             tilePoints.RemoveAt(randIndex);
-        }
-
-        for (int i = 0; i < itemCount; i++)
-        {
-            if (tilePoints.Count == 0)
-                break;
-            randIndex = Random.Range(0, tilePoints.Count);
-            itemPoints.Add(tilePoints[randIndex]);
-            tilePoints.RemoveAt(randIndex);
-        }
-
-        foreach (Vector2 point in itemPoints)
-        {
-            randIndex = Random.Range(0, items.Length);
-            Instantiate(items[randIndex], point, Quaternion.identity, roomObject.transform);
         }
 
         foreach (Vector2 point in enemyPoints)

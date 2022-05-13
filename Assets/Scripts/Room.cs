@@ -11,6 +11,9 @@ public class Room
     public enum WallDirection { UL, UR, R, DR, DL, L}
 
     public static int maxDifficulty = 5;
+    public static float[] webRatios = new float[] { .1f, .2f, .3f, .5f, .7f };
+    public static int[] minEnemies = new int[] { 1, 1, 2, 2, 3 };
+    public static int[] maxEnemies = new int[] { 3, 5, 6, 6, 6 };
 
     //each small array must add to 1
     //5 difficulties
@@ -33,17 +36,15 @@ public class Room
     public Transform magicKey;
     public Transform keyDoor;      
     public int enemyCount;
-    public int itemCount;
+    public int difficulty;
 
     //int eDoorCount, int kDoorCount?
     //the items and enemies arguments will NOT BE OPTIONAL FOREVER
-    public Room(Shape roomShape, TravelDirection enterDir, WallDirection enterWall, int enemies = 0, int items= 0)
+    public Room(Shape roomShape, TravelDirection enterDir, WallDirection enterWall)
     {
         shape = roomShape;
         entranceDir = enterDir;
         entranceWall = enterWall;
-        enemyCount = enemies;
-        itemCount = items;
     }
 
     //starting room!
