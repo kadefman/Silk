@@ -14,7 +14,7 @@ public class Frog : MonoBehaviour
     public float flyPrepareTime;
     public float flyTime;
     public float enemyGapTime;
-    public float coolTime;
+    private float coolTime;
     public float bossDeathTime;
     public float flySpawnOffset;
 
@@ -25,45 +25,40 @@ public class Frog : MonoBehaviour
     private Transform tongueSprite;
     private Transform tongueHitbox;
     private int turnAngle;
-    private bool canAttack;
+    public bool canAttack;
 
     void Start()
     {
+        GameManager.instance.frog = this;
         body = transform.GetChild(0);
         tongue = transform.GetChild(0).GetChild(0);
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
         //HideHitbox();
-        canAttack = true;
+        canAttack = false;
         health = maxHealth;
     }
 
     void Update()
     {
+        coolTime = Random.Range(2f, 4f);
+
         if (!canAttack)
             return;
 
-        //center stab
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        int attackChoice = Random.Range(0, 4);
+
+        if (attackChoice == 0)
             StabAttack();
 
-        //left whip
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (attackChoice == 1)
             LeftWhip();
 
-        //right whip
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (attackChoice == 2)
             RightWhip();
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            FlyAttack();
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            //FlipBody();
-            anim.SetTrigger("tongueWhipRight");
-            //Invoke("FlipBody", tongueWhipTime);
-        }       
+        else if (attackChoice == 3)
+            FlyAttack();           
     }
 
     void StabAttack()

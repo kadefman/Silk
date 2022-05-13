@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int currency;
     public int runCount;
 
+    [HideInInspector] public Frog frog;
     [HideInInspector] public int roomIndex;
     [HideInInspector] public int bossRoomIndex;   
     [HideInInspector] public static GameManager instance = null;
@@ -83,6 +84,7 @@ public class GameManager : MonoBehaviour
         if(roomIndex == bossRoomIndex)
         {
             FindObjectOfType<AudioManager>().PlayBoss();
+            frog.canAttack = true;
         }
     }
 

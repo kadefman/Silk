@@ -4912,6 +4912,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss Room
       objectReference: {fileID: 0}
+    - target: {fileID: 7624502788891481395, guid: 7959a6f56034c7640954d41921625bb2,
+        type: 3}
+      propertyPath: coolTime
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7959a6f56034c7640954d41921625bb2, type: 3}
 --- !u!1001 &6171128127696148586
