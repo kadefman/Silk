@@ -34,6 +34,10 @@ public class FlyingEnemy : MonoBehaviour
     public bool isSeeker = false;
     private float rotationModifier = 90;
 
+    private float xVelocity;
+    private float yVelocity;
+
+
 
     void Start()
     {
@@ -55,6 +59,13 @@ public class FlyingEnemy : MonoBehaviour
                 Vector3 relative = transform.InverseTransformPoint(lookAtPoint);
                 angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
                 transform.Rotate(0, 0, -angle);
+
+                if (rb.velocity.magnitude < .5)
+                {
+                    Vector2 randVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                    rb.AddForce((.3f * speed) * randVector.normalized);
+              
+                }
             }
             
             if (isSeeker)
