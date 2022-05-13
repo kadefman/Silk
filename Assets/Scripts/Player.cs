@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
     {
         GameManager.instance.playerScript = this;
         GameManager.instance.ResetPowerups();
+        GameManager.instance.runCount++;
 
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;

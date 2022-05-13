@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject healthBar;
     public GameObject[] items;
     public GameObject[] powerups;
+    public PanelHolder panels;
     public int[] damagePermValues;
     public int[] silkPermValues;
     public int healthUpgrades;
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public int roomIndex;
     [HideInInspector] public int bossRoomIndex;
-    
+    [HideInInspector] public int runCount;
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
     [HideInInspector] public Room currentRoom;  
@@ -226,5 +227,7 @@ public class GameManager : MonoBehaviour
 
         silkUpgrades = 0;
         spinCost = silkPermValues[silkUpgrades];
+
+        runCount = 0;
     }
 }
