@@ -331,6 +331,7 @@ public class Player : MonoBehaviour
         animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
         playerCollider.enabled = !playerCollider.enabled;
+        GameManager.instance.reload();
     }
 
     public IEnumerator Cooldown (float time)
