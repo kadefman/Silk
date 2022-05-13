@@ -75,12 +75,12 @@ public class Frog : MonoBehaviour
     void StabAttack()
     {
         anim.SetTrigger("tongueAttack");
-        StartCoroutine(Stab());
+        //StartCoroutine(Stab());
         canAttack = false;
         Invoke("EndCoolTime", coolTime);
     }
 
-    IEnumerator Stab(bool down = true)
+    /*IEnumerator Stab(bool down = true)
     {
         float inverseTime = 2 / stabTime;
         Vector3 targetPosition = tongueHitBox.transform.position - stabDist * (down ? Vector3.down : Vector3.up);
@@ -96,7 +96,7 @@ public class Frog : MonoBehaviour
         }       
 
         StartCoroutine(Stab(false));
-    }
+    }*/
 
     void FlipBody()
     {
