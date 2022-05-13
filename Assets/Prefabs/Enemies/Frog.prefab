@@ -495,7 +495,7 @@ MonoBehaviour:
   coolTime: 1.5
   bossDeathTime: 1.5
   flySpawnOffset: 1
-  health: 10
+  health: 300
 --- !u!1 &6699283376423614135
 GameObject:
   m_ObjectHideFlags: 0
