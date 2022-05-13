@@ -49,6 +49,12 @@ public class Frog : MonoBehaviour
         //right whip
         if (Input.GetKeyDown(KeyCode.Alpha3))
             RightWhip();
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            //FlipBody();
+            anim.SetTrigger("tongueWhipRight");
+            //Invoke("FlipBody", tongueWhipTime);
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
             FlyAttack();
@@ -97,7 +103,7 @@ public class Frog : MonoBehaviour
     void FlipBody()
     {
         body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
-        tongueSprite.GetComponent<SpriteRenderer>().flipX = !tongueSprite.GetComponent<SpriteRenderer>().flipX;
+        //tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
     }
 
     void TurnTongue()
