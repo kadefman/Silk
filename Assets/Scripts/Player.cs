@@ -90,6 +90,13 @@ public class Player : MonoBehaviour
             audioSource.Stop();
         }
 
+        if(Input.GetKeyDown(KeyCode.R) && GameManager.instance.canReset)
+        {
+            //reset game!
+            Debug.Log("reset");
+        }
+
+
         if (Input.GetKeyDown(KeyCode.LeftBracket))
             ToggleGodMode();
 

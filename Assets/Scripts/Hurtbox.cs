@@ -6,10 +6,12 @@ public class Hurtbox : MonoBehaviour
 {    
     private FlyingEnemy enemy;  
     
-    private int damage;
+    public int damage;
+    private int origDamage;
     
     void Awake()
     {
+        origDamage = damage;
         if (transform.parent.GetComponent<FlyingEnemy>())
         {
             enemy = transform.parent.GetComponent<FlyingEnemy>();
@@ -18,17 +20,30 @@ public class Hurtbox : MonoBehaviour
 
         //tongue
         else
-            damage = 1;       
+            damage = 1;
+    }
+
+    private void OnEnable()
+    {
+        damage = origDamage;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            Debug.Log("take " + damage + " damage");
             Player player = collider.gameObject.GetComponent<Player>();
             player.AddHealth(-damage);
             if (player.spinning)
-                player.spinning = false; 
+                player.spinning = false;
+
+            StartCoroutine(TempDisable());
+
+            /*if(transform.CompareTag("Tongue"))
+            {
+                Frog boss = transform.parent.parent.parent.GetComponent<Frog>();
+            }*/
         }
 
         else if(collider.gameObject.CompareTag("Bullet"))
@@ -39,16 +54,26 @@ public class Hurtbox : MonoBehaviour
                 collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
             }
 
+            //frog getting hit
             if(transform.CompareTag("Frog"))
             {
                 Frog boss = transform.parent.GetComponent<Frog>();
                 boss.health -= collider.transform.GetComponent<Bullet>().damage;
                 if (boss.health <= 0)
-                    boss.Die();
+                {
+                    boss.StartCoroutine("Die");
+                }                    
             }
                
             else
                 enemy.GetHit(collider.transform.GetComponent<Bullet>().damage);
         }
+    }
+
+    IEnumerator TempDisable()
+    {
+        damage = 0;
+        yield return new WaitForSeconds(1);
+        damage = origDamage;
     }
 }

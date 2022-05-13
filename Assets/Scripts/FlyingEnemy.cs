@@ -145,12 +145,22 @@ public class FlyingEnemy : MonoBehaviour
         float itemRoll = Random.Range(0f, 1f);
         int itemIndex = 0;
 
+        Debug.Log("Killed enemy, rolled " + itemRoll);
+        string arrString = "";
+
         for (int i = 0; i < dropRates.Length; i++)
         {
             itemRoll -= dropRates[i];
+            arrString += dropRates[i] + " ";
             if (itemRoll <= 0)
+            {
                 itemIndex = i;
+                break;
+            }
+                
         }
+
+        Debug.Log(arrString + "we got index " + itemIndex);
 
         if(itemIndex < 7 && itemIndex > 0)
             Instantiate(GameManager.instance.items[itemIndex-1], transform.position, Quaternion.identity);

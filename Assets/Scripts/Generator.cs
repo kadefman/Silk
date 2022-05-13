@@ -174,6 +174,15 @@ public class Generator : MonoBehaviour
             if (hexScript != null)
                 hexScript.ChooseSprite(hexScript.type);
         }
+
+        GameObject ent = Instantiate(entranceMark, prevRoom.exitPoint, Quaternion.identity, roomObject.transform);
+        for (int i = 0; i < 3; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex;
+        for (int i = 3; i < 6; i++)
+            ent.transform.GetChild(0).GetChild(i).GetComponent<Entry>().roomNumber = currentIndex - 1;
+
+        //case U from main method
+        ent.transform.GetChild(0).Rotate(Vector3.back, -60);
     }
 
     void Redo()
@@ -788,9 +797,11 @@ public class Generator : MonoBehaviour
             {
                 enemyRoll -= enemyRates[i];
                 if (enemyRoll <= 0)
+                {
                     enemyIndex = i;
+                    break;
+                }                  
             }
-
             Instantiate(enemies[enemyIndex], point, Quaternion.identity, roomObject.transform);
         }
     }

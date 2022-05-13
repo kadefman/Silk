@@ -8,13 +8,17 @@ public class Frog : MonoBehaviour
     public Animator anim;
     public List<GameObject> enemiesToSpawn;
 
-    public int health;
+    public int maxHealth;   
     public float stabTime;
-    public float tongueWhipTime;    
+    public float tongueWhipTime;
+    public float flyPrepareTime;
     public float flyTime;
     public float enemyGapTime;
     public float coolTime;
+    public float bossDeathTime;
     public float flySpawnOffset;
+
+    public int health;
 
     private Transform body;
     private Transform tongue;
@@ -31,6 +35,7 @@ public class Frog : MonoBehaviour
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
         HideHitbox();
         canAttack = true;
+        health = maxHealth;
     }
 
     void Update()
@@ -49,15 +54,16 @@ public class Frog : MonoBehaviour
         //right whip
         if (Input.GetKeyDown(KeyCode.Alpha3))
             RightWhip();
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            FlyAttack();
+
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             //FlipBody();
             anim.SetTrigger("tongueWhipRight");
             //Invoke("FlipBody", tongueWhipTime);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            FlyAttack();
+        }       
     }
 
     void StabAttack()
@@ -84,9 +90,9 @@ public class Frog : MonoBehaviour
     void RightWhip()
     {
         canAttack = false;
-        FlipBody();
-        anim.SetTrigger("tongueWhip");
-        Invoke("FlipBody", tongueWhipTime);
+        //FlipBody();
+        anim.SetTrigger("tongueWhipRight");
+        //Invoke("FlipBody", tongueWhipTime);
         Invoke("HideHitbox", tongueWhipTime);
         Invoke("EndCoolTime", coolTime);
     }
@@ -96,19 +102,19 @@ public class Frog : MonoBehaviour
         tongueHitbox.gameObject.SetActive(true);
         canAttack = false;
         anim.SetTrigger("flyAttack");
-        StartCoroutine(SpawnFlies());
+        StartCoroutine(PrepareFlies());
         Invoke("EndCoolTime", coolTime);
-    }
-
-    void FlipBody()
-    {
-        body.GetComponent<SpriteRenderer>().flipX = !body.GetComponent<SpriteRenderer>().flipX;
-        //tongue.GetComponent<SpriteRenderer>().flipX = !tongue.GetComponent<SpriteRenderer>().flipX;
     }
 
     void TurnTongue()
     {
         tongue.transform.Rotate(Vector3.back, turnAngle);
+    }
+
+    IEnumerator PrepareFlies()
+    {
+        yield return new WaitForSeconds(flyPrepareTime);
+        StartCoroutine(SpawnFlies());
     }
 
     IEnumerator SpawnFlies()
@@ -123,11 +129,10 @@ public class Frog : MonoBehaviour
         }
     }
 
-    void HideHitbox()
+    public void HideHitbox()
     {
-        Debug.Log(tongueHitbox.gameObject.name);
         tongueHitbox.gameObject.SetActive(false);
-        tongueHitbox.GetComponent<SpriteRenderer>().enabled = false;
+        //tongueHitbox.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     void EndCoolTime()
@@ -136,8 +141,11 @@ public class Frog : MonoBehaviour
         Debug.Log("can attack");
     }
 
-    public void Die()
+    public IEnumerator Die()
     {
         anim.SetTrigger("death");
+        yield return new WaitForSeconds(bossDeathTime);
+        Destroy(gameObject);
+        GameManager.instance.panels.Win();
     }
 }

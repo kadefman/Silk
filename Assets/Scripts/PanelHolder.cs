@@ -57,8 +57,9 @@ public class PanelHolder : MonoBehaviour
 
     public void Win()
     {
-        TextMeshPro winText = transform.GetChild(5).GetComponent<TextMeshPro>();
-        winText.text = $"Congratulations! \n You completed the game in {GameManager.instance.runCount} runs. \n Press 'R' to start over!";
+        ShowPanel(5);
+        TextMeshPro runText = transform.GetChild(5).GetChild(2).GetComponent<TextMeshPro>();
+        runText.text = $"Congratulations! \n You completed the game in {GameManager.instance.runCount} runs. \n Press 'R' to start over!";
     }
 
     private void ShowPanel(int index)
