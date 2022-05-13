@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -231,5 +232,16 @@ public class GameManager : MonoBehaviour
         spinCost = silkPermValues[silkUpgrades];
 
         runCount = 0;
+    }
+
+    public IEnumerator reloadRoutine()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene(0);
+    }
+
+    public void reload()
+    {
+        StartCoroutine(reloadRoutine());
     }
 }
