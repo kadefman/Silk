@@ -121,6 +121,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &134379777 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4516856335797710831, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1329159770}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &134379779 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4516856335797710818, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1329159770}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &134379782
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134379777}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0afb35c0f2b6bcf4f83bd28b4d430b4b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &179296968
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -706,6 +737,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4516856335797710818, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: bossMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: defa802a2baadb84d949b019b09cb359, type: 3}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: musicAnim
+      value: 
+      objectReference: {fileID: 134379782}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: forestMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: a0016f9f9adc80a4197c5248e527268e, type: 3}
+    - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
+        type: 3}
+      propertyPath: musicSource
+      value: 
+      objectReference: {fileID: 134379779}
     - target: {fileID: 4516856335797710828, guid: d53a7f891bcb1ea4799f89f917dc60d3,
         type: 3}
       propertyPath: sounds.Array.size

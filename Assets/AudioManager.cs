@@ -11,6 +11,12 @@ public class AudioManager : MonoBehaviour
     public Sound[] sounds;
     public static AudioManager instance;
 
+    public AudioSource musicSource;
+    public AudioClip forestMusic;
+    public AudioClip bossMusic;
+
+    public Animator musicAnim;
+
     private void Awake()
     {
         if (instance == null)
@@ -31,6 +37,19 @@ public class AudioManager : MonoBehaviour
 
         }
     }
+
+    /*private void Update()
+    {
+         if (Input.GetKeyDown(KeyCode.A))
+        {
+            PlayBoss();
+        }
+
+         if (Input.GetKeyDown(KeyCode.D))
+        {
+            PlayForest();
+        }
+    }*/
 
     public void Play(string name)
     {
@@ -57,4 +76,36 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    public void PlayBoss()
+    {
+        StartCoroutine(waitForBoss());
+    }
+
+    public void PlayForest()
+    {
+        StartCoroutine(waitForAnim());
+    }
+
+    IEnumerator waitForAnim()
+    {
+        musicAnim.SetTrigger("bossFade");
+        yield return new WaitForSeconds(1);
+        musicSource.Stop();
+        musicSource.volume = .36f;
+        musicSource.clip = forestMusic;
+        yield return new WaitForSeconds(.02f);
+        musicSource.Play();
+    }
+
+    IEnumerator waitForBoss()
+    {
+        musicAnim.SetTrigger("forestFade");
+        yield return new WaitForSeconds(.9f);
+        musicSource.Stop();
+        
+        musicSource.volume = .24f;
+        musicSource.clip = bossMusic;
+        yield return new WaitForSeconds(.1f);
+        musicSource.Play();
+    }
 }
