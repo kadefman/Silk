@@ -81,7 +81,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PrepareFly
-  m_Speed: 0.2
+  m_Speed: 0.07
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 5514779874360809564}
@@ -206,7 +206,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PrepareTongueSwip
-  m_Speed: 0.2
+  m_Speed: 0.05
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8837649600519924990}
@@ -474,7 +474,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AttackFly
-  m_Speed: 0.2
+  m_Speed: 0.05
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -2145939161222165473}
@@ -501,7 +501,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PrepareTongue
-  m_Speed: 0.2
+  m_Speed: 0.07
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -1903159023888941198}
