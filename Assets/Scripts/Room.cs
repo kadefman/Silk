@@ -10,6 +10,18 @@ public class Room
     public enum TravelDirection { U, UR, DR, D, DL, UL }
     public enum WallDirection { UL, UR, R, DR, DL, L}
 
+    public static int maxDifficulty = 5;
+
+    //each small array must add to 1
+    //5 difficulties
+    //7 enemies: stillFly, movingFly, bee, angryBee, fastFly, bigBee, bigAngryBee
+    public static float[,] enemyRarities = new float[5, 7] 
+    {{.5f, .4f, .1f, 0, 0, 0, 0}, 
+    {.3f,.4f,.3f, 0, 0, 0, 0},
+    {0, .2f, .5f, .3f, 0, 0, 0}, 
+    {0, 0, 0, .4f, .3f, .2f, 0}, 
+    {0, 0, 0, .2f, .1f, .4f, .3f}};  
+
     public Shape shape;
     public TravelDirection entranceDir;   
     public WallDirection entranceWall;

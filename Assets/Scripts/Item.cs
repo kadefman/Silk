@@ -56,7 +56,7 @@ public class Item : MonoBehaviour
                     break;
 
                 case Type.Currency:
-                    GameManager.instance.AddCurrency(1);
+                    GameManager.instance.AddCurrency(value);
                     break;
             }
 

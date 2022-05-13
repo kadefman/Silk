@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public static GameManager instance = null;
     [HideInInspector] public List<Room> rooms;
-    public Room currentRoom;
-    public int roomIndex;
+    [HideInInspector] public Room currentRoom;
+    [HideInInspector] public int roomIndex;
     [HideInInspector] public Player playerScript;
     [HideInInspector] public Transform sensor;
     [HideInInspector] public Transform webTile;

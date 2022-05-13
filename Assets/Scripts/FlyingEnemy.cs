@@ -5,8 +5,27 @@ using UnityEngine;
 public class FlyingEnemy : MonoBehaviour
 {
     public enum Type {Fly, Bee};
-    public Type type;
 
+    //each small array must add to 1
+    //7 enemies: stillFly, movingFly, bee, angryBee, fastFly, bigBee, bigAngryBee
+    //8 items: nothing, silk, health, currency, bigSilk, bigHealth, bigCurrency, powerup
+    public static float[,] itemRarities = new float[7, 8]
+    //stillFly
+    {{.4f, .4f, .2f, 0, 0, 0, 0, 0},
+    //movingFly
+    {.4f, .4f, .2f, 0, 0, 0, 0, 0},
+    //bee
+    {.35f, .4f, .2f, .05f, 0, 0, 0, 0},
+    //angryBee
+    {.2f, .5f, .2f, 0, .1f, .1f, 0, .05f},
+    //fastFly
+    {.3f, .05f, .05f, .2f, .2f, .2f, 0, 0},
+    //bigBee
+    {0, 0, 0, .4f, .2f, .2f, .1f, .1f},
+    //bigAngryBee
+    {0, 0, 0, .2f, .2f, .2f, .2f, .2f}};
+
+    public Type type;
     public Transform sprite;
     public GameObject FxDiePrefab;
     /*public AudioSource audioSource;

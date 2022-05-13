@@ -10,7 +10,6 @@ public class Generator : MonoBehaviour
     public List<Room> rooms;
     public GameObject[] tiles;
     public GameObject[] enemies;
-    public GameObject[] items;
     public GameObject outerWall;
     public GameObject innerWall;
     public GameObject entranceMark;
