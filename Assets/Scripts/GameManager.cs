@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
         if(roomIndex == bossRoomIndex)
         {
-            //Boss stuff happens
+            FindObjectOfType<AudioManager>().PlayBoss();
         }
     }
 

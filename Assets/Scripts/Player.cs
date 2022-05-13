@@ -305,6 +305,10 @@ public class Player : MonoBehaviour
     {
         // Do stuff when dying
         FindObjectOfType<AudioManager>().Play("Player Death");
+        if (GameManager.instance.roomIndex == GameManager.instance.bossRoomIndex)
+        {
+            FindObjectOfType<AudioManager>().PlayForest();
+        }
         walkingSource.Stop();
         
         canMove = false;
