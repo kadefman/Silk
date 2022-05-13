@@ -54,9 +54,14 @@ public class Generator : MonoBehaviour
     
     void Start()
     {       
+        //need even no. of rooms - number will round down. even rooms are safe except boss.
         if (roomCount < 4 || autoBoss)
             roomCount = 4;
-        bossRoomIndex = roomCount % 2 == 0 ? roomCount - 1 : roomCount - 2;
+
+        if(roomCount%2==1)
+            roomCount--;
+
+        bossRoomIndex = roomCount - 1;
         GameManager.instance.bossRoomIndex = bossRoomIndex;
 
         currentIndex = 0;
@@ -113,9 +118,19 @@ public class Generator : MonoBehaviour
             PrepareRoom();
             ChooseExits(currentIndex);
 
-            int height = Random.Range(minRoomSize, maxRoomSize);
-            //int length = Random.Range(minRoomSize, maxRoomSize);
-            int length = 2;
+            int height;
+            int length;
+            if(thisRoom.shape == Room.Shape.Hall)
+            {
+                height = Random.Range(minHallSize, maxHallSize);
+                length = Random.Range(minHallSize, maxHallSize);                
+            }
+            else
+            {
+                height = Random.Range(minRoomSize, maxRoomSize);
+                length = Random.Range(minRoomSize, maxRoomSize);
+            }
+
             Vector2 genPoint = ChooseGenOffset(height, length);
 
             BuildShape(height, length, genPoint);
@@ -133,6 +148,7 @@ public class Generator : MonoBehaviour
         }
 
         currentIndex++;
+
         if (roomObjects.Count < roomCount)
             CreateNextRoom();
         else
@@ -716,8 +732,9 @@ public class Generator : MonoBehaviour
                 hexObjects.Add(Instantiate(outerWall, point, Quaternion.identity, roomObject.transform));
         }
 
-        foreach (Vector2 point in inWallPoints)
-            Instantiate(innerWall, point, Quaternion.identity, roomObject.transform);
+        //maybe no inwalls
+        /*foreach (Vector2 point in inWallPoints)
+            Instantiate(innerWall, point, Quaternion.identity, roomObject.transform);*/
 
         //tiles[0] empty, tiles[1] platform, factor in web Ratio
 
