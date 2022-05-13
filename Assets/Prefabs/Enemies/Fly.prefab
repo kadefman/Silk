@@ -90,7 +90,7 @@ MonoBehaviour:
   enemyIndex: 1
   speed: 100
   damage: 1
-  health: 3
+  health: 5
   seekSpeed: 0
   isSeeker: 0
   isStill: 0

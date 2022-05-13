@@ -226,13 +226,15 @@ public class Player : MonoBehaviour
         if(silkCount <20)
         {
             GameManager.instance.silkText.color = Color.red;
-            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).GetComponent<SpriteRenderer>().color = Color.red;
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(true);
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).gameObject.SetActive(false);
         }
 
         else
         {
             GameManager.instance.silkText.color = Color.white;
-            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).GetComponent<SpriteRenderer>().color = Color.white;
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).gameObject.SetActive(true);
+            GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(false);
         }
         
     }
