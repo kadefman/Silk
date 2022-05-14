@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UpgradeHex : MonoBehaviour
+public class SpecialHex : MonoBehaviour
 {
-    public enum Upgrade { MaxHealth, Damage, SpinCost }
+    public enum Upgrade { MaxHealth, Damage, SpinCost, Help, Reset}
    
     public GameObject itemObject;
     public GameObject costText;
@@ -28,43 +28,70 @@ public class UpgradeHex : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(upgradeType == Upgrade.Help)
+        {
+            GameManager.instance.panels.Tutorial();
+            return;
+        }
+
+        if (upgradeType == Upgrade.Reset)
+        {
+            GameManager.instance.panels.ResetConfirm();
+            GameManager.instance.canReset = true;
+            return;
+        }
+
         if (!collision.transform.CompareTag("Player"))
             return;
 
         int upgradeCount = UpgradeCount();
         Color c;
 
+        if(upgradeCount == 3)
+        {
+            c = Color.grey;
+            GameManager.instance.panels.Shop(soldOut: true);
+        }
+
         if (upgradeCount < 3 && prices[upgradeCount] <= GameManager.instance.currency)
         {
             canPurchase = true;
             c = Color.green;
+            GameManager.instance.panels.Shop((int)upgradeType);
         }
 
         else
+        {
             c = Color.grey;
+            GameManager.instance.panels.Shop(noFunds: true);
+        }
+            
 
-        
+        //sensors
         for (int i = 0; i < 6; i++)
         {
             transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = true;
             transform.GetChild(i).GetComponent<SpriteRenderer>().color = c;
         }
-
-
     }
 
     private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.transform.CompareTag("Player"))
+    {       
+        if (!collision.transform.CompareTag("Player"))
+            return;
+
+        GameManager.instance.panels.HidePanels();
+
+        if (upgradeType == Upgrade.Reset || upgradeType == Upgrade.Help)
         {
-            canPurchase = false;
-            for (int i = 0; i < 6; i++)
-            {
-                transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
-            }
-            //Debug.Log("Can't purchase");
+            GameManager.instance.canReset = false;
+            return;
         }
-            
+
+        //exiting shop tile
+        canPurchase = false;
+        for (int i = 0; i < 6; i++)
+            transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;       
     }
 
     private int UpgradeCount()
@@ -124,7 +151,9 @@ public class UpgradeHex : MonoBehaviour
 
         DisplayText();
         GameManager.instance.merchant.Animate();
-        transform.GetComponent<Collider2D>().enabled = false;
-        transform.GetComponent<Collider2D>().enabled = true;
+        GameManager.instance.panels.Shop(bought: true);
+
+        for (int i = 0; i < 6; i++)
+            transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
     }
 }

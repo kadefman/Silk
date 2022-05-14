@@ -91,10 +91,19 @@ public class Player : MonoBehaviour
             audioSource.Stop();
         }
 
-        if(Input.GetKeyDown(KeyCode.R) && GameManager.instance.canReset)
+        if(Input.GetKeyDown(KeyCode.R))
         {
-            //reset game!
-            Debug.Log("reset");
+            if(GameManager.instance.canReset)
+            {
+                GameManager.instance.ResetUpgrades();
+                GameManager.instance.panels.PostReset();
+                GameManager.instance.canReset = false;
+            }
+
+            if(GameManager.instance.canReturn)
+            {
+                SceneManager.LoadScene(1);
+            }
         }
 
 

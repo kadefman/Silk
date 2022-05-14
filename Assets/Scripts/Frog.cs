@@ -34,8 +34,7 @@ public class Frog : MonoBehaviour
         tongue = transform.GetChild(0).GetChild(0);
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
-        //HideHitbox();
-        canAttack = true;
+        canAttack = false;
         health = maxHealth;
     }
 

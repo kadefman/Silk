@@ -20,10 +20,10 @@ public class PanelHolder : MonoBehaviour
         ShowPanel(1);
     }
 
-    public void Shop(int upgrade, bool bought, bool soldOut, bool noFunds)
+    public void Shop(int upgrade = 0, bool bought = false, bool soldOut = false, bool noFunds = false)
     {
         ShowPanel(2);
-        TextMeshPro shopText = transform.GetChild(2).GetComponent<TextMeshPro>();
+        TextMeshProUGUI shopText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
         if (bought)
             shopText.text = "Thank you!";
 
