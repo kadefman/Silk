@@ -9,17 +9,17 @@ public class FlyingEnemy : MonoBehaviour
     //8 items: nothing, silk, health, currency, bigSilk, bigHealth, bigCurrency, powerup
     public static float[,] itemRarities = new float[7, 8]
     //stillFly
-    {{.3f, .4f, .2f, .1f, 0, 0, 0, 0},
+    {{.2f, .4f, .15f, .2f, 0, 0, 0, .05f},
     //movingFly
-    {.3f, .4f, .2f, .1f, 0, 0, 0, 0},
+    {.2f, .4f, .15f, .2f, 0, 0, 0, .05f},
     //bee
-    {.2f, .35f, .15f, .2f, 0, 0, 0, .1f},
+    {.2f, .25f, .15f, .3f, 0, 0, 0, .1f},
     //angryBee
-    {.2f, .2f, .1f, .2f, .1f, .1f, 0, .1f},
+    {.1f, .2f, .1f, .3f, .1f, .1f, 0, .1f},
     //fastFly
-    {.15f, .05f, .05f, .2f, .2f, .2f, 0, .15f},
+    {.05f, .05f, .05f, .2f, .2f, .2f, .1f, .15f},
     //bigBee
-    {0, 0, 0, .4f, .2f, .2f, .1f, .15f},
+    {0, 0, 0, .3f, .2f, .2f, .1f, .15f},
     //bigAngryBee
     {0, 0, 0, .2f, .2f, .2f, .2f, .3f}};
 
