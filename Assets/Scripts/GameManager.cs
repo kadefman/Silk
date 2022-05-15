@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
         canvas = Instantiate(canvasPrefab,transform);
         panels = canvas.transform.GetChild(1).GetComponent<PanelHolder>();
         silkText = canvas.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+        currencyText = canvas.transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
         healthBar = canvas.transform.GetChild(0).GetChild(0).gameObject;
         panels.HidePanels();
     }
