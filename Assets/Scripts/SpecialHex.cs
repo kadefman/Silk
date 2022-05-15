@@ -5,7 +5,7 @@ using TMPro;
 
 public class SpecialHex : MonoBehaviour
 {
-    public enum Upgrade { MaxHealth, Damage, SpinCost, Help, Reset}
+    public enum Upgrade { MaxHealth, Damage, SpinCost, Help, Reset, Info}
    
     public GameObject itemObject;
     public GameObject costText;
@@ -16,7 +16,12 @@ public class SpecialHex : MonoBehaviour
 
     private void Start()
     {
-        DisplayText();
+        if(upgradeType != Upgrade.Help && upgradeType != Upgrade.Reset && upgradeType != Upgrade.Info)
+        {
+            //Debug.Log((int)upgradeType);
+            DisplayText();
+        }
+            
     }
 
     private void Update()
@@ -28,7 +33,10 @@ public class SpecialHex : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(upgradeType == Upgrade.Help)
+        if (!collision.transform.CompareTag("Player"))
+            return;
+
+        if (upgradeType == Upgrade.Help)
         {
             GameManager.instance.panels.Tutorial();
             return;
@@ -38,6 +46,12 @@ public class SpecialHex : MonoBehaviour
         {
             GameManager.instance.panels.ResetConfirm();
             GameManager.instance.canReset = true;
+            return;
+        }
+
+        if(upgradeType == Upgrade.Info)
+        {
+            GameManager.instance.panels.Info();
             return;
         }
 
@@ -82,7 +96,7 @@ public class SpecialHex : MonoBehaviour
 
         GameManager.instance.panels.HidePanels();
 
-        if (upgradeType == Upgrade.Reset || upgradeType == Upgrade.Help)
+        if (upgradeType == Upgrade.Reset || upgradeType == Upgrade.Help || upgradeType == Upgrade.Info)
         {
             GameManager.instance.canReset = false;
             return;
@@ -152,6 +166,7 @@ public class SpecialHex : MonoBehaviour
         DisplayText();
         GameManager.instance.merchant.Animate();
         GameManager.instance.panels.Shop(bought: true);
+        //purchase audio
 
         for (int i = 0; i < 6; i++)
             transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;

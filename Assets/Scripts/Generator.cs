@@ -51,6 +51,7 @@ public class Generator : MonoBehaviour
     private int currentIndex = 0;
     private int maxWalls;
     private int bossRoomIndex;
+    private int collisionCount;
     
     void Start()
     {       
@@ -71,6 +72,7 @@ public class Generator : MonoBehaviour
         CreateNextRoom();
         cam.transform.parent = player.transform;  
         GameManager.instance.rooms = rooms;
+        collisionCount = 0;
     }
 
     private void Update()
@@ -111,7 +113,7 @@ public class Generator : MonoBehaviour
             CreateStartRoom();
 
         else if (currentIndex == bossRoomIndex)
-            CreateBossRoom();
+            TryCreateBossRoom();
 
         else
         {
@@ -175,6 +177,61 @@ public class Generator : MonoBehaviour
         }
     }
 
+    void TryCreateBossRoom()
+    {
+        int length = 4;
+        Vector2 genPoint = thisRoom.exitPoint + 4 * new Vector2(-.96f, .56f);
+        for (int x = 0; x <= 8; x++)
+        {
+            int lineHeight;
+            if (x <= length)
+                lineHeight = x + length + 1;
+            else
+                lineHeight = 3 * length + 1 - x;
+
+            for (int y = 0; y < lineHeight; y++)
+            {
+                float pointX = genPoint.x + xOffset * x;
+                float pointY;
+                if (x < length)
+                    pointY = genPoint.y + (yOffset * (y - .5f * x));
+                else
+                    pointY = genPoint.y + (yOffset * (1 + y - .5f * (2 * length + 2 - x)));
+
+                Vector2 point = new Vector2(pointX, pointY);
+                if (!(y == 0 & x == length))
+                {
+                    tilePoints.Add(point);
+                }
+            }
+        }
+
+        foreach (Vector2 point in tilePoints)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
+
+            //go back 2 rooms, try again
+            if (hit.transform != null && collisionCount<50)
+            {
+                Debug.Log("COLLISION! Can't make room " + currentIndex);
+                Debug.Log("COLLISION AT " + hit.transform.position);
+                //collisionCount++;
+
+                Destroy(roomObjects[roomObjects.Count - 1]);
+                Destroy(roomObjects[roomObjects.Count - 2]);
+                Destroy(roomObjects[roomObjects.Count - 3]);
+                Destroy(roomObjects[roomObjects.Count - 4]);
+                roomObjects.RemoveRange(roomObjects.Count - 4, 4);
+                rooms.RemoveRange(rooms.Count - 5, 5);
+                currentIndex -= 4;
+                Invoke("Redo", .05f);
+                return;
+            }
+        }
+        //Debug.Log(collisionCount + " collisions");
+        CreateBossRoom();
+    }
+
     void CreateBossRoom()
     {
         prevRoom = rooms[currentIndex - 1];
@@ -199,10 +256,12 @@ public class Generator : MonoBehaviour
 
         //case U from main method
         ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+        Debug.Log($"Finished! {collisionCount} collisions");
     }
 
     void Redo()
     {
+        collisionCount++;
         CreateNextRoom();
     }
 
@@ -227,11 +286,10 @@ public class Generator : MonoBehaviour
             RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
 
             //go back 2 rooms, try again
-            if (hit.transform != null)
+            if (hit.transform != null && collisionCount<50)
             {
                 Debug.Log("COLLISION! Can't make room " + currentIndex);
-                Debug.Log("COLLISION AT " + hit.transform.position);
-                //collisionCount++;
+                //Debug.Log("COLLISION AT " + hit.transform.position);
 
                 Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);

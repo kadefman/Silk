@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 393931b75917ee44cbf7ee1e15a2cebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayTime: 0.2
+  damage: 0
 --- !u!1 &8579754611316829909
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +354,7 @@ MonoBehaviour:
   enemyIndex: 6
   speed: 80
   damage: 2
-  health: 20
+  health: 55
   seekSpeed: 0.5
   isSeeker: 1
   isStill: 0

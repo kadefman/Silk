@@ -15,6 +15,7 @@ public class canvasDo : MonoBehaviour
             Destroy(gameObject);
         }
 
+        GameManager.instance.canvas = gameObject;
         DontDestroyOnLoad(gameObject);
     }
 

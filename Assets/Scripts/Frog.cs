@@ -29,7 +29,7 @@ public class Frog : MonoBehaviour
 
     void Start()
     {
-        //GameManager.instance.frog = this;
+        GameManager.instance.frog = this;
         body = transform.GetChild(0);
         tongue = transform.GetChild(0).GetChild(0);
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
@@ -118,7 +118,7 @@ public class Frog : MonoBehaviour
         {
             Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset * Vector3.down, Quaternion.identity);
             enemyIndex++;
-            Debug.Log(enemyIndex);
+            //Debug.Log(enemyIndex);
             yield return new WaitForSeconds(enemyGapTime);
         }
     }
@@ -140,7 +140,12 @@ public class Frog : MonoBehaviour
         anim.SetTrigger("death");
         yield return new WaitForSeconds(bossDeathTime);
         Destroy(gameObject);
+        FindObjectOfType<AudioManager>().PlayForest();
         GameManager.instance.panels.Win();
+        GameManager.instance.playerScript.godMode = true;
+        GameManager.instance.playerScript.canMove = false;
+        GameManager.instance.playerScript.canShoot = false;
+        GameManager.instance.canReturn = true;
     }
 }
 

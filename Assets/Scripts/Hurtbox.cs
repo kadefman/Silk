@@ -6,12 +6,10 @@ public class Hurtbox : MonoBehaviour
 {    
     private FlyingEnemy enemy;  
     
-    public int damage;
-    public int origDamage;
+    private int damage;
     
     void Awake()
     {
-        origDamage = damage;
         if (transform.parent.GetComponent<FlyingEnemy>())
         {
             enemy = transform.parent.GetComponent<FlyingEnemy>();
@@ -30,29 +28,41 @@ public class Hurtbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        Debug.Log(collider.gameObject.name + "hitting" + transform.name);
+        if (collider.gameObject.CompareTag("BossPlat"))
+            return;
+
         if (collider.gameObject.CompareTag("Player"))
         {
-            Debug.Log("take " + damage + " damage");
+            //Debug.Log("take " + damage + " damage");
             Player player = collider.gameObject.GetComponent<Player>();
+
+            if (player.invincible)
+            {
+                //Debug.Log("you should not take damage");
+                return;
+            }
+                
+
             player.AddHealth(-damage);
             if (player.spinning)
                 player.spinning = false;
 
-            TempDisable();
-
-            /*if(transform.CompareTag("Tongue"))
-            {
-                Frog boss = transform.parent.parent.parent.GetComponent<Frog>();
-            }*/
+            player.Invincible();
         }
 
         else if(collider.gameObject.CompareTag("Bullet"))
         {                     
+            
             if (!collider.transform.GetComponent<Bullet>().piercing) 
             {
                 Destroy(collider.gameObject);
                 collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
             }
+
+            //tongue getting hit
+            if(transform.CompareTag("Tongue"))
+                return;
 
             //frog getting hit
             if(transform.CompareTag("Frog"))
@@ -68,16 +78,5 @@ public class Hurtbox : MonoBehaviour
             else
                 enemy.GetHit(collider.transform.GetComponent<Bullet>().damage);
         }
-    }
-
-    void TempDisable()
-    {
-        //damage = 0;
-        //Invoke("EnableHitbox", .7f);
-    }
-
-    void EnableHitbox()
-    {
-        damage = origDamage;
     }
 }

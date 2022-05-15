@@ -23,15 +23,23 @@ public class PanelHolder : MonoBehaviour
     public void Shop(int upgrade = 0, bool bought = false, bool soldOut = false, bool noFunds = false)
     {
         ShowPanel(2);
-        TextMeshProUGUI shopText = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI shopText = transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
         if (bought)
             shopText.text = "Thank you!";
 
         else if (soldOut)
+        {
             shopText.text = "You are too powerful! You cannot buy anymore.";
+            //can't buy audio
+        }
+            
 
         else if (noFunds)
+        {
             shopText.text = "You can't afford that yet. Sorry!";
+            //can't buy audio
+        }
+            
 
         else
         {
@@ -58,7 +66,7 @@ public class PanelHolder : MonoBehaviour
     public void Win()
     {
         ShowPanel(5);
-        TextMeshPro runText = transform.GetChild(5).GetChild(2).GetComponent<TextMeshPro>();
+        TextMeshProUGUI runText = transform.GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>();
         runText.text = $"Congratulations! \n You completed the game in {GameManager.instance.runCount} runs. \n Press 'R' to start over...";
     }
 
