@@ -9,13 +9,10 @@ public class GameManager : MonoBehaviour
     public GameObject web;
     public GameObject webCounter;
     public GameObject platform;
-    public GameObject invisWall;
-    public TextMeshProUGUI silkText;
-    public TextMeshProUGUI currencyText;
-    public GameObject healthBar;
+    public GameObject invisWall;  
     public GameObject[] items;
     public GameObject[] powerups;
-    public PanelHolder panels;
+    
     public int[] damagePermValues;
     public int[] silkPermValues;
     public int healthUpgrades;
@@ -24,6 +21,10 @@ public class GameManager : MonoBehaviour
     public int currency;
     public int runCount;
 
+    [HideInInspector] public TextMeshProUGUI silkText;
+    [HideInInspector] public TextMeshProUGUI currencyText;
+    [HideInInspector] public GameObject healthBar;
+    [HideInInspector] public PanelHolder panels;
     [HideInInspector] public GameObject canvas;
     [HideInInspector] public Frog frog;
     [HideInInspector] public int roomIndex;

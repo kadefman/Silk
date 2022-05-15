@@ -164,7 +164,6 @@ public class SpecialHex : MonoBehaviour
         }
 
         DisplayText();
-        GameManager.instance.merchant.Animate();
         GameManager.instance.panels.Shop(bought: true);
         //purchase audio
 

@@ -22,6 +22,7 @@ public class PanelHolder : MonoBehaviour
 
     public void Shop(int upgrade = 0, bool bought = false, bool soldOut = false, bool noFunds = false)
     {
+        GameManager.instance.merchant.Animate();
         ShowPanel(2);
         TextMeshProUGUI shopText = transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
         if (bought)
