@@ -32,6 +32,7 @@ public class PanelHolder : MonoBehaviour
         {
             shopText.text = "You are too powerful! You cannot buy anymore.";
             //can't buy audio
+            FindObjectOfType<AudioManager>().Play("No Buy");
         }
             
 
@@ -39,6 +40,7 @@ public class PanelHolder : MonoBehaviour
         {
             shopText.text = "You can't afford that yet. Sorry!";
             //can't buy audio
+            FindObjectOfType<AudioManager>().Play("No Buy");
         }
             
 
