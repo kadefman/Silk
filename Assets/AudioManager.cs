@@ -59,6 +59,18 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.pitch = UnityEngine.Random.Range(.9f, 1.1f);
+        if (name == "Currency")
+        {
+            s.source.volume = .35f;
+            s.source.pitch = UnityEngine.Random.Range(1.1f, 1.2f);
+            
+        }
+        if (name == "Big Currency")
+        {
+            s.source.volume = .35f;
+            
+        }
+
         s.source.Play();
         //Debug.Log("shooting");
 

@@ -166,6 +166,7 @@ public class SpecialHex : MonoBehaviour
         DisplayText();
         GameManager.instance.panels.Shop(bought: true);
         //purchase audio
+        FindObjectOfType<AudioManager>().Play("Buy");
 
         for (int i = 0; i < 6; i++)
             transform.GetChild(i).GetComponent<SpriteRenderer>().enabled = false;
