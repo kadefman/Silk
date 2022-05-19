@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Frog : MonoBehaviour
 {
-    
+
     public Animator anim;
     public List<GameObject> enemiesToSpawn;
 
-    public int maxHealth;   
+    public int maxHealth;
     public float stabTime;
     public float tongueWhipTime;
     public float flyPrepareTime;
@@ -34,7 +34,6 @@ public class Frog : MonoBehaviour
         tongue = transform.GetChild(0).GetChild(0);
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
-        //HideHitbox();
         canAttack = false;
         health = maxHealth;
     }
@@ -58,13 +57,13 @@ public class Frog : MonoBehaviour
             RightWhip();
 
         else if (attackChoice == 3)
-            FlyAttack();           
+            FlyAttack();
     }
 
     void StabAttack()
     {
         tongueHitbox.gameObject.SetActive(true);
-        canAttack = false;        
+        canAttack = false;
         turnAngle = Random.Range(-15, 15);
         TurnTongue();
         turnAngle *= -1;
@@ -80,7 +79,7 @@ public class Frog : MonoBehaviour
         canAttack = false;
         anim.SetTrigger("tongueWhip");
         Invoke("HideHitbox", tongueWhipTime);
-        Invoke("EndCoolTime", coolTime); 
+        Invoke("EndCoolTime", coolTime);
     }
     void RightWhip()
     {
@@ -115,11 +114,11 @@ public class Frog : MonoBehaviour
     IEnumerator SpawnFlies()
     {
         int enemyIndex = 0;
-        while(enemyIndex < enemiesToSpawn.Count)
+        while (enemyIndex < enemiesToSpawn.Count)
         {
-            Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset*Vector3.down, Quaternion.identity);
+            Instantiate(enemiesToSpawn[enemyIndex], transform.position + flySpawnOffset * Vector3.down, Quaternion.identity);
             enemyIndex++;
-            Debug.Log(enemyIndex);
+            //Debug.Log(enemyIndex);
             yield return new WaitForSeconds(enemyGapTime);
         }
     }
@@ -141,6 +140,12 @@ public class Frog : MonoBehaviour
         anim.SetTrigger("death");
         yield return new WaitForSeconds(bossDeathTime);
         Destroy(gameObject);
+        FindObjectOfType<AudioManager>().PlayForest();
         GameManager.instance.panels.Win();
+        GameManager.instance.playerScript.godMode = true;
+        GameManager.instance.playerScript.canMove = false;
+        GameManager.instance.playerScript.canShoot = false;
+        GameManager.instance.canReturn = true;
     }
 }
+

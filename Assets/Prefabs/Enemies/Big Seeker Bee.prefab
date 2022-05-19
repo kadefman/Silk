@@ -213,7 +213,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
-  origDamage: 0
 --- !u!1 &8579754611316829909
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,7 +354,7 @@ MonoBehaviour:
   enemyIndex: 6
   speed: 80
   damage: 2
-  health: 60
+  health: 55
   seekSpeed: 0.5
   isSeeker: 1
   isStill: 0

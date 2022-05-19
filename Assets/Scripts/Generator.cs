@@ -51,6 +51,7 @@ public class Generator : MonoBehaviour
     private int currentIndex = 0;
     private int maxWalls;
     private int bossRoomIndex;
+    private int collisionCount;
     
     void Start()
     {       
@@ -71,6 +72,7 @@ public class Generator : MonoBehaviour
         CreateNextRoom();
         cam.transform.parent = player.transform;  
         GameManager.instance.rooms = rooms;
+        collisionCount = 0;
     }
 
     private void Update()
@@ -179,7 +181,7 @@ public class Generator : MonoBehaviour
     {
         int length = 4;
         Vector2 genPoint = thisRoom.exitPoint + 4 * new Vector2(-.96f, .56f);
-        for(int x=0; x<=8; x++)
+        for (int x = 0; x <= 8; x++)
         {
             int lineHeight;
             if (x <= length)
@@ -197,7 +199,7 @@ public class Generator : MonoBehaviour
                     pointY = genPoint.y + (yOffset * (1 + y - .5f * (2 * length + 2 - x)));
 
                 Vector2 point = new Vector2(pointX, pointY);
-                if(!(y==0 & x==length))
+                if (!(y == 0 & x == length))
                 {
                     tilePoints.Add(point);
                 }
@@ -209,7 +211,7 @@ public class Generator : MonoBehaviour
             RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
 
             //go back 2 rooms, try again
-            if (hit.transform != null)
+            if (hit.transform != null && collisionCount<50)
             {
                 Debug.Log("COLLISION! Can't make room " + currentIndex);
                 Debug.Log("COLLISION AT " + hit.transform.position);
@@ -217,9 +219,11 @@ public class Generator : MonoBehaviour
 
                 Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);
-                roomObjects.RemoveRange(roomObjects.Count - 2, 2);
-                rooms.RemoveRange(rooms.Count - 3, 3);
-                currentIndex -= 2;
+                Destroy(roomObjects[roomObjects.Count - 3]);
+                Destroy(roomObjects[roomObjects.Count - 4]);
+                roomObjects.RemoveRange(roomObjects.Count - 4, 4);
+                rooms.RemoveRange(rooms.Count - 5, 5);
+                currentIndex -= 4;
                 Invoke("Redo", .05f);
                 return;
             }
@@ -252,10 +256,12 @@ public class Generator : MonoBehaviour
 
         //case U from main method
         ent.transform.GetChild(0).Rotate(Vector3.back, -60);
+        Debug.Log($"Finished! {collisionCount} collisions");
     }
 
     void Redo()
     {
+        collisionCount++;
         CreateNextRoom();
     }
 
@@ -280,11 +286,10 @@ public class Generator : MonoBehaviour
             RaycastHit2D hit = Physics2D.Linecast(point, point + rayOffset, LayerMask.GetMask("Tall"));
 
             //go back 2 rooms, try again
-            if (hit.transform != null)
+            if (hit.transform != null && collisionCount<50)
             {
                 Debug.Log("COLLISION! Can't make room " + currentIndex);
-                Debug.Log("COLLISION AT " + hit.transform.position);
-                //collisionCount++;
+                //Debug.Log("COLLISION AT " + hit.transform.position);
 
                 Destroy(roomObjects[roomObjects.Count - 1]);
                 Destroy(roomObjects[roomObjects.Count - 2]);

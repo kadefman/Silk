@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject canvasPrefab;
     public GameObject web;
     public GameObject webCounter;
     public GameObject platform;
-    public GameObject invisWall;
-    [HideInInspector] public TextMeshProUGUI silkText;
-    [HideInInspector] public TextMeshProUGUI currencyText;
-    [HideInInspector] public GameObject healthBar;
+    public GameObject invisWall;  
     public GameObject[] items;
     public GameObject[] powerups;
-    public PanelHolder panels;
+    
     public int[] damagePermValues;
     public int[] silkPermValues;
     public int healthUpgrades;
@@ -24,6 +21,11 @@ public class GameManager : MonoBehaviour
     public int currency;
     public int runCount;
 
+    [HideInInspector] public TextMeshProUGUI silkText;
+    [HideInInspector] public TextMeshProUGUI currencyText;
+    [HideInInspector] public GameObject healthBar;
+    [HideInInspector] public PanelHolder panels;
+    [HideInInspector] public GameObject canvas;
     [HideInInspector] public Frog frog;
     [HideInInspector] public int roomIndex;
     [HideInInspector] public int bossRoomIndex;   
@@ -40,9 +42,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int baseDamage;
     [HideInInspector] public List<GameObject> powerupsRemaining;
     [HideInInspector] public bool canReset;
-
-    public GameObject canvasPrefab;
-    [HideInInspector] public GameObject canvas;
+    [HideInInspector] public bool canReturn;
+    [HideInInspector] public List<GameObject> webs;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        webs = new List<GameObject>();
     }
 
     private void Start()
@@ -59,12 +61,12 @@ public class GameManager : MonoBehaviour
         currency = 0;
         spinCost = silkPermValues[0];
         baseDamage = damagePermValues[0];
-        canvas = Instantiate(canvasPrefab);
-        healthBar = canvas.transform.GetChild(0).GetChild(0).gameObject;
+        canvas = Instantiate(canvasPrefab,transform);
+        panels = canvas.transform.GetChild(1).GetComponent<PanelHolder>();
         silkText = canvas.transform.GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-        Debug.Log(silkText.text);
         currencyText = canvas.transform.GetChild(0).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
-        
+        healthBar = canvas.transform.GetChild(0).GetChild(0).gameObject;
+        panels.HidePanels();
     }
 
     public void SetRoom(int index)
@@ -172,7 +174,7 @@ public class GameManager : MonoBehaviour
     {
         Vector2 position = spot.transform.position;
         Destroy(spot.gameObject);
-        Instantiate(web, position, Quaternion.identity, transform);
+        Instantiate(web, position, Quaternion.identity);
         FindObjectOfType<AudioManager>().Play("Web complete");
     }
 
@@ -196,11 +198,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("No door");
     }
 
-    public void SetHealth(int health)
+    public void SetHealth()
     {
         playerScript.maxHealth = 6 + 2 * healthUpgrades;
-        if (health > playerScript.maxHealth)
-            health = playerScript.maxHealth;
+        if (playerScript.healthCount > playerScript.maxHealth)
+            playerScript.healthCount = playerScript.maxHealth;
 
         for(int i=1; i<=6; i++)
         {
@@ -208,9 +210,9 @@ public class GameManager : MonoBehaviour
             foreach(Transform child in healthBubble)
                 child.gameObject.SetActive(false);
 
-            if (health >= 2 * i)
+            if (playerScript.healthCount >= 2 * i)
                 healthBubble.GetChild(0).gameObject.SetActive(true);
-            else if (health == 2 * i - 1)
+            else if (playerScript.healthCount == 2 * i - 1)
                 healthBubble.GetChild(1).gameObject.SetActive(true);
             else if (playerScript.maxHealth >= 2*i)
                 healthBubble.GetChild(2).gameObject.SetActive(true);
@@ -242,17 +244,6 @@ public class GameManager : MonoBehaviour
         silkUpgrades = 0;
         spinCost = silkPermValues[silkUpgrades];
 
-        runCount = 0;
-    }
-
-    public IEnumerator reloadRoutine()
-    {
-        yield return new WaitForSeconds(4);
-        SceneManager.LoadScene(0);
-    }
-
-    public void reload()
-    {
-        StartCoroutine(reloadRoutine());
+        runCount = 1;
     }
 }

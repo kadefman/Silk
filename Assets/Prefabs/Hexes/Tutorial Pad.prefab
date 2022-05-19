@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: -8831164507633965157}
   - component: {fileID: 7419595909869798968}
   - component: {fileID: 7440317989003062926}
-  m_Layer: 9
+  - component: {fileID: -6424532126885356876}
+  m_Layer: 12
   m_Name: Tutorial Pad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 5098216594947477444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 2973194641452993153}
   m_Father: {fileID: 0}
@@ -92,10 +93,10 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5098216594947477444}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 332deee9e082dc244a55e0abc5f8ed19, type: 2}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -158,6 +159,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5fc46f5080ada4da1ee30da1928a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6424532126885356876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5098216594947477444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7571fdf56bb24c48a52e810563319da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemObject: {fileID: 0}
+  costText: {fileID: 0}
+  upgradeType: 3
+  prices: 
 --- !u!1 &6119894951392738314
 GameObject:
   m_ObjectHideFlags: 0

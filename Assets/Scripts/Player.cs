@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     public GameObject[] bullets;
-    
     public float defaultSpeed;
     public int silkStart;
     public int maxHealth;
@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public int shotCost;
     public float shotCoolTime;
     public float spinTime;
+    public float invincibilityTime;
     public bool saveWebProgress;
        
     public AudioSource audioSource; //for spinning
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool canMove;
     [HideInInspector] public bool canShoot;
     [HideInInspector] public bool godMode;
-    
+    [HideInInspector] public bool invincible;
 
     public bool piercing;
     public bool tripleShot;
@@ -39,13 +40,12 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 curDirection;
     private float bulletOffset = .08f;
+    
 
     private Collider2D playerCollider;
 
     SpriteRenderer sp;
     private Vector3 positionBeforeSpinSnap;
-
-    private bool die = false; 
 
     private void Awake()
     {
@@ -57,26 +57,30 @@ public class Player : MonoBehaviour
         GameManager.instance.playerScript = this;
         GameManager.instance.ResetPowerups();
         GameManager.instance.runCount++;
-        
-
-        die = false;
 
         rb = transform.GetComponent<Rigidbody2D>();
         spinning = false;
         godMode = false;
         canMove = true;
         canShoot = true;
+        invincible = false;
         curDirection = Vector2.down;
 
-        speed = defaultSpeed;
-        AddSilk(silkStart);
-        silkCount = silkStart;
-        AddHealth(maxHealth);
-        healthCount = maxHealth;
+        
         sp = gameObject.transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<CapsuleCollider2D>();
-        
+
         //Debug.Log(sp);
+
+        speed = defaultSpeed;
+
+        AddSilk(silkStart);
+        silkCount = silkStart;
+
+        AddHealth(maxHealth);
+        healthCount = maxHealth;
+
+        //Invoke("TriggerUI", .1f);            
     }
 
     void Update()
@@ -97,12 +101,26 @@ public class Player : MonoBehaviour
             audioSource.Stop();
         }
 
-        if(Input.GetKeyDown(KeyCode.R) && GameManager.instance.canReset)
+        if(Input.GetKeyDown(KeyCode.R))
         {
-            //reset game!
-            Debug.Log("reset");
-        }
+            if(GameManager.instance.canReset)
+            {
+                GameManager.instance.ResetUpgrades();
+                GameManager.instance.panels.HidePanels();
+                GameManager.instance.panels.PostReset();
+                GameManager.instance.canReset = false;
+            }
 
+            if(GameManager.instance.canReturn)
+            {
+                GameManager.instance.canReturn = false;
+                GameManager.instance.playerScript.godMode = false;
+                GameManager.instance.playerScript.canMove = true;
+                GameManager.instance.playerScript.canShoot = true;
+                GameManager.instance.panels.HidePanels();
+                SceneManager.LoadScene(1);
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftBracket))
             ToggleGodMode();
@@ -220,14 +238,15 @@ public class Player : MonoBehaviour
             godMode = false;
             speed = defaultSpeed;
         }
-    } 
+    }
 
     public void AddSilk(int i)
     {
+        Debug.Log("Adding silk");
         silkCount += i;
         GameManager.instance.silkText.text = silkCount.ToString();
 
-        if(silkCount <20)
+        if (silkCount < 20)
         {
             GameManager.instance.silkText.color = Color.red;
             GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(true);
@@ -240,8 +259,9 @@ public class Player : MonoBehaviour
             GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(1).gameObject.SetActive(true);
             GameManager.instance.canvas.transform.GetChild(0).GetChild(1).GetChild(2).gameObject.SetActive(false);
         }
-        
+
     }
+
 
     public void AddHealth(int i)
     {
@@ -251,10 +271,7 @@ public class Player : MonoBehaviour
         healthCount += i;
 
         //maxHealth is changed here if necessary
-        GameManager.instance.SetHealth(healthCount);
-
-        if (healthCount > maxHealth)
-            healthCount = maxHealth;
+        GameManager.instance.SetHealth();
       
         if (i < 0)
         {
@@ -304,7 +321,7 @@ public class Player : MonoBehaviour
             if (longRange)
                 bulletScript.longRange = true;
         }
-                           
+
         AddSilk(-shotCost);
         StartCoroutine(Cooldown(shotCoolTime));
         FindObjectOfType<AudioManager>().Play("Web shot 1");
@@ -334,12 +351,15 @@ public class Player : MonoBehaviour
         walkingSource.Stop();
         
         canMove = false;
-        die = true;
-        //animator.Play("Base Layer.Die");
-        animator.SetTrigger("die");
+        animator.Play("Base Layer.Die");
         Instantiate(FxDiePrefab, transform);
+        StartCoroutine(scenewait());
         playerCollider.enabled = !playerCollider.enabled;
-        GameManager.instance.reload();
+
+        foreach(GameObject web in GameManager.instance.webs)
+            Destroy(web);
+            
+        GameManager.instance.webs.Clear();
     }
 
     public IEnumerator Cooldown (float time)
@@ -403,24 +423,11 @@ public class Player : MonoBehaviour
         if (getIn) { 
             if (skip)
             {
-                if (die)
-                {
-                    animator.SetTrigger("die");
-                    canMove = false;
-                    Destroy(rb);
-                }
                 animator.Play("Base Layer.SpinBegin");
-                
             }
             else
             {
                 animator.Play("Base Layer.SpinDashes");
-                if (die)
-                {
-                    animator.SetTrigger("die");
-                    canMove = false;
-                    Destroy(rb);
-                }
             }
         }
         else
@@ -429,25 +436,31 @@ public class Player : MonoBehaviour
             {
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
-                if (die)
-                {
-                    animator.SetTrigger("die");
-                    canMove = false;
-                    Destroy(rb);
-                }
             }
             else
             {
                 animator.Play("Base Layer.Movement");
                 tileCollider.enabled = true;
-                if (die)
-                {
-                    animator.SetTrigger("die");
-                    canMove = false;
-                    Destroy(rb);
-                }
             }
             canMove = true;
         }
+    }
+
+    IEnumerator scenewait()
+    {
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene(1);
+    }
+
+    public void Invincible()
+    {
+        //Debug.Log("invincible");
+        invincible = true;
+        Invoke("NotInvincible", invincibilityTime);
+    }
+
+    public void NotInvincible()
+    {
+        invincible = false;
     }
 }
