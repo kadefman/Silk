@@ -482,7 +482,7 @@ MonoBehaviour:
   - {fileID: 3689479164833152567, guid: 11767c589d58e9149ac0cd2b13a2869c, type: 3}
   - {fileID: 8579754611316829909, guid: 2a1ed86ae7815a64e961156f7e73e06f, type: 3}
   - {fileID: 8579754611316829909, guid: 9d9ce4a3347e12a4aa15928d2162cd95, type: 3}
-  maxHealth: 500
+  health: 500
   stabTime: 0.5
   tongueWhipTime: 0.45
   flyPrepareTime: 0
@@ -490,7 +490,6 @@ MonoBehaviour:
   enemyGapTime: 0.1
   bossDeathTime: 1.5
   flySpawnOffset: 1
-  health: 10
   canAttack: 0
 --- !u!1 &6699283376423614135
 GameObject:

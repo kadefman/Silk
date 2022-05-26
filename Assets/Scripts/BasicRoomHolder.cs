@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BasicRoomHolder : MonoBehaviour
 {
+    //this script was made to enable lock/key functionalities in handmade scenes/levels
+    //we probably won't need it for long
+
     public enum Scene { aquaMockup, kadefSample}
 
     public static List<Room> rooms = new List<Room>();

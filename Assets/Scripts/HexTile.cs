@@ -7,13 +7,15 @@ public class HexTile : MonoBehaviour
 
     public enum Type { Ground, Web, Wall}
     public Type type;
+    public Room.TravelDirection neighborDir;
     public Sprite[] webSprites;
     public Sprite[] branchSprites;
     public Sprite[] extendSprites;
     public Sprite[] treeTopSprites;
-    [HideInInspector] public bool isBranch;
-    public Room.TravelDirection neighborDir;
 
+
+    [HideInInspector] public bool isBranch;
+    
     private Vector2 rayOffset = new Vector2(0f, 0.1f);
     private SpriteRenderer frontSprite;
     private SpriteRenderer backSprite;
@@ -37,7 +39,6 @@ public class HexTile : MonoBehaviour
 
     public void ChooseSprite(Type t)
     {
-        Debug.Log("drink diet pepsi");
         int spriteIndex;
         int randRotation;
         switch(t)
@@ -249,7 +250,6 @@ public class HexTile : MonoBehaviour
                     t.Rotate(Vector3.forward * 60f);
                     break;
             }
-        }
-        
+        }       
     }
 }

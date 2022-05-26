@@ -6,7 +6,8 @@ public class FlyingEnemy : MonoBehaviour
 {
     //each small array must add to 1
     //7 enemies: stillFly, movingFly, bee, angryBee, fastFly, bigBee, bigAngryBee
-    //8 items: nothing, silk, health, currency, bigSilk, bigHealth, bigCurrency, powerup
+    //8 items: nothing, silk, health, gold, bigSilk, bigHealth, bigGold, powerup
+
     public static float[,] itemRarities = new float[7, 8]
     //stillFly
     {{.2f, .4f, .15f, .2f, 0, 0, 0, .05f},
@@ -26,32 +27,19 @@ public class FlyingEnemy : MonoBehaviour
 
     public Transform sprite;
     public GameObject FxDiePrefab;
-    /*public AudioSource audioSource;
-    public AudioClip damageSFX;
-    public AudioClip deathSFX;*/
-
-    public int enemyIndex;
-    public float speed;   
+    public int enemyIndex;      
     public int damage;
     public int health;
+    public float speed;
 
+    private Transform target;
     private Collider2D coll;
     private Rigidbody2D rb;
-
-    private int sfxNum;
-    private string sfxString;
-
-    //public Transform sprite;
-    //public GameObject FxDiePrefab;
-    private Vector3 position;
-
-    public float seekSpeed;
-    private Transform target;
     public bool isSeeker = false;
     public bool isStill = false;
-    private float rotationModifier = 90;
-
     private float[] dropRates;
+    public float seekSpeed;     
+    private float rotationModifier = 90;   
     private float xVelocity;
     private float yVelocity;
 
@@ -107,10 +95,7 @@ public class FlyingEnemy : MonoBehaviour
                 float seekAngle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - rotationModifier;
                 Quaternion q = Quaternion.AngleAxis(seekAngle, Vector3.forward);
                 transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * speed);
-            }
-                
-
-
+            }               
         }
         
         /*if (isSeeker)
@@ -132,12 +117,37 @@ public class FlyingEnemy : MonoBehaviour
         else if(i>0)
         {
             //Debug.Log("Maybe sounds?");
-            position = gameObject.transform.position;
-            FindObjectOfType<AudioManager>().PlaySpatial("Enemy hit 1", position, 1f);
+            FindObjectOfType<AudioManager>().PlaySpatial("Enemy hit 1", transform.position, 1f);
 
             /*audioSource.pitch = Random.Range(.95f, 1.1f);
             audioSource.PlayOneShot(damageSFX, .8f);*/
         }       
+    }
+
+    IEnumerator Die()
+    {
+        //destroy hurtbox
+        Destroy(transform.GetChild(0).gameObject);
+        DropItem();
+
+        GameManager.instance.enemyCount--;
+        if (GameManager.instance.enemyCount == 0)
+            GameManager.instance.OpenDoor(false);
+
+        //visual effects
+        rb.velocity = Vector3.zero;
+        Animator animator = GetComponentInChildren<Animator>();
+        animator.Play("Base Layer.Die");
+        Instantiate(FxDiePrefab, transform);
+
+        //sound
+        int sfxNum = Random.Range(1, 4);
+        string sfxString = sfxNum.ToString();
+        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death " + sfxString, transform.position, .95f);
+
+        yield return new WaitForSeconds(2);
+
+        Destroy(gameObject);
     }
 
     private void DropItem()
@@ -166,7 +176,7 @@ public class FlyingEnemy : MonoBehaviour
         if(itemIndex < 7 && itemIndex > 0)
             Instantiate(GameManager.instance.items[itemIndex-1], transform.position, Quaternion.identity);
         
-        //random powerup, uniform
+        //random powerup, uniform distribution
         else if(itemIndex == 7)
         {
             int powerupIndex = Random.Range(0, GameManager.instance.powerupsRemaining.Count);
@@ -174,36 +184,5 @@ public class FlyingEnemy : MonoBehaviour
             Instantiate(powerup, transform.position, Quaternion.identity);
             GameManager.instance.powerupsRemaining.Remove(powerup);
         }
-    }
-
-    IEnumerator Die()
-    {
-        Destroy(transform.GetChild(0).gameObject);
-
-        GameManager.instance.enemyCount--;
-        if (GameManager.instance.enemyCount == 0)
-            GameManager.instance.OpenDoor(false);
-
-        DropItem();
-           
-
-        //audio
-        /*audioSource.pitch = Random.Range(.95f, 1.1f);
-        audioSource.PlayOneShot(deathSFX, .8f);*/
-
-        //anim
-        rb.velocity = Vector3.zero;
-        Animator animator = GetComponentInChildren<Animator>();
-        position = gameObject.transform.position;
-        sfxNum = Random.Range(1, 4);
-        sfxString = sfxNum.ToString();
-        FindObjectOfType<AudioManager>().PlaySpatial("Enemy Death " + sfxString, position, .95f);
-        animator.Play("Base Layer.Die");
-        Instantiate(FxDiePrefab, transform);
-
-        yield return new WaitForSeconds(2);
-
-        Destroy(gameObject);
-        
-    }
+    }   
 }

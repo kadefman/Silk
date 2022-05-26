@@ -91,17 +91,26 @@ public class Player : MonoBehaviour
                 SpinWeb();
             if (spinning)
                 audioSource.Play();
-
         }
-
-        
+       
         if (Input.GetKeyUp(KeyCode.Space))
         {
             spinning = false;
             audioSource.Stop();
         }
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (canMove && canShoot)
+            {
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = 10;
+                Vector2 dir = Camera.main.ScreenToWorldPoint(mousePos) - transform.position;
+                Shoot(dir);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
             if(GameManager.instance.canReset)
             {
@@ -121,51 +130,12 @@ public class Player : MonoBehaviour
                 SceneManager.LoadScene(1);
             }
         }
-
+       
         if (Input.GetKeyDown(KeyCode.LeftBracket))
             ToggleGodMode();
 
         if (Input.GetKeyDown(KeyCode.RightBracket))
-            GameManager.instance.AddCurrency(10);
-
-        //3 variations of shooting controls
-        if (canMove && canShoot)
-        {
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = 10;
-                Vector2 dir = Camera.main.ScreenToWorldPoint(mousePos) - transform.position;
-                Shoot(dir);
-            }
-
-            /*if (controls == ControlScheme.Mouse)
-            {               
-                               
-            }
-
-            else if (controls == ControlScheme.ArrowAuto)
-            {
-                if (Input.GetKeyDown(KeyCode.Z))
-                    Shoot(curDirection);
-            }
-
-            else if (controls == ControlScheme.ArrowManual)
-            {
-                if (Input.GetKeyDown(KeyCode.T))
-                    Shoot(Vector2.up);
-
-                else if (Input.GetKeyDown(KeyCode.H))
-                    Shoot(Vector2.right);
-
-                else if (Input.GetKeyDown(KeyCode.G))
-                    Shoot(Vector2.down);
-
-                else if (Input.GetKeyDown(KeyCode.F))
-                    Shoot(Vector2.left);
-            }*/
-        }              
+            GameManager.instance.AddCurrency(10);                
     }
 
     private void FixedUpdate()
@@ -242,7 +212,7 @@ public class Player : MonoBehaviour
 
     public void AddSilk(int i)
     {
-        Debug.Log("Adding silk");
+        //Debug.Log("Adding silk");
         silkCount += i;
         GameManager.instance.silkText.text = silkCount.ToString();
 

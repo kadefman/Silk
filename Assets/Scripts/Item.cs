@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum Type { Silk, Health, Key, Pierce, Big, Triple, FastSpin, Speed, Range, Currency };
+    public enum Type { Silk, Health, Key, Pierce, Big, Triple, FastSpin, Speed, Range, Gold };
  
     public Type type;   
-    public int value;
+    public int value; //only needed for silk/health/gold
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -64,7 +64,7 @@ public class Item : MonoBehaviour
                     FindObjectOfType<AudioManager>().Play("Pickup 2");
                     break;
 
-                case Type.Currency:
+                case Type.Gold:
                     GameManager.instance.AddCurrency(value);
                     if (value == 3)
                     {

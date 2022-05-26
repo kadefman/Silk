@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5221777552533394566}
   - component: {fileID: 3964492874710783860}
   - component: {fileID: -7341336117335899272}
-  - component: {fileID: 3203513263432006318}
+  - component: {fileID: 6393762355536070168}
   m_Layer: 12
   m_Name: Special Web
   m_TagString: Untagged
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  neighborDir: 0
   webSprites:
   - {fileID: 4796289729230840213, guid: 6f818f70af10b294c8406092b0f1c051, type: 3}
   - {fileID: -7178868210122759525, guid: 6f818f70af10b294c8406092b0f1c051, type: 3}
@@ -113,7 +114,6 @@ MonoBehaviour:
   extendSprites: []
   treeTopSprites: []
   isBranch: 0
-  neighborDir: 0
 --- !u!114 &3964492874710783860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,8 +142,8 @@ MonoBehaviour:
   costText: {fileID: 8354130802192666736}
   upgradeType: 0
   prices: 
---- !u!60 &3203513263432006318
-PolygonCollider2D:
+--- !u!70 &6393762355536070168
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -155,33 +155,9 @@ PolygonCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 1.28}
-    newSize: {x: 1.28, y: 1.28}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.59999996, y: 0.13}
-      - {x: 0.39, y: 0.48999998}
-      - {x: 0.32999998, y: 0.59}
-      - {x: -0.32, y: 0.59}
-      - {x: -0.34, y: 0.58}
-      - {x: -0.59999996, y: 0.13}
-      - {x: -0.64, y: 0.06}
-      - {x: -0.64, y: -0.06}
-      - {x: -0.59999996, y: -0.13}
-      - {x: -0.39, y: -0.48999998}
-      - {x: -0.32999998, y: -0.59}
-      - {x: 0.32, y: -0.59}
-      - {x: 0.34, y: -0.58}
-      - {x: 0.64, y: -0.06}
-      - {x: 0.64, y: 0.06}
+  m_Offset: {x: -0.0060144663, y: -0.0060145855}
+  m_Size: {x: 0.76275516, y: 0.8349292}
+  m_Direction: 0
 --- !u!1 &8354130802192666736
 GameObject:
   m_ObjectHideFlags: 0

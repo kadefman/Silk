@@ -16,7 +16,6 @@ public class Entry : MonoBehaviour
             transform.parent.parent.GetComponent<PolygonCollider2D>().enabled = false;
             Debug.Log(GameManager.instance.bossRoomIndex);
 
-
             Vector3 dropOffset;
             Vector3 ent;
 
@@ -31,6 +30,7 @@ public class Entry : MonoBehaviour
                 shopLocked = true;
             }
 
+            //we may need a bool for this if we go past the boss room
             else if (GameManager.instance.roomIndex == GameManager.instance.bossRoomIndex)
             {
                 ent = GameManager.instance.rooms[GameManager.instance.roomIndex - 1].exitPoint;

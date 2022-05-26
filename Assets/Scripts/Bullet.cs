@@ -31,12 +31,13 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
     }
 
+    //collision with walls
     private void OnCollisionEnter2D(Collision2D collision)
     {        
         Destroy(gameObject);
     }
 
-    public void BulletHit(Vector3 point)
+    public void BulletFX(Vector3 point)
     {
         Instantiate(prefabFx, point, Quaternion.identity);
     }

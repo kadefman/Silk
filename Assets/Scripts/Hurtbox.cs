@@ -4,34 +4,38 @@ using UnityEngine;
 
 public class Hurtbox : MonoBehaviour
 {    
-    private FlyingEnemy enemy;  
-    
     private int damage;
-    
+    private bool isEnemy;
+
+    //An object with this script can be a hurtbox or a hitbox (often both, in the case of a standard enemy)
+
     void Awake()
     {
         if (transform.parent.GetComponent<FlyingEnemy>())
         {
-            enemy = transform.parent.GetComponent<FlyingEnemy>();
+            isEnemy = true;
+            FlyingEnemy enemy = transform.parent.GetComponent<FlyingEnemy>();
             damage = enemy.damage;
         }
 
-        //tongue
-        else
-            damage = 1;
-    }
+        //A boss is an enemy, and will take damage
+        else if (transform.CompareTag("Frog"))
+            isEnemy = true;
 
-    private void OnEnable()
-    {
-        //damage = origDamage;
+        //non enemy hitbox (ex. frog tongue)
+        else
+        {
+            damage = 1;
+            isEnemy = false;
+        }
+            
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log(collider.gameObject.name + "hitting" + transform.name);
-        if (collider.gameObject.CompareTag("BossPlat"))
-            return;
+        //Debug.Log(collider.gameObject.name + "hitting" + transform.name);
 
+        //hitbox hitting player
         if (collider.gameObject.CompareTag("Player"))
         {
             //Debug.Log("take " + damage + " damage");
@@ -43,7 +47,6 @@ public class Hurtbox : MonoBehaviour
                 return;
             }
                 
-
             player.AddHealth(-damage);
             if (player.spinning)
                 player.spinning = false;
@@ -51,17 +54,19 @@ public class Hurtbox : MonoBehaviour
             player.Invincible();
         }
 
+
+        //bullet hitting hurtbox
         else if(collider.gameObject.CompareTag("Bullet"))
-        {                     
-            
+        {          
+            collider.gameObject.GetComponent<Bullet>().BulletFX(transform.position);
+
             if (!collider.transform.GetComponent<Bullet>().piercing) 
             {
-                Destroy(collider.gameObject);
-                collider.gameObject.GetComponent<Bullet>().BulletHit(transform.position);
+                Destroy(collider.gameObject);                
             }
 
-            //tongue getting hit
-            if(transform.CompareTag("Tongue"))
+            //non enemies will not take damage
+            if(!isEnemy)
                 return;
 
             //frog getting hit
@@ -75,8 +80,13 @@ public class Hurtbox : MonoBehaviour
                 }                    
             }
                
+            //regular enemy getting hit
             else
+            {
+                FlyingEnemy enemy = transform.parent.GetComponent<FlyingEnemy>();
                 enemy.GetHit(collider.transform.GetComponent<Bullet>().damage);
+            }
+                
         }
     }
 }

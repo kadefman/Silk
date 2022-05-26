@@ -8,23 +8,21 @@ public class Frog : MonoBehaviour
     public Animator anim;
     public List<GameObject> enemiesToSpawn;
 
-    public int maxHealth;
+    public int health;
     public float stabTime;
     public float tongueWhipTime;
     public float flyPrepareTime;
     public float flyTime;
-    public float enemyGapTime;
-    private float coolTime;
-    public float bossDeathTime;
+    public float enemyGapTime;    
     public float flySpawnOffset;
-
-    public int health;
+    public float bossDeathTime;
 
     private Transform body;
     private Transform tongue;
     private Transform tongueSprite;
     private Transform tongueHitbox;
     private int turnAngle;
+    private float coolTime;
     public bool canAttack;
 
     void Start()
@@ -35,7 +33,6 @@ public class Frog : MonoBehaviour
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
         canAttack = false;
-        health = maxHealth;
     }
 
     void Update()

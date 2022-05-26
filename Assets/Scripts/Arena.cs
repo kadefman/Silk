@@ -6,7 +6,7 @@ public class Arena : MonoBehaviour
 {
     public enum Mode { enemies, powerups, items};
 
-    public Mode mode = Mode.enemies;
+    public Mode mode;
 
     public List<GameObject> enemies;
     public List<GameObject> powerups;
@@ -16,7 +16,9 @@ public class Arena : MonoBehaviour
 
     private void Start()
     {
+        mode = Mode.enemies;
         currentList = enemies;
+        Debug.Log("Spawn enemies, 1-7");
     }
     void Update()
     {
