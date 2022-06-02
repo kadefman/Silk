@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HexTile : MonoBehaviour
 {
-
     public enum Type { Ground, Web, Wall}
     public Type type;
     public Room.TravelDirection neighborDir;

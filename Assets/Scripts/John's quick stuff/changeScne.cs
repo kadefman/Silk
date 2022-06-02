@@ -17,6 +17,7 @@ public class changeScne : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Why hello there! -" + gameObject.name);
         t += Time.deltaTime;
         if (t > timeBeforeChange)
         {

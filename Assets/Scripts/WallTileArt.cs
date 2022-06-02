@@ -59,7 +59,6 @@ public class WallTileArt : MonoBehaviour
         // Get Art
         // --------------------
 
-        Random.seed = seed;
         // 1 Wall
         GameObject wallArt = null;
         if (nbOfFreeCorners == 1)

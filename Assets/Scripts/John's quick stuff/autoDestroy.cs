@@ -15,6 +15,7 @@ public class autoDestroy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Here I am -" + gameObject.name);
         time += Time.deltaTime;
         if (time > duration)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class canvasFinder : MonoBehaviour
 {
-    // Start is called before the first frame update
+/*    // Start is called before the first frame update
     public static canvasFinder instance;
 
     void Start()
@@ -17,6 +17,6 @@ public class canvasFinder : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-    }
+    }*/
 
 }

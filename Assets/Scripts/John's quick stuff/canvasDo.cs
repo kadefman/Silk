@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class canvasDo : MonoBehaviour
 {
-    public static canvasDo instance;
+    /*public static canvasDo instance;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,5 +23,5 @@ public class canvasDo : MonoBehaviour
     void Update()
     {
         
-    }
+    }*/
 }

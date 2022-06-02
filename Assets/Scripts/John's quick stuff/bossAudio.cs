@@ -15,26 +15,26 @@ public class bossAudio : MonoBehaviour
     {
         audioSource.clip = straightAttack;
         audioSource.Play();
-        Debug.Log("straight attack");
+        //Debug.Log("straight attack");
     }
 
     public void sweepAttackSFX()
     {
         audioSource.clip = sweepAttack;
         audioSource.Play();
-        Debug.Log("sweep attack");
+        //Debug.Log("sweep attack");
     }
 
     public void flyAttackSFX()
     {
         audioSource.clip = flyAttack;
         audioSource.Play();
-        Debug.Log("fly attack");
+        //Debug.Log("fly attack");
     }
 
     public void deathSFX()
     {
-        Debug.Log("deathsfx");
+        //Debug.Log("deathsfx");
         audioSource.clip = death;
         audioSource.Play();
     }
