@@ -91,6 +91,7 @@ public class FlyingEnemy : MonoBehaviour
                 }
                 target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
                 transform.position = Vector2.MoveTowards(transform.position, target.position, seekSpeed * Time.deltaTime);
+                //m_Rigidbody.MovePosition(transform.position + m_Input * Time.deltaTime * m_Speed);
                 Vector3 vectorToTarget = target.transform.position - transform.position;
                 float seekAngle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg - rotationModifier;
                 Quaternion q = Quaternion.AngleAxis(seekAngle, Vector3.forward);

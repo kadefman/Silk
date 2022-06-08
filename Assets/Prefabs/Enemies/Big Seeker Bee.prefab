@@ -212,7 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 393931b75917ee44cbf7ee1e15a2cebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1 &8579754611316829909
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,9 +225,10 @@ GameObject:
   - component: {fileID: 4842536400369633314}
   - component: {fileID: 2912477436184628051}
   - component: {fileID: 5350249581596634381}
+  - component: {fileID: -7382206818646319184}
   m_Layer: 8
   m_Name: Big Seeker Bee
-  m_TagString: Untagged
+  m_TagString: Seeker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -352,9 +352,23 @@ MonoBehaviour:
   FxDiePrefab: {fileID: 6505338092035888528, guid: 6fbc3d70361ac61448f6f8f8f4da23de,
     type: 3}
   enemyIndex: 6
-  speed: 80
   damage: 2
   health: 55
-  seekSpeed: 0.5
+  speed: 7
   isSeeker: 1
   isStill: 0
+  seekSpeed: 0.5
+--- !u!114 &-7382206818646319184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8579754611316829909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a225ee6a919984eafca334b5101268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spaceBetween: 1
+  speed: 0.7

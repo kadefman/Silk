@@ -25,6 +25,9 @@ public class Frog : MonoBehaviour
     private float coolTime;
     public bool canAttack;
 
+
+    
+
     void Start()
     {
         GameManager.instance.frog = this;
@@ -33,6 +36,7 @@ public class Frog : MonoBehaviour
         tongueSprite = transform.GetChild(0).GetChild(0).GetChild(0);
         tongueHitbox = transform.GetChild(0).GetChild(0).GetChild(1);
         canAttack = false;
+ 
     }
 
     void Update()
@@ -55,6 +59,8 @@ public class Frog : MonoBehaviour
 
         else if (attackChoice == 3)
             FlyAttack();
+        
+  
     }
 
     void StabAttack()
@@ -144,5 +150,9 @@ public class Frog : MonoBehaviour
         GameManager.instance.playerScript.canShoot = false;
         GameManager.instance.canReturn = true;
     }
+
+
+
+ 
 }
 

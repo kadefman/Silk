@@ -9,6 +9,9 @@ TagManager:
   - Tongue
   - Frog
   - BossPlat
+  - AttachPoint
+  - Entrance
+  - Latch
   layers:
   - Default
   - TransparentFX

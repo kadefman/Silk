@@ -8,6 +8,8 @@ public class Entry : MonoBehaviour
 
     public int roomNumber;
 
+    public GameObject frog;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Player"))
@@ -37,6 +39,7 @@ public class Entry : MonoBehaviour
                 dropOffset = Vector3.down * 1.12f;
                 Instantiate(GameManager.instance.invisWall, ent + dropOffset, Quaternion.identity);
                 Destroy(transform.parent.parent.gameObject);
+
             }
         }                    
     }

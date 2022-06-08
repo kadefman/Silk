@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     public bool tripleShot;
     public bool bigBullets;
     public bool longRange;
+    public GameObject maincam;
     
     private Rigidbody2D rb;
     private Vector2 curDirection;
@@ -432,5 +433,24 @@ public class Player : MonoBehaviour
     public void NotInvincible()
     {
         invincible = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Entrance")
+        {
+            FindObjectOfType<camAnim>().smoothMove();
+            Destroy(collision.gameObject);
+            canMove = false;
+            StartCoroutine(enterancewait());
+
+        } 
+    }
+    IEnumerator enterancewait()
+    {
+        animator.SetBool("isMoving", false);
+        yield return new WaitForSeconds(1.6f);
+        canMove = true;
+
     }
 }

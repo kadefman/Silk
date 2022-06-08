@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 5172150679782737877}
   m_Layer: 0
   m_Name: Frog
-  m_TagString: Untagged
+  m_TagString: Frog
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -488,9 +488,11 @@ MonoBehaviour:
   flyPrepareTime: 0
   flyTime: 1
   enemyGapTime: 0.1
-  bossDeathTime: 1.5
   flySpawnOffset: 1
+  bossDeathTime: 1.5
   canAttack: 0
+  cam: {fileID: 0}
+  cameraAttachPoint: {fileID: 0}
 --- !u!1 &6699283376423614135
 GameObject:
   m_ObjectHideFlags: 0
